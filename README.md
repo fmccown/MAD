@@ -1,2 +1,2 @@
 # MAD
-Example apps from MAD zyBook
+Example apps from the *Mobile App Development with Jetpack Compose* zyBook.
