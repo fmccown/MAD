@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Graduation RSVP</string>
+    <string name="app_name">Grad RSVP</string>
+    <string name="graduation_announcement">Graduation Announcement</string>
 </resources>
