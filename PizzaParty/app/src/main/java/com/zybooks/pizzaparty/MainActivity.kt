@@ -64,8 +64,8 @@ fun calculateNumPizzas(
 @Composable
 fun PizzaPartyScreen(modifier: Modifier = Modifier) {
    var totalPizzas by remember { mutableIntStateOf(0) }
-   var textInput by remember { mutableStateOf("") }
-   var selectedOption by remember { mutableStateOf("Medium") }
+   var numPeopleInput by remember { mutableStateOf("") }
+   var hungerLevel by remember { mutableStateOf("Medium") }
 
    Column(
       modifier = modifier.padding(10.dp)
@@ -77,15 +77,15 @@ fun PizzaPartyScreen(modifier: Modifier = Modifier) {
       )
       NumberField(
          labelText = "Number of people?",
-         textInput = textInput,
-         onValueChange = { textInput = it },
+         textInput = numPeopleInput,
+         onValueChange = { numPeopleInput = it },
          modifier = modifier.padding(bottom = 16.dp).fillMaxWidth()
       )
       RadioGroup(
          labelText = "How hungry?",
          radioOptions = listOf("Light", "Medium", "Ravenous"),
-         selectedOption = selectedOption,
-         onSelected = { selectedOption = it },
+         selectedOption = hungerLevel,
+         onSelected = { hungerLevel = it },
          modifier = modifier
       )
       Text(
@@ -94,7 +94,9 @@ fun PizzaPartyScreen(modifier: Modifier = Modifier) {
          modifier = modifier.padding(top = 16.dp, bottom = 16.dp)
       )
       Button(
-         onClick = { },
+         onClick = {
+            totalPizzas = calculateNumPizzas(numPeopleInput.toInt(), hungerLevel)
+         },
          modifier = modifier.fillMaxWidth()
       ) {
          Text("Calculate")
