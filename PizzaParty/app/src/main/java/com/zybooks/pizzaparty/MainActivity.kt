@@ -58,11 +58,11 @@ fun PizzaPartyScreen(modifier: Modifier = Modifier) {
          fontSize = 38.sp,
          modifier = modifier.padding(bottom = 16.dp)
       )
-      EditNumberField(
+      NumberField(
          labelText = "Number of people?",
-         modifier = modifier.padding(bottom = 16.dp)
+         modifier = modifier.padding(bottom = 16.dp).fillMaxWidth()
       )
-      RadioButtonGroup(
+      RadioGroup(
          labelText = "How hungry?",
          radioOptions = listOf("Light", "Medium", "Ravenous"),
          selectedValue = "Medium",
@@ -83,7 +83,7 @@ fun PizzaPartyScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun EditNumberField(
+fun NumberField(
    labelText: String,
    modifier: Modifier = Modifier
 ) {
@@ -97,12 +97,12 @@ fun EditNumberField(
       keyboardOptions = KeyboardOptions(
          keyboardType = KeyboardType.Number
       ),
-      modifier = modifier.fillMaxWidth()
+      modifier = modifier
    )
 }
 
 @Composable
-fun RadioButtonGroup(
+fun RadioGroup(
    labelText: String,
    radioOptions: List<String>,
    selectedValue: String,
