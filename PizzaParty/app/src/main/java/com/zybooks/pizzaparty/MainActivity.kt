@@ -49,6 +49,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun PizzaPartyScreen(modifier: Modifier = Modifier) {
    var totalPizzas by remember { mutableIntStateOf(0) }
+   var textInput by remember { mutableStateOf("") }
 
    Column(
       modifier = modifier.padding(10.dp)
@@ -60,6 +61,8 @@ fun PizzaPartyScreen(modifier: Modifier = Modifier) {
       )
       NumberField(
          labelText = "Number of people?",
+         textInput = textInput,
+         onValueChange = { textInput = it },
          modifier = modifier.padding(bottom = 16.dp).fillMaxWidth()
       )
       RadioGroup(
@@ -85,13 +88,13 @@ fun PizzaPartyScreen(modifier: Modifier = Modifier) {
 @Composable
 fun NumberField(
    labelText: String,
+   textInput: String,
+   onValueChange: (String) -> Unit,
    modifier: Modifier = Modifier
 ) {
-   var textInput by remember { mutableStateOf("") }
-
    TextField(
       value = textInput,
-      onValueChange = { textInput = it },
+      onValueChange = onValueChange,
       label = { Text(labelText) },
       singleLine = true,
       keyboardOptions = KeyboardOptions(
