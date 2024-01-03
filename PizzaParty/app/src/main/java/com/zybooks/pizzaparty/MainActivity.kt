@@ -50,6 +50,7 @@ class MainActivity : ComponentActivity() {
 fun PizzaPartyScreen(modifier: Modifier = Modifier) {
    var totalPizzas by remember { mutableIntStateOf(0) }
    var textInput by remember { mutableStateOf("") }
+   var selectedOption by remember { mutableStateOf("Medium") }
 
    Column(
       modifier = modifier.padding(10.dp)
@@ -68,7 +69,8 @@ fun PizzaPartyScreen(modifier: Modifier = Modifier) {
       RadioGroup(
          labelText = "How hungry?",
          radioOptions = listOf("Light", "Medium", "Ravenous"),
-         selectedValue = "Medium",
+         selectedOption = selectedOption,
+         onSelected = { selectedOption = it },
          modifier = modifier
       )
       Text(
@@ -108,10 +110,10 @@ fun NumberField(
 fun RadioGroup(
    labelText: String,
    radioOptions: List<String>,
-   selectedValue: String,
+   selectedOption: String,
+   onSelected: (String) -> Unit,
    modifier: Modifier = Modifier
 ) {
-   var selectedOption by remember { mutableStateOf(selectedValue) }
    val isSelectedOption: (String) -> Boolean = { selectedOption == it }
 
    Column {
@@ -121,7 +123,7 @@ fun RadioGroup(
             modifier = modifier
                .selectable(
                   selected = isSelectedOption(option),
-                  onClick = { selectedOption = option },
+                  onClick = { onSelected(option) },
                   role = Role.RadioButton
                )
                .padding(8.dp)
