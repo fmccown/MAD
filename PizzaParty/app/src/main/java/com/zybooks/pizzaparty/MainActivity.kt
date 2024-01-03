@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zybooks.pizzaparty.ui.theme.PizzaPartyTheme
+import kotlin.math.ceil
 
 class MainActivity : ComponentActivity() {
    override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +45,20 @@ class MainActivity : ComponentActivity() {
          }
       }
    }
+}
+
+fun calculateNumPizzas(
+   numPeople: Int,
+   hungerLevel: String
+): Int {
+   val slicesPerPizza = 8
+   val slicesPerPerson = when (hungerLevel) {
+      "Light" -> 2
+      "Medium" -> 3
+      else -> 4
+   }
+
+   return ceil(numPeople * slicesPerPerson / slicesPerPizza.toDouble()).toInt()
 }
 
 @Composable
