@@ -1,72 +1,35 @@
-package com.zybooks.pizzaparty
+package com.zybooks.pizzaparty.ui
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.zybooks.pizzaparty.HungerLevel
 import com.zybooks.pizzaparty.ui.theme.PizzaPartyTheme
-import kotlin.math.ceil
-
-class MainActivity : ComponentActivity() {
-   override fun onCreate(savedInstanceState: Bundle?) {
-      super.onCreate(savedInstanceState)
-
-      setContent {
-         PizzaPartyTheme {
-            Surface(
-               modifier = Modifier.fillMaxSize(),
-               color = MaterialTheme.colorScheme.background
-            ) {
-               PizzaPartyScreen()
-            }
-         }
-      }
-   }
-}
-
-fun calculateNumPizzas(
-   numPeople: Int,
-   hungerLevel: String
-): Int {
-   val slicesPerPizza = 8
-   val slicesPerPerson = when (hungerLevel) {
-      "Light" -> 2
-      "Medium" -> 3
-      else -> 4
-   }
-
-   return ceil(numPeople * slicesPerPerson / slicesPerPizza.toDouble()).toInt()
-}
 
 @Composable
-fun PizzaPartyScreen(modifier: Modifier = Modifier) {
-   var totalPizzas by remember { mutableIntStateOf(0) }
-   var numPeopleInput by remember { mutableStateOf("") }
-   var hungerLevel by remember { mutableStateOf("Medium") }
+fun PizzaPartyScreen(
+   modifier: Modifier = Modifier,
+   partyViewModel: PizzaPartyViewModel = viewModel()
+) {
+   val hungerItems = listOf("Light", "Medium", "Ravenous")
 
    Column(
       modifier = modifier.padding(10.dp)
@@ -78,26 +41,34 @@ fun PizzaPartyScreen(modifier: Modifier = Modifier) {
       )
       NumberField(
          labelText = "Number of people?",
-         textInput = numPeopleInput,
-         onValueChange = { numPeopleInput = it },
+         textInput = partyViewModel.numPeople,
+         onValueChange = { partyViewModel.numPeople = it },
          modifier = modifier.padding(bottom = 16.dp).fillMaxWidth()
       )
       RadioGroup(
          labelText = "How hungry?",
-         radioOptions = listOf("Light", "Medium", "Ravenous"),
-         selectedOption = hungerLevel,
-         onSelected = { hungerLevel = it },
+         radioOptions = hungerItems,
+         selectedOption = when (partyViewModel.hungerLevel) {
+            HungerLevel.LIGHT -> hungerItems[0]
+            HungerLevel.MEDIUM -> hungerItems[1]
+            else -> hungerItems[2]
+         },
+         onSelected = {
+            partyViewModel.hungerLevel = when (it) {
+               hungerItems[0] -> HungerLevel.LIGHT
+               hungerItems[1] -> HungerLevel.MEDIUM
+               else -> HungerLevel.RAVENOUS
+            }
+         },
          modifier = modifier
       )
       Text(
-         text = "Total pizzas: $totalPizzas",
+         text = "Total pizzas: " + partyViewModel.totalPizzas,
          fontSize = 22.sp,
          modifier = modifier.padding(top = 16.dp, bottom = 16.dp)
       )
       Button(
-         onClick = {
-            totalPizzas = calculateNumPizzas(numPeopleInput.toIntOrNull() ?: 0, hungerLevel)
-         },
+         onClick = { partyViewModel.calculateNumPizzas() },
          modifier = modifier.fillMaxWidth()
       ) {
          Text("Calculate")
@@ -119,6 +90,11 @@ fun NumberField(
       singleLine = true,
       keyboardOptions = KeyboardOptions(
          keyboardType = KeyboardType.Number
+      ),
+      colors = TextFieldDefaults.colors(
+         focusedContainerColor = Color(0xFFF2F2F2F2),
+         unfocusedContainerColor = Color(0xFFF2F2F2F2),
+         disabledContainerColor = Color.White,
       ),
       modifier = modifier
    )
