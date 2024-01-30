@@ -41,8 +41,8 @@ fun PizzaPartyScreen(
       )
       NumberField(
          labelText = "Number of people?",
-         textInput = partyViewModel.numPeople,
-         onValueChange = { partyViewModel.numPeople = it },
+         textInput = partyViewModel.numPeopleInput,
+         onValueChange = { partyViewModel.numPeopleInput = it },
          modifier = modifier.padding(bottom = 16.dp).fillMaxWidth()
       )
       RadioGroup(

@@ -9,7 +9,7 @@ import com.zybooks.pizzaparty.HungerLevel
 import com.zybooks.pizzaparty.PizzaCalculator
 
 class PizzaPartyViewModel : ViewModel() {
-   var numPeople by mutableStateOf("")
+   var numPeopleInput by mutableStateOf("")
 
    var hungerLevel by mutableStateOf(HungerLevel.MEDIUM)
 
@@ -17,7 +17,7 @@ class PizzaPartyViewModel : ViewModel() {
       private set
 
    fun calculateNumPizzas() {
-      val calc = PizzaCalculator(numPeople.toIntOrNull() ?: 0, hungerLevel)
+      val calc = PizzaCalculator(numPeopleInput.toIntOrNull() ?: 0, hungerLevel)
       totalPizzas = calc.totalPizzas
    }
 }
