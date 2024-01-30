@@ -88,6 +88,7 @@ fun GradScreen(modifier: Modifier = Modifier) {
    }
 }
 
+@Preview
 @Composable
 fun Rsvp(modifier: Modifier = Modifier) {
    var isChecked by remember { mutableStateOf(true) }
