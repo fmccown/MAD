@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -29,50 +28,103 @@ fun PizzaPartyScreen(
    modifier: Modifier = Modifier,
    partyViewModel: PizzaPartyViewModel = viewModel()
 ) {
-   val hungerItems = listOf("Light", "Medium", "Ravenous")
-
    Column(
       modifier = modifier.padding(10.dp)
    ) {
-      Text(
-         text = "Pizza Party",
-         fontSize = 38.sp,
-         modifier = modifier.padding(bottom = 16.dp)
-      )
-      NumberField(
-         labelText = "Number of people?",
-         textInput = partyViewModel.numPeopleInput,
+      AppTitle(modifier)
+      PartySize(
+         numPeopleInput = partyViewModel.numPeopleInput,
          onValueChange = { partyViewModel.numPeopleInput = it },
-         modifier = modifier.padding(bottom = 16.dp).fillMaxWidth()
-      )
-      RadioGroup(
-         labelText = "How hungry?",
-         radioOptions = hungerItems,
-         selectedOption = when (partyViewModel.hungerLevel) {
-            HungerLevel.LIGHT -> hungerItems[0]
-            HungerLevel.MEDIUM -> hungerItems[1]
-            else -> hungerItems[2]
-         },
-         onSelected = {
-            partyViewModel.hungerLevel = when (it) {
-               hungerItems[0] -> HungerLevel.LIGHT
-               hungerItems[1] -> HungerLevel.MEDIUM
-               else -> HungerLevel.RAVENOUS
-            }
-         },
          modifier = modifier
       )
-      Text(
-         text = "Total pizzas: " + partyViewModel.totalPizzas,
-         fontSize = 22.sp,
-         modifier = modifier.padding(top = 16.dp, bottom = 16.dp)
+      HungerLevelSelection(
+         hungerLevel = partyViewModel.hungerLevel,
+         onSelected = { partyViewModel.hungerLevel = it },
+         modifier = modifier
       )
-      Button(
+      TotalPizzas(
+         totalPizzas = partyViewModel.totalPizzas,
+         modifier = modifier
+      )
+      CalculateButton(
          onClick = { partyViewModel.calculateNumPizzas() },
-         modifier = modifier.fillMaxWidth()
-      ) {
-         Text("Calculate")
-      }
+         modifier = modifier
+      )
+   }
+}
+
+@Composable
+fun AppTitle(modifier: Modifier = Modifier) {
+   Text(
+      text = "Pizza Party",
+      fontSize = 38.sp,
+      modifier = modifier.padding(bottom = 16.dp)
+   )
+}
+
+@Composable
+fun PartySize(
+   numPeopleInput: String,
+   onValueChange: (String) -> Unit,
+   modifier: Modifier = Modifier
+) {
+   NumberField(
+      labelText = "Number of people?",
+      textInput = numPeopleInput,
+      onValueChange = { onValueChange(it) },
+      modifier = modifier.padding(bottom = 16.dp).fillMaxWidth()
+   )
+}
+
+@Composable
+fun HungerLevelSelection(
+   hungerLevel: HungerLevel,
+   onSelected: (HungerLevel) -> Unit,
+   modifier: Modifier = Modifier
+) {
+   val hungerItems = listOf("Light", "Medium", "Ravenous")
+
+   RadioGroup(
+      labelText = "How hungry?",
+      radioOptions = hungerItems,
+      selectedOption = when (hungerLevel) {
+         HungerLevel.LIGHT -> hungerItems[0]
+         HungerLevel.MEDIUM -> hungerItems[1]
+         else -> hungerItems[2]
+      },
+      onSelected = {
+         onSelected(when (it) {
+            hungerItems[0] -> HungerLevel.LIGHT
+            hungerItems[1] -> HungerLevel.MEDIUM
+            else -> HungerLevel.RAVENOUS
+         })
+      },
+      modifier = modifier
+   )
+}
+
+@Composable
+fun TotalPizzas(
+   totalPizzas: Int,
+   modifier: Modifier = Modifier
+) {
+   Text(
+      text = "Total pizzas: $totalPizzas",
+      fontSize = 22.sp,
+      modifier = modifier.padding(top = 16.dp, bottom = 16.dp)
+   )
+}
+
+@Composable
+fun CalculateButton(
+   onClick: () -> Unit,
+   modifier: Modifier = Modifier
+) {
+   Button(
+      onClick = onClick,
+      modifier = modifier.fillMaxWidth()
+   ) {
+      Text("Calculate")
    }
 }
 
