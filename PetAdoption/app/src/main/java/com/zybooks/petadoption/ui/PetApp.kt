@@ -1,14 +1,13 @@
 package com.zybooks.petadoption.ui
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,8 +16,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,16 +28,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -48,13 +45,12 @@ import androidx.navigation.compose.rememberNavController
 import com.zybooks.petadoption.data.DataSource
 import com.zybooks.petadoption.data.Pet
 import com.zybooks.petadoption.data.PetGender
-import com.zybooks.petadoption.data.PetType
 import com.zybooks.petadoption.ui.theme.PetAdoptionTheme
 
-enum class PetScreen {
-   List,
-   Detail,
-   Adopt
+enum class PetScreen(val title: String) {
+   List("Find a Friend"),
+   Detail("Details"),
+   Adopt("Thank You!")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,8 +62,7 @@ fun PetAppBar(
    modifier: Modifier = Modifier
 ) {
    TopAppBar(
-      //title = { Text(currentScreen.name) },
-      title = { Text("Pet Adoption") },
+      title = { Text(currentScreen.title) },
       colors = TopAppBarDefaults.mediumTopAppBarColors(
          containerColor = MaterialTheme.colorScheme.primaryContainer
       ),
@@ -75,10 +70,7 @@ fun PetAppBar(
       navigationIcon = {
          if (canNavigateBack) {
             IconButton(onClick = navigateUp) {
-               Icon(
-                  imageVector = Icons.Filled.ArrowBack,
-                  contentDescription = "Go back"
-               )
+               Icon(Icons.Filled.ArrowBack,"Back")
             }
          }
       }
@@ -107,7 +99,7 @@ fun PetApp(
       NavHost(
          navController = navController,
          startDestination = PetScreen.List.name,
-         modifier = Modifier.padding(innerPadding)
+         modifier = modifier.padding(innerPadding)
       ) {
          composable(route = PetScreen.List.name) {
             ListScreen(
@@ -167,15 +159,18 @@ fun DetailScreen(
 ) {
    val gender = if (pet.gender == PetGender.MALE) "Male" else "Female"
    val painter = painterResource(id = pet.imageId)
+
    Column {
       Image(
          painter = painter,
          contentDescription = pet.name,
-         contentScale = ContentScale.FillWidth,
-
+         contentScale = ContentScale.FillWidth
       )
-      Row(horizontalArrangement = Arrangement.SpaceBetween,
-         modifier = modifier.fillMaxWidth()) {
+      Row(
+         horizontalArrangement = Arrangement.SpaceBetween,
+         verticalAlignment = Alignment.CenterVertically,
+         modifier = modifier.fillMaxWidth()
+      ) {
          Text(
             text = pet.name,
             style = MaterialTheme.typography.headlineMedium,
@@ -210,8 +205,9 @@ fun AdoptScreen(
    pet: Pet,
    modifier: Modifier = Modifier
 ) {
+   val context = LocalContext.current
    Column {
-      Row {
+      Row(verticalAlignment = Alignment.CenterVertically) {
          Image(
             painter = painterResource(id = pet.imageId),
             contentDescription = pet.name,
@@ -219,7 +215,7 @@ fun AdoptScreen(
          )
          Text(
             text = "Thank you for adopting ${pet.name}!",
-            modifier = modifier.padding(28.dp),
+            modifier = modifier.padding(horizontal = 28.dp),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineLarge,
          )
@@ -228,7 +224,26 @@ fun AdoptScreen(
          text = "Please pick up your new family member during business hours.",
          modifier = modifier.padding(6.dp),
       )
+      Button(
+         onClick = { shareAdoption(context, pet) },
+         modifier = modifier.padding(6.dp)
+      ) {
+         Icon(Icons.Default.Share, null)
+         Text("Share", modifier = modifier.padding(start = 8.dp))
+      }
    }
+}
+
+private fun shareAdoption(context: Context, pet: Pet) {
+   val intent = Intent(Intent.ACTION_SEND).apply {
+      type = "text/plain"
+      putExtra(Intent.EXTRA_SUBJECT, "Meet ${pet.name}!")
+      putExtra(Intent.EXTRA_TEXT, "I've adopted ${pet.name}!")
+   }
+
+   context.startActivity(
+      Intent.createChooser(intent,"Pet Adoption")
+   )
 }
 
 @Preview
