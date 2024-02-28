@@ -76,6 +76,7 @@ fun PetAppBar(
       }
    )
 }
+
 @Composable
 fun PetApp(
    modifier: Modifier = Modifier,
