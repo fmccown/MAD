@@ -9,10 +9,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun PetApp(
-   modifier: Modifier = Modifier
+   modifier: Modifier = Modifier,
+   petViewModel: PetViewModel = viewModel()
 ) {
    Scaffold(
       topBar = {
