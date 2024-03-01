@@ -53,30 +53,6 @@ enum class PetScreen(val title: String) {
    Adopt("Thank You!")
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun PetAppBar(
-   currentScreen: PetScreen,
-   canNavigateBack: Boolean,
-   navigateUp: () -> Unit,
-   modifier: Modifier = Modifier
-) {
-   TopAppBar(
-      title = { Text(currentScreen.title) },
-      colors = TopAppBarDefaults.mediumTopAppBarColors(
-         containerColor = MaterialTheme.colorScheme.primaryContainer
-      ),
-      modifier = modifier,
-      navigationIcon = {
-         if (canNavigateBack) {
-            IconButton(onClick = navigateUp) {
-               Icon(Icons.Filled.ArrowBack,"Back")
-            }
-         }
-      }
-   )
-}
-
 @Composable
 fun PetApp(
    modifier: Modifier = Modifier,
@@ -103,10 +79,10 @@ fun PetApp(
          modifier = modifier.padding(innerPadding)
       ) {
          composable(route = PetScreen.List.name) {
-            ListScreen(
+            GridScreen(
                petList = petViewModel.petList,
                onImageClick = {
-                  petViewModel.selectedPet.value = it
+                  petViewModel.selectedPet = it
                   navController.navigate(PetScreen.Detail.name)
                }
             )
@@ -114,7 +90,7 @@ fun PetApp(
 
          composable(route = PetScreen.Detail.name) {
             DetailScreen(
-               pet = petViewModel.selectedPet.value!!,
+               pet = petViewModel.selectedPet!!,
                onAdoptClick = {
                   navController.navigate(PetScreen.Adopt.name)
                }
@@ -123,15 +99,39 @@ fun PetApp(
 
          composable(route = PetScreen.Adopt.name) {
             AdoptScreen(
-               pet = petViewModel.selectedPet.value!!
+               pet = petViewModel.selectedPet!!
             )
          }
       }
    }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListScreen(
+fun PetAppBar(
+   currentScreen: PetScreen,
+   canNavigateBack: Boolean,
+   navigateUp: () -> Unit,
+   modifier: Modifier = Modifier
+) {
+   TopAppBar(
+      title = { Text(currentScreen.title) },
+      colors = TopAppBarDefaults.mediumTopAppBarColors(
+         containerColor = MaterialTheme.colorScheme.primaryContainer
+      ),
+      modifier = modifier,
+      navigationIcon = {
+         if (canNavigateBack) {
+            IconButton(onClick = navigateUp) {
+               Icon(Icons.Filled.ArrowBack,"Back")
+            }
+         }
+      }
+   )
+}
+
+@Composable
+fun GridScreen(
    petList: List<Pet>,
    onImageClick: (Pet) -> Unit
 ) {
@@ -258,7 +258,7 @@ fun PreviewAdoptScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun PetListPreview() {
+fun PreviewGridScreen() {
    PetAdoptionTheme {
       PetApp()
    }
