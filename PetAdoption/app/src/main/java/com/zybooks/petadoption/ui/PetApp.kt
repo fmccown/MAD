@@ -37,7 +37,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -56,9 +55,9 @@ enum class PetScreen(val title: String) {
 @Composable
 fun PetApp(
    modifier: Modifier = Modifier,
-   petViewModel: PetViewModel = viewModel(),
-   navController: NavHostController = rememberNavController()
+   petViewModel: PetViewModel = viewModel()
 ) {
+   val navController = rememberNavController()
    val backStackEntry by navController.currentBackStackEntryAsState()
    val currentScreen = PetScreen.valueOf(
       backStackEntry?.destination?.route ?: PetScreen.List.name
@@ -79,7 +78,7 @@ fun PetApp(
          modifier = modifier.padding(innerPadding)
       ) {
          composable(route = PetScreen.List.name) {
-            GridScreen(
+            ListScreen(
                petList = petViewModel.petList,
                onImageClick = {
                   petViewModel.selectedPet = it
@@ -131,7 +130,7 @@ fun PetAppBar(
 }
 
 @Composable
-fun GridScreen(
+fun ListScreen(
    petList: List<Pet>,
    onImageClick: (Pet) -> Unit
 ) {
