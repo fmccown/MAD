@@ -74,7 +74,7 @@ fun VerticalGrid() {
    ) {
       items(90) { item ->
          Card(
-            modifier = Modifier.size(100.dp).padding(4.dp)
+            modifier = Modifier.height(100.dp).padding(4.dp)
          ) {
             Text("Item $item", Modifier.padding(6.dp))
          }
