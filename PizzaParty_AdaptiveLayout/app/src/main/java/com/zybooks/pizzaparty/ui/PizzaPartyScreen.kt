@@ -11,10 +11,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.input.KeyboardType
@@ -178,11 +176,6 @@ fun NumberField(
       singleLine = true,
       keyboardOptions = KeyboardOptions(
          keyboardType = KeyboardType.Number
-      ),
-      colors = TextFieldDefaults.colors(
-         focusedContainerColor = Color(0xFFF2F2F2),
-         unfocusedContainerColor = Color(0xFFF2F2F2),
-         disabledContainerColor = Color.White,
       ),
       modifier = modifier
    )
