@@ -158,45 +158,43 @@ fun DetailScreen(
    modifier: Modifier = Modifier
 ) {
    val gender = if (pet.gender == PetGender.MALE) "Male" else "Female"
-   val painter = painterResource(id = pet.imageId)
 
    Column {
       Image(
-         painter = painter,
+         painter = painterResource(pet.imageId),
          contentDescription = pet.name,
          contentScale = ContentScale.FillWidth
       )
-      Row(
-         horizontalArrangement = Arrangement.SpaceBetween,
-         verticalAlignment = Alignment.CenterVertically,
-         modifier = modifier.fillMaxWidth()
+      Column(
+         verticalArrangement = Arrangement.spacedBy(6.dp),
+         modifier = modifier.padding(6.dp)
       ) {
-         Text(
-            text = pet.name,
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = modifier.padding(6.dp)
-         )
-         Button(onClick = { onAdoptClick() },
-            modifier = modifier.padding(6.dp)
+         Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier.fillMaxWidth()
          ) {
-            Text("Adopt Me!")
+            Text(
+               text = pet.name,
+               style = MaterialTheme.typography.headlineMedium
+            )
+            Button(onClick = onAdoptClick) {
+               Text("Adopt Me!")
+            }
          }
+         Text(
+            text = "Gender: $gender",
+            style = MaterialTheme.typography.bodyLarge
+         )
+         Text(
+            text = "Age: ${pet.age}",
+            style = MaterialTheme.typography.bodyLarge
+         )
+         Text(
+            text = pet.description,
+            style = MaterialTheme.typography.bodyMedium
+         )
       }
-      Text(
-         text = "Gender: $gender",
-         style = MaterialTheme.typography.bodyLarge,
-         modifier = modifier.padding(6.dp)
-      )
-      Text(
-         text = "Age: ${pet.age}",
-         style = MaterialTheme.typography.bodyLarge,
-         modifier = Modifier.padding(6.dp)
-      )
-      Text(
-         text = pet.description,
-         style = MaterialTheme.typography.bodyMedium,
-         modifier = modifier.padding(6.dp)
-      )
    }
 }
 
@@ -209,7 +207,7 @@ fun AdoptScreen(
    Column {
       Row(verticalAlignment = Alignment.CenterVertically) {
          Image(
-            painter = painterResource(id = pet.imageId),
+            painter = painterResource(pet.imageId),
             contentDescription = pet.name,
             modifier = modifier.size(150.dp)
          )
