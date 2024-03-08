@@ -116,8 +116,7 @@ fun PetAppBar(
    TopAppBar(
       title = { Text(currentScreen.title) },
       colors = TopAppBarDefaults.topAppBarColors(
-         containerColor = MaterialTheme.colorScheme.primaryContainer,
-         titleContentColor = MaterialTheme.colorScheme.primary
+         containerColor = MaterialTheme.colorScheme.primaryContainer
       ),
       modifier = modifier,
       navigationIcon = {
