@@ -33,8 +33,7 @@ fun PetAppBar(
    TopAppBar(
       title = { Text("Pet Adoption") },
       colors = TopAppBarDefaults.topAppBarColors(
-         containerColor = MaterialTheme.colorScheme.primaryContainer,
-         titleContentColor = MaterialTheme.colorScheme.primary,
+         containerColor = MaterialTheme.colorScheme.primaryContainer
       ),
       modifier = modifier
    )
