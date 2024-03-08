@@ -47,9 +47,9 @@ import com.zybooks.petadoption.data.PetGender
 import com.zybooks.petadoption.ui.theme.PetAdoptionTheme
 
 enum class PetScreen(val title: String) {
-   List("Find a Friend"),
-   Detail("Details"),
-   Adopt("Thank You!")
+   LIST("Find a Friend"),
+   DETAIL("Details"),
+   ADOPT("Thank You!")
 }
 
 @Composable
@@ -60,7 +60,7 @@ fun PetApp(
    val navController = rememberNavController()
    val backStackEntry by navController.currentBackStackEntryAsState()
    val currentScreen = PetScreen.valueOf(
-      backStackEntry?.destination?.route ?: PetScreen.List.name
+      backStackEntry?.destination?.route ?: PetScreen.LIST.name
    )
 
    Scaffold(
@@ -68,35 +68,35 @@ fun PetApp(
          PetAppBar(
             currentScreen = currentScreen,
             canNavigateBack = navController.previousBackStackEntry != null,
-            navigateUp = { navController.navigateUp() }
+            onUpClick = { navController.navigateUp() }
          )
       }
    ) { innerPadding ->
       NavHost(
          navController = navController,
-         startDestination = PetScreen.List.name,
+         startDestination = PetScreen.LIST.name,
          modifier = modifier.padding(innerPadding)
       ) {
-         composable(route = PetScreen.List.name) {
+         composable(route = PetScreen.LIST.name) {
             ListScreen(
                petList = petViewModel.petList,
                onImageClick = {
                   petViewModel.selectedPet = it
-                  navController.navigate(PetScreen.Detail.name)
+                  navController.navigate(PetScreen.DETAIL.name)
                }
             )
          }
 
-         composable(route = PetScreen.Detail.name) {
+         composable(route = PetScreen.DETAIL.name) {
             DetailScreen(
                pet = petViewModel.selectedPet!!,
                onAdoptClick = {
-                  navController.navigate(PetScreen.Adopt.name)
+                  navController.navigate(PetScreen.ADOPT.name)
                }
             )
          }
 
-         composable(route = PetScreen.Adopt.name) {
+         composable(route = PetScreen.ADOPT.name) {
             AdoptScreen(
                pet = petViewModel.selectedPet!!
             )
@@ -110,18 +110,19 @@ fun PetApp(
 fun PetAppBar(
    currentScreen: PetScreen,
    canNavigateBack: Boolean,
-   navigateUp: () -> Unit,
+   onUpClick: () -> Unit,
    modifier: Modifier = Modifier
 ) {
    TopAppBar(
       title = { Text(currentScreen.title) },
-      colors = TopAppBarDefaults.mediumTopAppBarColors(
-         containerColor = MaterialTheme.colorScheme.primaryContainer
+      colors = TopAppBarDefaults.topAppBarColors(
+         containerColor = MaterialTheme.colorScheme.primaryContainer,
+         titleContentColor = MaterialTheme.colorScheme.primary
       ),
       modifier = modifier,
       navigationIcon = {
          if (canNavigateBack) {
-            IconButton(onClick = navigateUp) {
+            IconButton(onClick = onUpClick) {
                Icon(Icons.Filled.ArrowBack,"Back")
             }
          }
