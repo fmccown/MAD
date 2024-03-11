@@ -86,7 +86,6 @@ fun PetApp(
                }
             )
          }
-
          composable(route = PetScreen.DETAIL.name) {
             DetailScreen(
                pet = petViewModel.selectedPet!!,
@@ -95,7 +94,6 @@ fun PetApp(
                }
             )
          }
-
          composable(route = PetScreen.ADOPT.name) {
             AdoptScreen(
                pet = petViewModel.selectedPet!!
@@ -232,7 +230,7 @@ fun AdoptScreen(
    }
 }
 
-private fun shareAdoption(context: Context, pet: Pet) {
+fun shareAdoption(context: Context, pet: Pet) {
    val intent = Intent(Intent.ACTION_SEND).apply {
       type = "text/plain"
       putExtra(Intent.EXTRA_SUBJECT, "Meet ${pet.name}!")
