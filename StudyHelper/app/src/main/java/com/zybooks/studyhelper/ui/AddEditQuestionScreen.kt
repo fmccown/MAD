@@ -78,6 +78,7 @@ fun AddEditQuestionScreen(
          Row(modifier = modifier.weight(1f).fillMaxWidth()) {
             Text(
                text = "Q",
+               color = MaterialTheme.colorScheme.primary,
                fontSize = 80.sp,
                modifier = modifier.padding(8.dp)
             )
@@ -94,6 +95,7 @@ fun AddEditQuestionScreen(
          Row(modifier = modifier.weight(1f).fillMaxWidth()) {
             Text(
                text = "A",
+               color = MaterialTheme.colorScheme.primary,
                fontSize = 80.sp,
                modifier = modifier.padding(8.dp)
             )
@@ -134,9 +136,6 @@ fun AddQuestionAppBar(
 ) {
    TopAppBar(
       title = { Text(title) },
-      colors = TopAppBarDefaults.topAppBarColors(
-         containerColor = MaterialTheme.colorScheme.primaryContainer
-      ),
       modifier = modifier,
       navigationIcon = {
          IconButton(onClick = onUpClick) {

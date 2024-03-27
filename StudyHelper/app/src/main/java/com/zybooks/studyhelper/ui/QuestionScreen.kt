@@ -25,7 +25,6 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -78,7 +77,7 @@ fun QuestionScreen(
       },
       bottomBar = {
          QuestionBottomBar(
-            showAddOnly = questionList.isEmpty(),
+            addOnly = questionList.isEmpty(),
             onAddClick = onAddClick,
             onEditClick = onEditClick,
             onDeleteClick = { onDeleteClick(question) }
@@ -93,6 +92,7 @@ fun QuestionScreen(
             Row(modifier = modifier.weight(1f).fillMaxWidth()) {
                Text(
                   text = "Q",
+                  color = MaterialTheme.colorScheme.primary,
                   fontSize = 80.sp,
                   modifier = modifier.padding(8.dp)
                )
@@ -103,27 +103,40 @@ fun QuestionScreen(
                   modifier = modifier.padding(8.dp)
                )
             }
-            Row(
-               modifier = modifier.fillMaxWidth().padding(8.dp),
-               horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-
-               OutlinedIconButton(onClick = onLeftClick) {
-                  Icon(Icons.Filled.ArrowBack, "Previous")
-               }
-               Button(
-                  onClick = { answerVisible = !answerVisible }
+            if (questionList.size > 1) {
+               Row(
+                  modifier = modifier.fillMaxWidth().padding(8.dp),
+                  horizontalArrangement = Arrangement.SpaceBetween
                ) {
-                  Text(showAnswerBtnLabel)
+                  OutlinedIconButton(onClick = onLeftClick) {
+                     Icon(Icons.Filled.ArrowBack, "Previous")
+                  }
+                  Button(
+                     onClick = { answerVisible = !answerVisible }
+                  ) {
+                     Text(showAnswerBtnLabel)
+                  }
+                  OutlinedIconButton(onClick = onRightClick) {
+                     Icon(Icons.Filled.ArrowForward, "Next")
+                  }
                }
-               OutlinedIconButton(onClick = onRightClick) {
-                  Icon(Icons.Filled.ArrowForward, "Next")
+            } else {
+               Row(
+                  modifier = modifier.fillMaxWidth().padding(8.dp),
+                  horizontalArrangement = Arrangement.Center
+               ) {
+                  Button(
+                     onClick = { answerVisible = !answerVisible }
+                  ) {
+                     Text(showAnswerBtnLabel)
+                  }
                }
             }
             Row(modifier = modifier.weight(1f).fillMaxWidth()) {
                if (answerVisible) {
                   Text(
                      text = "A",
+                     color = MaterialTheme.colorScheme.primary,
                      fontSize = 80.sp,
                      modifier = modifier.padding(8.dp)
                   )
@@ -179,9 +192,6 @@ fun QuestionTopAppBar(
 
    TopAppBar(
       title = { Text(title) },
-      colors = TopAppBarDefaults.topAppBarColors(
-         containerColor = MaterialTheme.colorScheme.primaryContainer
-      ),
       modifier = modifier,
       navigationIcon = {
          IconButton(onClick = onUpClick) {
@@ -194,14 +204,14 @@ fun QuestionTopAppBar(
 @Composable
 fun QuestionBottomBar(
    modifier: Modifier = Modifier,
-   showAddOnly: Boolean = false,
+   addOnly: Boolean = false,
    onAddClick: () -> Unit = {},
    onEditClick: () -> Unit = {},
    onDeleteClick: () -> Unit = {}
 ) {
    BottomAppBar(
       actions = {
-         if (!showAddOnly) {
+         if (!addOnly) {
             IconButton(onClick = onEditClick) {
                Icon(
                   Icons.Filled.Edit,

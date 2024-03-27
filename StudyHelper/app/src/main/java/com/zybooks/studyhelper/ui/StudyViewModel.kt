@@ -19,11 +19,12 @@ import kotlinx.coroutines.launch
 class StudyViewModel(context: Context) : ViewModel() {
    private val studyRepo = StudyRepository.getInstance(context)
 
+   fun getSubjects(): LiveData<List<Subject>> = studyRepo.getSubjects()
    val subjectList: LiveData<List<Subject>> = studyRepo.getSubjects()
 
-   //var selectedSubject: Subject? = null
    val selectedSubject = MutableLiveData<Subject>()
 
+   fun getQuestions(subjectId: Long) = studyRepo.getQuestions(subjectId)
    val questionList: LiveData<List<Question>> =
       selectedSubject.switchMap { subject ->
          Log.d("McCown", "Getting questions for ${subject.id}")

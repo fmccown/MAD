@@ -28,12 +28,8 @@ fun StudyHelperApp(
    viewModel: StudyViewModel = viewModel()
 ) {
    val navController = rememberNavController()
-   val backStackEntry by navController.currentBackStackEntryAsState()
-   val currentScreen = StudyScreen.valueOf(
-      backStackEntry?.destination?.route ?: StudyScreen.SUBJECT.name
-   )
-
-   val subjectList by viewModel.subjectList.observeAsState(emptyList())
+   //val subjectList by viewModel.subjectList.observeAsState(emptyList())
+   val subjectList by viewModel.getSubjects().observeAsState(emptyList())
    val questionList by viewModel.questionList.observeAsState(emptyList())
 
    NavHost(
@@ -48,8 +44,15 @@ fun StudyHelperApp(
                viewModel.currQuestionIndex = 0
                navController.navigate(StudyScreen.QUESTION.name)
             },
-            onAddSubject = {
-               subject -> viewModel.addSubject(Subject(title = subject))
+            onAddSubject = { subject ->
+               if (subject.trim() != "") {
+                  viewModel.addSubject(Subject(title = subject))
+               }
+            },
+            onDeleteSubjects = { subjects ->
+               for (subject in subjects) {
+                  viewModel.deleteSubject(subject)
+               }
             }
          )
       }
@@ -70,8 +73,8 @@ fun StudyHelperApp(
 
          QuestionScreen(
             subject = viewModel.selectedSubject.value!!,
-            questionList = questionList, //viewModel.questionList.value ?: listOf(),
-            currQuestionIndex = viewModel.currQuestionIndex, //.coerceIn(0, questionList.size),
+            questionList = questionList,
+            currQuestionIndex = viewModel.currQuestionIndex,
             onUpClick = { navController.popBackStack() },
             onLeftClick = {
                if (viewModel.currQuestionIndex == 0) {
@@ -91,9 +94,6 @@ fun StudyHelperApp(
                navController.navigate(StudyScreen.ADD_QUESTION.name)
             },
             onDeleteClick = {
-               //Log.d("McCown", "currentQuestion = ${viewModel.currQuestionIndex}")
-               //Log.d("McCown", "questionList.size = ${questionList.size}")
-
                // Deleting last question is a special case
                if (viewModel.currQuestionIndex == questionList.size - 1) {
                   viewModel.currQuestionIndex--
@@ -129,17 +129,6 @@ fun StudyHelperApp(
       }
    }
 }
-
-/*
-@Preview(showSystemUi = true)
-@Composable
-fun AppPreview() {
-   StudyHelperTheme {
-      StudyHelperApp()
-   }
-}
-*/
-
 
 @Preview(showBackground = true)
 @Composable

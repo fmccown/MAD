@@ -1,16 +1,12 @@
 package com.zybooks.studyhelper.data
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class StudyRepository private constructor(context: Context) {
@@ -68,19 +64,9 @@ class StudyRepository private constructor(context: Context) {
 
    fun addQuestion(question: Question) {
       CoroutineScope(Dispatchers.IO).launch {
-         Log.d("McCown", "questionDao.addQuestion")
          question.id = questionDao.addQuestion(question)
-         Log.d("McCown", "id = ${question.id}")
       }
    }
-   /*
-   fun addQuestion(question: Question): Job {
-      return CoroutineScope(Dispatchers.IO).launch {
-         Log.d("McCown", "questionDao.addQuestion")
-         question.id = questionDao.addQuestion(question)
-         Log.d("McCown", "id = ${question.id}")
-      }
-   }*/
 
    fun updateQuestion(question: Question) {
       CoroutineScope(Dispatchers.IO).launch {
@@ -94,7 +80,7 @@ class StudyRepository private constructor(context: Context) {
       }
    }
 
-   private suspend fun addStarterData() {
+   private fun addStarterData() {
       var subjectId = subjectDao.addSubject(Subject(title = "Math"))
       questionDao.addQuestion(
          Question(
