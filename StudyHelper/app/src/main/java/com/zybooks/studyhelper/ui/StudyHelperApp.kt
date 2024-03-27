@@ -28,8 +28,7 @@ fun StudyHelperApp(
    viewModel: StudyViewModel = viewModel()
 ) {
    val navController = rememberNavController()
-   //val subjectList by viewModel.subjectList.observeAsState(emptyList())
-   val subjectList by viewModel.getSubjects().observeAsState(emptyList())
+   val subjectList by viewModel.subjectList.observeAsState(emptyList())
    val questionList by viewModel.questionList.observeAsState(emptyList())
 
    NavHost(
@@ -41,7 +40,6 @@ fun StudyHelperApp(
             subjectList = subjectList,
             onSubjectClick = { subject ->
                viewModel.selectedSubject.value = subject
-               viewModel.currQuestionIndex = 0
                navController.navigate(StudyScreen.QUESTION.name)
             },
             onAddSubject = { subject ->
@@ -62,14 +60,8 @@ fun StudyHelperApp(
          Log.d("McCown", "currQuestionIndex = ${viewModel.currQuestionIndex}")
          if (questionList.isNotEmpty() && viewModel.currQuestionIndex == -1) {
             Log.d("McCown", "TOO SMALL, making 0")
-            viewModel.currQuestionIndex = 0
+            //viewModel.currQuestionIndex = 0
          }
-         /*
-         else if (viewModel.currQuestionIndex >= questionList.size) {
-            Log.d("McCown", "TOO LARGE, making ${questionList.size - 1}")
-            //viewModel.currQuestionIndex = questionList.size - 1
-         }
-*/
 
          QuestionScreen(
             subject = viewModel.selectedSubject.value!!,
@@ -77,28 +69,15 @@ fun StudyHelperApp(
             currQuestionIndex = viewModel.currQuestionIndex,
             onUpClick = { navController.popBackStack() },
             onLeftClick = {
-               if (viewModel.currQuestionIndex == 0) {
-                  viewModel.currQuestionIndex = questionList.size - 1
-               } else {
-                  viewModel.currQuestionIndex--
-               }
+               viewModel.prevQuestion()
             },
             onRightClick = {
-               if (viewModel.currQuestionIndex == questionList.size - 1) {
-                  viewModel.currQuestionIndex = 0
-               } else {
-                  viewModel.currQuestionIndex++
-               }
+               viewModel.nextQuestion()
             },
             onAddClick = {
                navController.navigate(StudyScreen.ADD_QUESTION.name)
             },
             onDeleteClick = {
-               // Deleting last question is a special case
-               if (viewModel.currQuestionIndex == questionList.size - 1) {
-                  viewModel.currQuestionIndex--
-               }
-
                viewModel.deleteQuestion(it)
             },
             onEditClick = {
