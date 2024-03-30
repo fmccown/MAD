@@ -15,12 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zybooks.petadoption.data.MAX_AGE
 
 @Composable
 fun SettingsScreen(
-   settingsViewModel: SettingsViewModel,
-   modifier: Modifier = Modifier
+   modifier: Modifier = Modifier,
+   settingsViewModel: SettingsViewModel = viewModel(
+      factory = SettingsViewModel.Factory
+   )
 ) {
    val uiState = settingsViewModel.uiState.collectAsState().value
 

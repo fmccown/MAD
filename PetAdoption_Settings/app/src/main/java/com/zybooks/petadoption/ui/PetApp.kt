@@ -64,9 +64,6 @@ fun PetApp(
    modifier: Modifier = Modifier,
    petViewModel: PetViewModel = viewModel(
       factory = PetViewModel.Factory
-   ),
-   settingsViewModel: SettingsViewModel = viewModel(
-      factory = SettingsViewModel.Factory
    )
 ) {
    //val uiState = petViewModel.uiState.collectAsState().value
@@ -119,9 +116,7 @@ fun PetApp(
             )
          }
          composable(route = PetScreen.SETTINGS.name) {
-            SettingsScreen(
-               settingsViewModel
-            )
+            SettingsScreen()
          }
       }
    }
