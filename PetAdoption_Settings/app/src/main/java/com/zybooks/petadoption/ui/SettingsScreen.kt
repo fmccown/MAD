@@ -42,7 +42,7 @@ fun SettingsScreen(
       )
       SettingSlider(
          caption = "Maximum age",
-         min = 0,
+         min = 1,
          max = MAX_AGE,
          currentValue = uiState.maxAge,
          onValueChange = settingsViewModel::setMaxAge

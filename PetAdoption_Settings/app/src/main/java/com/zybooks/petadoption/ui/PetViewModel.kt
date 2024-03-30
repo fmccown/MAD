@@ -15,7 +15,10 @@ import com.zybooks.petadoption.data.AppSettingsRepo
 import com.zybooks.petadoption.data.DataSource
 import com.zybooks.petadoption.data.Pet
 import com.zybooks.petadoption.data.PetType
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class PetViewModel(
@@ -32,13 +35,18 @@ class PetViewModel(
    }
 
    //val petList = DataSource().loadPets()
+
+   // LiveData solution
+   /*
    private val _petList = MutableLiveData<List<Pet>>()
    val petList: LiveData<List<Pet>> get() = _petList
+*/
 
    // Only downside is that it is exposed as mutable, so could be changed outside
    //val petList = MutableLiveData<List<Pet>>()
 
    // This is to use LiveData instead of Flows
+   /*
    init {
       viewModelScope.launch {
          combine(
@@ -60,7 +68,26 @@ class PetViewModel(
          }
       }
    }
+*/
 
+   val petList: StateFlow<List<Pet>> =
+      combine(
+         appSettingsRepo.includeCats,
+         appSettingsRepo.includeDogs,
+         appSettingsRepo.includeOther,
+         appSettingsRepo.maxAge
+      ) { includeCats, includeDogs, includeOther, maxAge ->
+         DataSource().loadPets().filter { pet ->
+            ((includeCats && pet.type == PetType.CAT) ||
+                  (includeDogs && pet.type == PetType.DOG) ||
+                  (includeOther && pet.type == PetType.OTHER)) &&
+                  pet.age <= maxAge
+         }
+      }.stateIn(
+         scope = viewModelScope,
+         started = SharingStarted.WhileSubscribed(5000),
+         initialValue = emptyList()
+      )
    /*
    val uiState: StateFlow<UiState> =
       combine(
@@ -98,6 +125,7 @@ class PetViewModel(
    var selectedPet by mutableStateOf<Pet?>(null)
 }
 
+/*
 data class UiState (
    val petList: List<Pet>
-)
+)*/
