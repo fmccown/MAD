@@ -16,8 +16,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,7 +29,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -41,6 +45,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.zybooks.petadoption.data.AppSettingsRepo
 import com.zybooks.petadoption.data.DataSource
 import com.zybooks.petadoption.data.Pet
 import com.zybooks.petadoption.data.PetGender
@@ -49,26 +54,38 @@ import com.zybooks.petadoption.ui.theme.PetAdoptionTheme
 enum class PetScreen(val title: String) {
    LIST("Find a Friend"),
    DETAIL("Details"),
-   ADOPT("Thank You!")
+   ADOPT("Thank You!"),
+   SETTINGS("Settings")
 }
 
 @Composable
 fun PetApp(
    modifier: Modifier = Modifier,
-   petViewModel: PetViewModel = viewModel()
+   petViewModel: PetViewModel = viewModel(
+      factory = PetViewModel.Factory
+   ),
+   settingsViewModel: SettingsViewModel = viewModel(
+      factory = SettingsViewModel.Factory
+   )
 ) {
+   //val uiState = petViewModel.uiState.collectAsState().value
+   //val petList = uiState.petList
+   val petList = petViewModel.petList.observeAsState(emptyList())
    val navController = rememberNavController()
    val backStackEntry by navController.currentBackStackEntryAsState()
    val currentScreen = PetScreen.valueOf(
       backStackEntry?.destination?.route ?: PetScreen.LIST.name
    )
 
+   println("RENDER PetApp with petList size ${petList.value?.size}")
+
    Scaffold(
       topBar = {
          PetAppBar(
             currentScreen = currentScreen,
             canNavigateBack = navController.previousBackStackEntry != null,
-            onUpClick = { navController.navigateUp() }
+            onUpClick = { navController.navigateUp() },
+            onSettingsClick = { navController.navigate(PetScreen.SETTINGS.name) }
          )
       }
    ) { innerPadding ->
@@ -79,7 +96,7 @@ fun PetApp(
       ) {
          composable(route = PetScreen.LIST.name) {
             ListScreen(
-               petList = petViewModel.petList,
+               petList = petList.value,
                onImageClick = {
                   petViewModel.selectedPet = it
                   navController.navigate(PetScreen.DETAIL.name)
@@ -99,6 +116,11 @@ fun PetApp(
                pet = petViewModel.selectedPet!!
             )
          }
+         composable(route = PetScreen.SETTINGS.name) {
+            SettingsScreen(
+               settingsViewModel
+            )
+         }
       }
    }
 }
@@ -109,6 +131,7 @@ fun PetAppBar(
    currentScreen: PetScreen,
    canNavigateBack: Boolean,
    onUpClick: () -> Unit,
+   onSettingsClick: () -> Unit,
    modifier: Modifier = Modifier
 ) {
    TopAppBar(
@@ -122,6 +145,14 @@ fun PetAppBar(
             IconButton(onClick = onUpClick) {
                Icon(Icons.Filled.ArrowBack,"Back")
             }
+         }
+      },
+      actions = {
+         IconButton(onClick = onSettingsClick) {
+            Icon(
+               Icons.Default.Settings,
+               contentDescription = "Settings"
+            )
          }
       }
    )
