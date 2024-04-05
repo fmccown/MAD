@@ -2,17 +2,17 @@ package com.zybooks.studyhelper.ui
 
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.zybooks.studyhelper.data.Subject
+import androidx.navigation.navArgument
+import com.zybooks.studyhelper.ui.question.QuestionAddScreen
+import com.zybooks.studyhelper.ui.question.QuestionEditScreen
+import com.zybooks.studyhelper.ui.question.QuestionScreen
+import com.zybooks.studyhelper.ui.subject.SubjectScreen
 import com.zybooks.studyhelper.ui.theme.StudyHelperTheme
 
 enum class StudyScreen() {
@@ -25,11 +25,11 @@ enum class StudyScreen() {
 @Composable
 fun StudyHelperApp(
    modifier: Modifier = Modifier,
-   viewModel: StudyViewModel = viewModel()
+   //viewModel: StudyViewModel = viewModel(
+   //   factory = StudyViewModel.Factory
+   //)
 ) {
    val navController = rememberNavController()
-   val subjectList by viewModel.subjectList.observeAsState(emptyList())
-   val questionList by viewModel.questionList.observeAsState(emptyList())
 
    NavHost(
       navController = navController,
@@ -37,73 +37,56 @@ fun StudyHelperApp(
    ) {
       composable(route = StudyScreen.SUBJECT.name) {
          SubjectScreen(
-            subjectList = subjectList,
             onSubjectClick = { subject ->
-               viewModel.selectedSubject.value = subject
-               navController.navigate(StudyScreen.QUESTION.name)
-            },
-            onAddSubject = { subject ->
-               if (subject.trim() != "") {
-                  viewModel.addSubject(Subject(title = subject))
-               }
-            },
-            onDeleteSubjects = { subjects ->
-               for (subject in subjects) {
-                  viewModel.deleteSubject(subject)
-               }
+               navController.navigate("${StudyScreen.QUESTION.name}/${subject.id}")
             }
          )
       }
-      composable(route = StudyScreen.QUESTION.name) {
-         // tHIS MAY HAVE DONE IT
-         Log.d("McCown", "Rendering Questions screen")
-         Log.d("McCown", "currQuestionIndex = ${viewModel.currQuestionIndex}")
-         if (questionList.isNotEmpty() && viewModel.currQuestionIndex == -1) {
-            Log.d("McCown", "TOO SMALL, making 0")
-            //viewModel.currQuestionIndex = 0
-         }
 
+      composable(
+         route = "${StudyScreen.QUESTION.name}/{subjectId}",
+
+         // Specify subject ID argument so QuestionViewModel can determine selected subject
+         arguments = listOf(navArgument("subjectId") {
+            type = NavType.LongType
+         })
+      ) { backStackEntry ->
+         val subjectId = backStackEntry.arguments?.getLong("subjectId")
          QuestionScreen(
-            subject = viewModel.selectedSubject.value!!,
-            questionList = questionList,
-            currQuestionIndex = viewModel.currQuestionIndex,
             onUpClick = { navController.popBackStack() },
-            onLeftClick = {
-               viewModel.prevQuestion()
-            },
-            onRightClick = {
-               viewModel.nextQuestion()
-            },
             onAddClick = {
-               navController.navigate(StudyScreen.ADD_QUESTION.name)
+               navController.navigate("${StudyScreen.ADD_QUESTION.name}/${subjectId}")
             },
-            onDeleteClick = {
-               viewModel.deleteQuestion(it)
-            },
-            onEditClick = {
-               navController.navigate(StudyScreen.EDIT_QUESTION.name)
+            onEditClick = { questionId ->
+               navController.navigate("${StudyScreen.EDIT_QUESTION.name}/${questionId}")
             }
          )
       }
-      composable(route = StudyScreen.ADD_QUESTION.name) {
-         AddEditQuestionScreen(
-            subject = viewModel.selectedSubject.value!!,
+      composable(
+         route = "${StudyScreen.ADD_QUESTION.name}/{subjectId}",
+         arguments = listOf(navArgument("subjectId") {
+            type = NavType.LongType
+         })
+      ) {
+         QuestionAddScreen(
             onUpClick = { navController.popBackStack() },
             onSaveClick = {
-               viewModel.addQuestion(it)
                navController.popBackStack()
+               // TODO: Navigate to new question
             }
          )
       }
-      composable(route = StudyScreen.EDIT_QUESTION.name) {
-         AddEditQuestionScreen(
-            subject = viewModel.selectedSubject.value!!,
-            question = questionList[viewModel.currQuestionIndex],
+      composable(
+         route = "${StudyScreen.EDIT_QUESTION.name}/{questionId}",
+
+         // Specify subject ID argument so QuestionViewModel can determine selected subject
+         arguments = listOf(navArgument("questionId") {
+            type = NavType.LongType
+         })
+      ) {
+         QuestionEditScreen(
             onUpClick = { navController.popBackStack() },
-            onSaveClick = {
-               viewModel.updateQuestion(it)
-               navController.popBackStack()
-            }
+            onSaveClick = { navController.popBackStack() }
          )
       }
    }

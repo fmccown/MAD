@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class StudyRepository private constructor(context: Context) {
@@ -42,9 +43,9 @@ class StudyRepository private constructor(context: Context) {
    private val subjectDao = database.subjectDao()
    private val questionDao = database.questionDao()
 
-   fun getSubject(subjectId: Long): LiveData<Subject?> = subjectDao.getSubject(subjectId)
+   fun getSubject(subjectId: Long) = subjectDao.getSubject(subjectId)
 
-   fun getSubjects(): LiveData<List<Subject>> = subjectDao.getSubjects()
+   fun getSubjects() = subjectDao.getSubjects()
 
    fun addSubject(subject: Subject) {
       CoroutineScope(Dispatchers.IO).launch {
@@ -58,9 +59,9 @@ class StudyRepository private constructor(context: Context) {
       }
    }
 
-   fun getQuestion(questionId: Long): LiveData<Question?> = questionDao.getQuestion(questionId)
+   fun getQuestion(questionId: Long) = questionDao.getQuestion(questionId)
 
-   fun getQuestions(subjectId: Long): LiveData<List<Question>> = questionDao.getQuestions(subjectId)
+   fun getQuestions(subjectId: Long) = questionDao.getQuestions(subjectId)
 
    fun addQuestion(question: Question) {
       CoroutineScope(Dispatchers.IO).launch {
