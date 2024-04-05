@@ -152,5 +152,4 @@ fun LazyRowAndColumnDemo() {
          }
       }
    }
-
 }
