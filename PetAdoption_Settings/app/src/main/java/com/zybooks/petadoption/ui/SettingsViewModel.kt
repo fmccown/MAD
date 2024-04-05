@@ -1,21 +1,13 @@
 package com.zybooks.petadoption.ui
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.zybooks.petadoption.PetAdoptionApp
+import com.zybooks.petadoption.PetAdoptionApplication
 import com.zybooks.petadoption.data.AppSettingsRepo
-import com.zybooks.petadoption.data.DataSource
 import com.zybooks.petadoption.data.MAX_AGE
-import com.zybooks.petadoption.data.Pet
-import com.zybooks.petadoption.data.PetType
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -29,7 +21,7 @@ class SettingsViewModel(
    companion object {
       val Factory: ViewModelProvider.Factory = viewModelFactory {
          initializer {
-            val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as PetAdoptionApp)
+            val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as PetAdoptionApplication)
             SettingsViewModel(application.appSettingsRepo)
          }
       }

@@ -11,7 +11,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
    name = "app_prefs"
 )
 
-class PetAdoptionApp: Application() {
+class PetAdoptionApplication: Application() {
    lateinit var appSettingsRepo: AppSettingsRepo
 
    override fun onCreate() {
