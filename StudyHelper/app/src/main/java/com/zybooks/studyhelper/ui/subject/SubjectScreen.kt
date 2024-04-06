@@ -52,10 +52,9 @@ fun SubjectScreen(
    ),
    onSubjectClick: (Subject) -> Unit = {}
 ) {
-   val uiState = viewModel.uiState
-   val subjectList = uiState.subjectList.collectAsStateWithLifecycle(emptyList())
+   val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
-   if (uiState.isSubjectDialogVisible) {
+   if (uiState.value.isSubjectDialogVisible) {
       AddSubjectDialog(
          onDismissRequest = {
             viewModel.hideSubjectDialog()
@@ -72,13 +71,9 @@ fun SubjectScreen(
    Scaffold(
       topBar = {
          SubjectAppBar(
-            inSelectionMode = uiState.inSelectionMode,
-            onDeleteClick = {
-               viewModel.deleteSelectedSubjects()
-            },
-            onUpClick = {
-               viewModel.stopDeleting()
-            }
+            inSelectionMode = uiState.value.inSelectionMode,
+            onDeleteClick = viewModel::deleteSelectedSubjects,
+            onUpClick = viewModel::stopDeleting
          )
       },
       floatingActionButton = {
@@ -90,12 +85,12 @@ fun SubjectScreen(
       }
    ) { innerPadding ->
       SubjectGrid(
-         subjectList = subjectList.value,
-         modifier = modifier.padding(innerPadding),
-         inSelectionMode = uiState.inSelectionMode,
-         selectedSubjects = uiState.selectedSubjects,
+         subjectList = uiState.value.subjectList,
+         inSelectionMode = uiState.value.inSelectionMode,
+         selectedSubjects = uiState.value.selectedSubjects,
          onSubjectClick = onSubjectClick,
-         onSubjectLongClick = { viewModel.selectSubjectForDeleting(it) }
+         onSubjectLongClick = { viewModel.selectSubjectForDeleting(it) },
+         modifier = modifier.padding(innerPadding)
       )
    }
 }
@@ -104,9 +99,9 @@ fun SubjectScreen(
 @Composable
 fun SubjectGrid(
    subjectList: List<Subject>,
-   modifier: Modifier = Modifier,
    onSubjectClick: (Subject) -> Unit,
    onSubjectLongClick: (Subject) -> Unit,
+   modifier: Modifier = Modifier,
    inSelectionMode: Boolean = false,
    selectedSubjects: Set<Subject> = emptySet()
 ) {

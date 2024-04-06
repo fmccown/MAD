@@ -35,7 +35,7 @@ class QuestionEditViewModel(
 
    private val studyRepo = StudyRepository.getInstance(context)
 
-   // Get from composable()'s argument list and load from database
+   // Get from composable()'s argument list
    private val questionId: Long = checkNotNull(savedStateHandle["questionId"])
 
    var question by mutableStateOf(Question(0))

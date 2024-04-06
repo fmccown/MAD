@@ -62,10 +62,7 @@ fun QuestionAddScreen(
       QuestionEntry(
          question = viewModel.question,
          onQuestionChange = { viewModel.changeQuestion(it) },
-         innerPadding = innerPadding,
-         modifier = modifier
-         //   .padding(innerPadding)
-         //   .fillMaxSize(),
+         modifier = modifier.padding(innerPadding).fillMaxSize()
       )
    }
 }
@@ -84,25 +81,23 @@ fun PreviewAddQuestionScreen() {
 fun QuestionEntry(
    question: Question,
    onQuestionChange: (Question) -> Unit,
-   modifier: Modifier = Modifier,
-   innerPadding: PaddingValues
+   modifier: Modifier = Modifier
 ) {
    val focusManager = LocalFocusManager.current
 
    Column(
-      modifier = modifier
-         .padding(innerPadding)
-         .fillMaxSize(),
+      modifier = modifier,
       verticalArrangement = Arrangement.SpaceBetween,
    ) {
-      Row(modifier = modifier
+      Row(modifier = Modifier
          .weight(1f)
-         .fillMaxWidth()) {
+         .fillMaxWidth()
+      ) {
          Text(
             text = "Q",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 80.sp,
-            modifier = modifier.padding(8.dp)
+            modifier = Modifier.padding(8.dp)
          )
          TextField(
             value = question.text,
@@ -111,17 +106,19 @@ fun QuestionEntry(
             keyboardOptions = KeyboardOptions(
                imeAction = ImeAction.Next
             ),
-            modifier = modifier.padding(8.dp)
+            modifier = Modifier.padding(8.dp)
          )
       }
-      Row(modifier = modifier
+      Row(
+         modifier = Modifier
          .weight(1f)
-         .fillMaxWidth()) {
+         .fillMaxWidth()
+      ) {
          Text(
             text = "A",
             color = MaterialTheme.colorScheme.primary,
             fontSize = 80.sp,
-            modifier = modifier.padding(8.dp)
+            modifier = Modifier.padding(8.dp)
          )
          TextField(
             value = question.answer,
@@ -134,7 +131,7 @@ fun QuestionEntry(
             keyboardOptions = KeyboardOptions(
                imeAction = ImeAction.Done
             ),
-            modifier = modifier.padding(8.dp)
+            modifier = Modifier.padding(8.dp)
          )
       }
    }

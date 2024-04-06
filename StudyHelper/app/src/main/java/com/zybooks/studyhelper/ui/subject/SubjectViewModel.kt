@@ -13,8 +13,11 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.zybooks.studyhelper.StudyHelperApplication
 import com.zybooks.studyhelper.data.StudyRepository
 import com.zybooks.studyhelper.data.Subject
+import com.zybooks.studyhelper.ui.question.QuestionScreenUiState
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
 
@@ -31,16 +34,30 @@ class SubjectViewModel(context: Context) : ViewModel() {
 
    private val studyRepo = StudyRepository.getInstance(context)
 
-   var uiState by mutableStateOf(SubjectScreenUiState(
-      subjectList = studyRepo.getSubjects().filterNotNull()
-         .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = emptyList()
-         )
+   private val selectedSubjects = MutableStateFlow(emptySet<Subject>())
+   private val inSelectionMode = MutableStateFlow(false)
+   private val isSubjectDialogVisible = MutableStateFlow(false)
+
+   val uiState: StateFlow<SubjectScreenUiState> = transformedFlow()
+      .stateIn(
+         scope = viewModelScope,
+         started = SharingStarted.WhileSubscribed(5000L),
+         initialValue = SubjectScreenUiState(),
       )
-   )
-      private set
+
+   private fun transformedFlow() = combine(
+      studyRepo.getSubjects().filterNotNull(),
+      selectedSubjects,
+      inSelectionMode,
+      isSubjectDialogVisible
+   ) { subjects, selectSubs, inSelectMode, dialogVisible ->
+      SubjectScreenUiState(
+         subjectList = subjects,
+         selectedSubjects = selectSubs,
+         inSelectionMode = inSelectMode,
+         isSubjectDialogVisible = dialogVisible
+      )
+   }
 
    fun addSubject(title: String) {
       val subTitle = title.trim()
@@ -50,48 +67,39 @@ class SubjectViewModel(context: Context) : ViewModel() {
    }
 
    fun selectSubjectForDeleting(subject: Subject) {
-      val selected = uiState.selectedSubjects.contains(subject)
-      val selectedSubjects = if (selected) {
-         uiState.selectedSubjects.minus(subject)
+      val selected = uiState.value.selectedSubjects.contains(subject)
+      selectedSubjects.value = if (selected) {
+         uiState.value.selectedSubjects.minus(subject)
       } else {
-         uiState.selectedSubjects.plus(subject)
+         uiState.value.selectedSubjects.plus(subject)
       }
 
-      uiState = uiState.copy(
-         selectedSubjects = selectedSubjects,
-         inSelectionMode = selectedSubjects.isNotEmpty()
-      )
+      inSelectionMode.value = selectedSubjects.value.isNotEmpty()
    }
 
    fun stopDeleting() {
-      uiState = uiState.copy(
-         selectedSubjects = emptySet(),
-         inSelectionMode = false
-      )
+      selectedSubjects.value = emptySet()
+      inSelectionMode.value = false
    }
 
    fun deleteSelectedSubjects() {
-      for (subject in uiState.selectedSubjects) {
+      for (subject in uiState.value.selectedSubjects) {
          studyRepo.deleteSubject(subject)
       }
       stopDeleting()
    }
 
    fun showSubjectDialog() {
-      uiState = uiState.copy(
-         isSubjectDialogVisible = true
-      )
+      isSubjectDialogVisible.value = true
    }
 
    fun hideSubjectDialog() {
-      uiState = uiState.copy(
-         isSubjectDialogVisible = false
-      )
+      isSubjectDialogVisible.value = false
    }
 }
 
 data class SubjectScreenUiState(
-   val subjectList: StateFlow<List<Subject>>,
+   val subjectList: List<Subject> = emptyList(),
    val selectedSubjects: Set<Subject> = emptySet(),
    val inSelectionMode: Boolean = false,
    val isSubjectDialogVisible: Boolean = false

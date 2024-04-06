@@ -1,5 +1,7 @@
 package com.zybooks.studyhelper.ui.question
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Done
@@ -49,22 +51,7 @@ fun QuestionEditScreen(
       QuestionEntry(
          question = question,
          onQuestionChange = { viewModel.changeQuestion(it) },
-         innerPadding = innerPadding
-         //modifier = modifier
-         //   .padding(innerPadding)
-         //   .fillMaxSize(),
-      )
-   }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewQuestionEditScreen() {
-   val q = Question(0, "What is 2 + 2?", "4")
-   StudyHelperTheme {
-      QuestionEditScreen(
-         //questionId = 0L
-         //subject = Subject(0, "History")
+         modifier = modifier.padding(innerPadding).fillMaxSize(),
       )
    }
 }
