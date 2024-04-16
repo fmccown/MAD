@@ -19,7 +19,7 @@ class ToDoViewModel : ViewModel() {
    }
 
    val archivedTasksExist: Boolean
-      get() = archivedTasks.count() > 0
+      get() = archivedTasks.isNotEmpty()
 
    fun archiveTask(task: Task) {
       // Remove from current task list but archive for later
