@@ -83,40 +83,39 @@ fun ToDoScreen(
          LazyColumn {
             items(
                items = todoViewModel.taskList,
-               key = { task -> task.id },
-               itemContent = { task ->
-                  val currentTask by rememberUpdatedState(task)
-                  val dismissState = rememberDismissState(
-                     confirmValueChange = {
-                        when (it) {
-                           DismissValue.DismissedToEnd -> {
-                              todoViewModel.deleteTask(currentTask)
-                              true
-                           }
-                           DismissValue.DismissedToStart -> {
-                              todoViewModel.archiveTask(currentTask)
-                              true
-                           }
-                           else -> false
+               key = { task -> task.id }
+            ) { task ->
+               val currentTask by rememberUpdatedState(task)
+               val dismissState = rememberDismissState(
+                  confirmValueChange = {
+                     when (it) {
+                        DismissValue.DismissedToEnd -> {
+                           todoViewModel.deleteTask(currentTask)
+                           true
                         }
+                        DismissValue.DismissedToStart -> {
+                           todoViewModel.archiveTask(currentTask)
+                           true
+                        }
+                        else -> false
                      }
-                  )
+                  }
+               )
 
-                  SwipeToDismiss(
-                     state = dismissState,
-                     background = { SwipeBackground(dismissState) },
-                     modifier = Modifier
-                        .padding(vertical = 1.dp)
-                        .animateItemPlacement(),
-                     dismissContent = {
-                        TaskCard(
-                           task = task,
-                           toggleCompleted = todoViewModel::toggleTaskCompleted
-                        )
-                     }
-                  )
-               }
-            )
+               SwipeToDismiss(
+                  state = dismissState,
+                  background = { SwipeBackground(dismissState) },
+                  modifier = Modifier
+                     .padding(vertical = 1.dp)
+                     .animateItemPlacement(),
+                  dismissContent = {
+                     TaskCard(
+                        task = task,
+                        toggleCompleted = todoViewModel::toggleTaskCompleted
+                     )
+                  }
+               )
+            }
          }
       }
    }
