@@ -40,6 +40,8 @@ fun TimerScreen(
             .size(240.dp),
          contentAlignment = Alignment.Center
       ) {
+         // TODO: Add AnimatedTimeIndicator here
+
          Text(
             text = timerText(timerViewModel.remainingMillis),
             fontSize = 40.sp,
