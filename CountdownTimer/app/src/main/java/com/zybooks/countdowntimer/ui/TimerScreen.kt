@@ -1,6 +1,9 @@
 package com.zybooks.countdowntimer.ui
 
 import android.widget.NumberPicker
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,14 +12,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,6 +47,11 @@ fun TimerScreen(
             .size(240.dp),
          contentAlignment = Alignment.Center
       ) {
+         if (timerViewModel.isRunning) {
+            AnimatedTimeIndicator(
+               timeDuration = timerViewModel.totalMillis.toInt()
+            )
+         }
          Text(
             text = timerText(timerViewModel.remainingMillis),
             fontSize = 40.sp,
@@ -85,6 +97,32 @@ fun timerText(timeInMillis: Long): String {
    return String.format(
       Locale.getDefault(),"%02d:%02d:%02d",
       duration.inWholeHours, duration.inWholeMinutes % 60, duration.inWholeSeconds % 60)
+}
+
+@Composable
+fun AnimatedTimeIndicator(
+   timeDuration: Int = 1000
+) {
+   var progress by remember { mutableFloatStateOf(1f) }
+   val progressAnimation by animateFloatAsState(
+      targetValue = progress,
+      animationSpec = tween(
+         durationMillis = timeDuration,
+         easing = LinearEasing
+      ),
+      label = "Progress indicator",
+   )
+
+   CircularProgressIndicator(
+      progress = progressAnimation,
+      modifier = Modifier.size(240.dp),
+      color = Color.Magenta,
+      strokeWidth = 20.dp,
+   )
+
+   LaunchedEffect(Unit) {
+      progress = 0f
+   }
 }
 
 @Composable
