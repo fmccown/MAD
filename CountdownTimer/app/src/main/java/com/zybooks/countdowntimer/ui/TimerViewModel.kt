@@ -40,27 +40,36 @@ class TimerViewModel : ViewModel() {
       selectedSecond = sec
    }
 
-fun startTimer() {
-   // Convert hours, minutes, and seconds to milliseconds
-   totalMillis = (selectedHour * 60 * 60 + selectedMinute * 60 + selectedSecond) * 1000L
+   fun startTimer() {
+      // Convert hours, minutes, and seconds to milliseconds
+      totalMillis = (selectedHour * 60 * 60 + selectedMinute * 60 + selectedSecond) * 1000L
 
-   // Start coroutine that makes the timer count down
-   if (totalMillis > 0) {
-      isRunning = true
-      remainingMillis = totalMillis
+      // Start coroutine that makes the timer count down
+      if (totalMillis > 0) {
+         isRunning = true
+         remainingMillis = totalMillis
 
-      timerJob = viewModelScope.launch {
-         while (remainingMillis > 0) {
-            delay(1000)
-            remainingMillis -= 1000
+         timerJob = viewModelScope.launch {
+            while (remainingMillis > 0) {
+               delay(1000)
+               remainingMillis -= 1000
+            }
+
+            isRunning = false
          }
-
-         isRunning = false
       }
    }
-}
 
    fun cancelTimer() {
-      // TODO: Cancel the timer
+      if (isRunning) {
+         timerJob?.cancel()
+         isRunning = false
+         remainingMillis = 0
+      }
+   }
+
+   override fun onCleared() {
+      super.onCleared()
+      timerJob?.cancel()
    }
 }
