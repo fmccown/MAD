@@ -5,8 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.zybooks.todolist.Task
 
 class ToDoViewModel : ViewModel() {
-   var taskList = mutableStateListOf<Task>()
-      private set
+   val taskList = mutableStateListOf<Task>()
 
    private var archivedTasks = mutableStateListOf<Task>()
 

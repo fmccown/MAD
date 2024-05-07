@@ -31,35 +31,20 @@ fun ToDoScreen(
    modifier: Modifier = Modifier,
    todoViewModel: ToDoViewModel = viewModel()
 ) {
-
-      Column(
-         modifier = Modifier
-            .fillMaxSize()
-      ) {
-
-//         todoViewModel.addTask("Vacuum kitchen")
-//         todoViewModel.addTask("Check porch for packages")
-//         todoViewModel.addTask("Buy groceries")
-//         todoViewModel.addTask("Walk dog")
-//         todoViewModel.addTask("Scrub shower stall")
-//         todoViewModel.addTask("Water plants")
-//         todoViewModel.addTask("Send email to Grandma")
-//         todoViewModel.addTask("Remove useless apps from phone")
-//         todoViewModel.addTask("Practice guitar")
-//         todoViewModel.addTask("Fix bike tire")
-//         todoViewModel.addTask("Study for this class")
-
-         AddTaskInput { todoViewModel.addTask(it) }
-
-         LazyColumn {
-            items(todoViewModel.taskList) { task ->
-               TaskCard(
-                  task = task,
-                  toggleCompleted = todoViewModel::toggleTaskCompleted
-               )
-            }
+   Column(
+      modifier = Modifier
+         .fillMaxSize()
+   ) {
+      AddTaskInput { todoViewModel.addTask(it) }
+      LazyColumn {
+         items(todoViewModel.taskList) { task ->
+            TaskCard(
+               task = task,
+               toggleCompleted = todoViewModel::toggleTaskCompleted
+            )
          }
       }
+   }
 }
 
 @Composable
@@ -68,37 +53,12 @@ fun TaskCard(
    toggleCompleted: (Task) -> Unit,
    modifier: Modifier = Modifier
 ) {
-//   Card(
-//      modifier = modifier
-//         .padding(8.dp)
-//         .fillMaxWidth(),
-//      colors = CardDefaults.cardColors(
-//         containerColor = MaterialTheme.colorScheme.surfaceVariant
-//      )
-//   ) {
-//      Row(
-//         modifier = modifier.fillMaxWidth(),
-//         verticalAlignment = Alignment.CenterVertically,
-//         horizontalArrangement = Arrangement.SpaceBetween
-//      ) {
-//         Text(
-//            text = task.body,
-//            modifier = modifier.padding(start = 12.dp),
-//            color = if (task.completed) Color.Gray else Color.Black
-//         )
-//         Checkbox(
-//            checked = task.completed,
-//            onCheckedChange = {
-//               toggleCompleted(task)
-//            }
-//         )
-//      }
-//   }
    Text(
       text = task.body,
       fontSize = 26.sp,
       modifier = modifier.padding(start = 12.dp),
-   )}
+   )
+}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
