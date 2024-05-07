@@ -14,9 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.zybooks.countdowntimer.ui.TimerScreen
+import com.zybooks.countdowntimer.ui.TimerViewModel
 import com.zybooks.countdowntimer.ui.theme.CountdownTimerTheme
 
 class MainActivity : ComponentActivity() {
+
+   private val timerViewModel = TimerViewModel()
+
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       enableEdgeToEdge()
@@ -26,7 +30,7 @@ class MainActivity : ComponentActivity() {
                modifier = Modifier.fillMaxSize(),
                color = MaterialTheme.colorScheme.background
             ) {
-               TimerScreen()
+               TimerScreen(timerViewModel = timerViewModel)
             }
          }
       }
