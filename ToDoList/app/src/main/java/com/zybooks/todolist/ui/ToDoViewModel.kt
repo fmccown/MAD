@@ -7,7 +7,7 @@ import com.zybooks.todolist.Task
 class ToDoViewModel : ViewModel() {
    val taskList = mutableStateListOf<Task>()
 
-   private var archivedTasks = mutableStateListOf<Task>()
+   private val archivedTasks = mutableListOf<Task>()
 
    fun addTask(body: String) {
       taskList.add(Task(body = body))
