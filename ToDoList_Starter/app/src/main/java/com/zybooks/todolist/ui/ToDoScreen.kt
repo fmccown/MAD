@@ -79,7 +79,8 @@ fun AddTaskInput(onEnterTask: (String) -> Unit) {
             onEnterTask(taskBody)
             taskBody = ""
             keyboardController?.hide()
-         }),
+         }
+      )
    )
 }
 
