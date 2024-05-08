@@ -64,8 +64,6 @@ fun TaskCard(
 @Composable
 fun AddTaskInput(onEnterTask: (String) -> Unit) {
    val keyboardController = LocalSoftwareKeyboardController.current
-
-   // state for our new task body
    var taskBody by remember { mutableStateOf("") }
 
    OutlinedTextField(
