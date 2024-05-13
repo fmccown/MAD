@@ -75,7 +75,7 @@ fun ToDoScreen(
             .fillMaxSize()
             .padding(innerPadding),
       ) {
-         AddTaskInput { todoViewModel.addTask(it) }
+         AddTaskInput(todoViewModel::addTask)
          TaskList(
             taskList = todoViewModel.taskList,
             onDeleteTask = todoViewModel::deleteTask,
