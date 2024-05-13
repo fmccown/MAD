@@ -54,9 +54,6 @@ import com.zybooks.todolist.R
 import com.zybooks.todolist.Task
 import com.zybooks.todolist.ui.theme.ToDoListTheme
 
-@OptIn(
-   ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class
-)
 @Composable
 fun ToDoScreen(
    modifier: Modifier = Modifier,
@@ -79,44 +76,61 @@ fun ToDoScreen(
             .padding(innerPadding),
       ) {
          AddTaskInput { todoViewModel.addTask(it) }
+         TaskList(
+            taskList = todoViewModel.taskList,
+            onDeleteTask = todoViewModel::deleteTask,
+            onArchiveTask = todoViewModel::archiveTask,
+            onToggleTaskComplete = todoViewModel::toggleTaskCompleted
+         )
+      }
+   }
+}
 
-         LazyColumn {
-            items(
-               items = todoViewModel.taskList,
-               key = { task -> task.id }
-            ) { task ->
-               val currentTask by rememberUpdatedState(task)
-               val dismissState = rememberDismissState(
-                  confirmValueChange = {
-                     when (it) {
-                        DismissValue.DismissedToEnd -> {
-                           todoViewModel.deleteTask(currentTask)
-                           true
-                        }
-                        DismissValue.DismissedToStart -> {
-                           todoViewModel.archiveTask(currentTask)
-                           true
-                        }
-                        else -> false
-                     }
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@Composable
+fun TaskList(
+   taskList: List<Task>,
+   onDeleteTask: (Task) -> Unit,
+   onArchiveTask: (Task) -> Unit,
+   onToggleTaskComplete: (Task) -> Unit
+) {
+   LazyColumn {
+      items(
+         items = taskList,
+         key = { task -> task.id }
+      ) { task ->
+         val currentTask by rememberUpdatedState(task)
+         val dismissState = rememberDismissState(
+            confirmValueChange = {
+               when (it) {
+                  DismissValue.DismissedToEnd -> {
+                     onDeleteTask(currentTask)
+                     true
                   }
-               )
 
-               SwipeToDismiss(
-                  state = dismissState,
-                  background = { SwipeBackground(dismissState) },
-                  modifier = Modifier
-                     .padding(vertical = 1.dp)
-                     .animateItemPlacement(),
-                  dismissContent = {
-                     TaskCard(
-                        task = task,
-                        toggleCompleted = todoViewModel::toggleTaskCompleted
-                     )
+                  DismissValue.DismissedToStart -> {
+                     onArchiveTask(currentTask)
+                     true
                   }
+
+                  else -> false
+               }
+            }
+         )
+
+         SwipeToDismiss(
+            state = dismissState,
+            background = { SwipeBackground(dismissState) },
+            modifier = Modifier
+               .padding(vertical = 1.dp)
+               .animateItemPlacement(),
+            dismissContent = {
+               TaskCard(
+                  task = task,
+                  toggleCompleted = onToggleTaskComplete
                )
             }
-         }
+         )
       }
    }
 }
