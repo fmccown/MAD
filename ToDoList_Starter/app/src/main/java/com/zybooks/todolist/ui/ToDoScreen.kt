@@ -32,32 +32,36 @@ fun ToDoScreen(
    todoViewModel: ToDoViewModel = viewModel()
 ) {
    Column(
-      modifier = Modifier
+      modifier = modifier
          .fillMaxSize()
    ) {
-      AddTaskInput { todoViewModel.addTask(it) }
-      LazyColumn {
-         items(todoViewModel.taskList) { task ->
-            TaskCard(
-               task = task,
-               toggleCompleted = todoViewModel::toggleTaskCompleted
-            )
-         }
-      }
+      AddTaskInput(todoViewModel::addTask)
+      TaskList(
+         taskList = todoViewModel.taskList,
+         onDeleteTask = todoViewModel::deleteTask,
+         onArchiveTask = todoViewModel::archiveTask,
+         onToggleTaskComplete = todoViewModel::toggleTaskCompleted
+      )
    }
 }
 
 @Composable
-fun TaskCard(
-   task: Task,
-   toggleCompleted: (Task) -> Unit,
-   modifier: Modifier = Modifier
+fun TaskList(
+   taskList: List<Task>,
+   onDeleteTask: (Task) -> Unit,
+   onArchiveTask: (Task) -> Unit,
+   onToggleTaskComplete: (Task) -> Unit
 ) {
-   Text(
-      text = task.body,
-      fontSize = 26.sp,
-      modifier = modifier.padding(start = 12.dp),
-   )
+   LazyColumn {
+      items(
+         items = taskList
+      ) { task ->
+         TaskCard(
+            task = task,
+            toggleCompleted = onToggleTaskComplete
+         )
+      }
+   }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -81,6 +85,19 @@ fun AddTaskInput(onEnterTask: (String) -> Unit) {
             keyboardController?.hide()
          }
       )
+   )
+}
+
+@Composable
+fun TaskCard(
+   task: Task,
+   toggleCompleted: (Task) -> Unit,
+   modifier: Modifier = Modifier
+) {
+   Text(
+      text = task.body,
+      fontSize = 26.sp,
+      modifier = modifier.padding(start = 12.dp),
    )
 }
 
