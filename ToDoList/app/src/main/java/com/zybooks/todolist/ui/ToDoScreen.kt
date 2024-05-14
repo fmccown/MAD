@@ -284,7 +284,8 @@ fun ToDoAppTopBar(
                contentDescription = "Delete"
             )
          }
-      })
+      }
+   )
 }
 
 @Preview(showBackground = true)
