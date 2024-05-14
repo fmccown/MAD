@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -57,7 +58,8 @@ import com.zybooks.todolist.ui.theme.ToDoListTheme
 @Composable
 fun ToDoScreen(
    modifier: Modifier = Modifier,
-   todoViewModel: ToDoViewModel = viewModel()
+   todoViewModel: ToDoViewModel = viewModel(),
+   onClickSettings: () -> Unit = {}
 ) {
    Scaffold(
       topBar = {
@@ -66,7 +68,8 @@ fun ToDoScreen(
             onDeleteCompletedTasks = todoViewModel::deleteCompletedTasks,
             onCreateTasks = todoViewModel::createTasks,
             archivedTasksExist = todoViewModel.archivedTasksExist,
-            onRestoreArchive = todoViewModel::restoreArchivedTasks
+            onRestoreArchive = todoViewModel::restoreArchivedTasks,
+            onClickSettings = onClickSettings
          )
       }
    ) { innerPadding ->
@@ -237,7 +240,8 @@ fun ToDoAppTopBar(
    onDeleteCompletedTasks: () -> Unit,
    archivedTasksExist: Boolean,
    onRestoreArchive: () -> Unit,
-   onCreateTasks: () -> Unit
+   onCreateTasks: () -> Unit,
+   onClickSettings: () -> Unit
 ) {
    var showDeleteTasksDialog by remember { mutableStateOf(false) }
 
@@ -284,6 +288,12 @@ fun ToDoAppTopBar(
             Icon(
                Icons.Default.Delete,
                contentDescription = "Delete"
+            )
+         }
+         IconButton(onClick = onClickSettings) {
+            Icon(
+               Icons.Default.Settings,
+               contentDescription = "Settings"
             )
          }
       }
