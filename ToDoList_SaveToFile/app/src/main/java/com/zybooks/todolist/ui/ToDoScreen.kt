@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Refresh
@@ -54,9 +55,6 @@ import com.zybooks.todolist.R
 import com.zybooks.todolist.Task
 import com.zybooks.todolist.ui.theme.ToDoListTheme
 
-@OptIn(
-   ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class
-)
 @Composable
 fun ToDoScreen(
    modifier: Modifier = Modifier,
@@ -78,46 +76,62 @@ fun ToDoScreen(
             .fillMaxSize()
             .padding(innerPadding),
       ) {
-         AddTaskInput { todoViewModel.addTask(it) }
+         AddTaskInput(todoViewModel::addTask)
+         TaskList(
+            taskList = todoViewModel.taskList,
+            onDeleteTask = todoViewModel::deleteTask,
+            onArchiveTask = todoViewModel::archiveTask,
+            onToggleTaskComplete = todoViewModel::toggleTaskCompleted
+         )
+      }
+   }
+}
 
-         LazyColumn {
-            items(
-               items = todoViewModel.taskList,
-               key = { task -> task.id },
-               itemContent = { task ->
-                  val currentTask by rememberUpdatedState(task)
-                  val dismissState = rememberDismissState(
-                     confirmValueChange = {
-                        when (it) {
-                           DismissValue.DismissedToEnd -> {
-                              todoViewModel.deleteTask(currentTask)
-                              true
-                           }
-                           DismissValue.DismissedToStart -> {
-                              todoViewModel.archiveTask(currentTask)
-                              true
-                           }
-                           else -> false
-                        }
-                     }
-                  )
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@Composable
+fun TaskList(
+   taskList: List<Task>,
+   onDeleteTask: (Task) -> Unit,
+   onArchiveTask: (Task) -> Unit,
+   onToggleTaskComplete: (Task) -> Unit
+) {
+   LazyColumn {
+      items(
+         items = taskList,
+         key = { task -> task.id }
+      ) { task ->
+         val currentTask by rememberUpdatedState(task)
+         val dismissState = rememberDismissState(
+            confirmValueChange = {
+               when (it) {
+                  DismissValue.DismissedToEnd -> {
+                     onDeleteTask(currentTask)
+                     true
+                  }
 
-                  SwipeToDismiss(
-                     state = dismissState,
-                     background = { SwipeBackground(dismissState) },
-                     modifier = Modifier
-                        .padding(vertical = 1.dp)
-                        .animateItemPlacement(),
-                     dismissContent = {
-                        TaskCard(
-                           task = task,
-                           toggleCompleted = todoViewModel::toggleTaskCompleted
-                        )
-                     }
-                  )
+                  DismissValue.DismissedToStart -> {
+                     onArchiveTask(currentTask)
+                     true
+                  }
+
+                  else -> false
                }
-            )
-         }
+            }
+         )
+
+         SwipeToDismiss(
+            state = dismissState,
+            background = { SwipeBackground(dismissState) },
+            modifier = Modifier
+               .padding(vertical = 1.dp)
+               .animateItemPlacement(),
+            dismissContent = {
+               TaskCard(
+                  task = task,
+                  toggleCompleted = onToggleTaskComplete
+               )
+            }
+         )
       }
    }
 }
@@ -251,8 +265,8 @@ fun ToDoAppTopBar(
       actions = {
          IconButton(onClick = onCreateTasks) {
             Icon(
-               Icons.Default.Create,
-               contentDescription = "Create Tasks"
+               Icons.Default.Add,
+               contentDescription = "Add Tasks"
             )
          }
          IconButton(
@@ -273,7 +287,8 @@ fun ToDoAppTopBar(
                contentDescription = "Delete"
             )
          }
-      })
+      }
+   )
 }
 
 @Preview(showBackground = true)

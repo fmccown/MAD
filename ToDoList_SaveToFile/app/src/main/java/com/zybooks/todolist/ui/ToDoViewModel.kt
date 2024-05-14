@@ -8,7 +8,7 @@ class ToDoViewModel : ViewModel() {
    var taskList = mutableStateListOf<Task>()
       private set
 
-   private var archivedTasks = mutableStateListOf<Task>()
+   private val archivedTasks = mutableListOf<Task>()
 
    fun addTask(body: String) {
       taskList.add(Task(body = body))
@@ -19,7 +19,7 @@ class ToDoViewModel : ViewModel() {
    }
 
    val archivedTasksExist: Boolean
-      get() = archivedTasks.count() > 0
+      get() = archivedTasks.isNotEmpty()
 
    fun archiveTask(task: Task) {
       // Remove from current task list but archive for later
