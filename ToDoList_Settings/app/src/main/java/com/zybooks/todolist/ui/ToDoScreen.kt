@@ -241,7 +241,8 @@ fun ToDoAppTopBar(
    archivedTasksExist: Boolean,
    onRestoreArchive: () -> Unit,
    onCreateTasks: () -> Unit,
-   onClickSettings: () -> Unit
+   onClickSettings: () -> Unit,
+   confirmDelete: Boolean = true
 ) {
    var showDeleteTasksDialog by remember { mutableStateOf(false) }
 
@@ -282,7 +283,13 @@ fun ToDoAppTopBar(
             )
          }
          IconButton(
-            onClick = { showDeleteTasksDialog = true },
+            onClick = {
+               if (confirmDelete) {
+                  showDeleteTasksDialog = true
+               } else {
+                  onDeleteCompletedTasks()
+               }
+            },
             enabled = completedTasksExist
          ) {
             Icon(
