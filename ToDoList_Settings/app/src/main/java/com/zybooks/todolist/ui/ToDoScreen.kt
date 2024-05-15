@@ -45,14 +45,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.zybooks.todolist.R
 import com.zybooks.todolist.Task
+import com.zybooks.todolist.data.PrefStorage
 import com.zybooks.todolist.ui.theme.ToDoListTheme
 
 @Composable
@@ -69,7 +72,8 @@ fun ToDoScreen(
             onCreateTasks = todoViewModel::createTasks,
             archivedTasksExist = todoViewModel.archivedTasksExist,
             onRestoreArchive = todoViewModel::restoreArchivedTasks,
-            onClickSettings = onClickSettings
+            onClickSettings = onClickSettings,
+            confirmDelete = todoViewModel.confirmDelete
          )
       }
    ) { innerPadding ->
@@ -310,8 +314,8 @@ fun ToDoAppTopBar(
 @Preview(showBackground = true)
 @Composable
 fun ToDoScreenPreview() {
-   val viewModel = ToDoViewModel()
-   viewModel.createTasks(5)
+   val viewModel = ToDoViewModel(PrefStorage(LocalContext.current))
+   viewModel.createTasks()
    ToDoListTheme {
       ToDoScreen(todoViewModel = viewModel)
    }
