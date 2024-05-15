@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zybooks.todolist.data.AppPreferences
-import com.zybooks.todolist.data.PrefStorage
+import com.zybooks.todolist.data.PreferenceStorage
 import com.zybooks.todolist.data.TaskOrder
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -50,7 +50,7 @@ fun SettingsScreen(
    modifier: Modifier = Modifier,
    onUpClick: () -> Unit = {}
 ) {
-   val store = PrefStorage(LocalContext.current)
+   val store = PreferenceStorage(LocalContext.current)
    val appPrefs = store.appPreferencesFlow.collectAsStateWithLifecycle(AppPreferences())
    val coroutineScope = rememberCoroutineScope()
 

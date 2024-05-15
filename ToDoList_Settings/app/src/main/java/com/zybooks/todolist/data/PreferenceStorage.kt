@@ -11,9 +11,9 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class PrefStorage(private val context: Context) {
+class PreferenceStorage(private val context: Context) {
    companion object {
-      private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("app_prefs")
+      private val Context.dataStore by preferencesDataStore("app_prefs")
 
       private object PreferenceKeys {
          val TASK_ORDER = stringPreferencesKey("taskOrder")

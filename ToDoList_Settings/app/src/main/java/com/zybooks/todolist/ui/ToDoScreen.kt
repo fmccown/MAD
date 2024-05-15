@@ -54,7 +54,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zybooks.todolist.R
 import com.zybooks.todolist.Task
-import com.zybooks.todolist.data.PrefStorage
+import com.zybooks.todolist.data.PreferenceStorage
 import com.zybooks.todolist.ui.theme.ToDoListTheme
 
 @Composable
@@ -313,7 +313,7 @@ fun ToDoAppTopBar(
 @Preview(showBackground = true)
 @Composable
 fun ToDoScreenPreview() {
-   val viewModel = ToDoViewModel(PrefStorage(LocalContext.current))
+   val viewModel = ToDoViewModel(PreferenceStorage(LocalContext.current))
    viewModel.createTestTasks()
    ToDoListTheme {
       ToDoScreen(todoViewModel = viewModel)

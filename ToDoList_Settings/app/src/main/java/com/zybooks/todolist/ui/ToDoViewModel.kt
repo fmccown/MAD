@@ -7,12 +7,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zybooks.todolist.Task
-import com.zybooks.todolist.data.PrefStorage
+import com.zybooks.todolist.data.PreferenceStorage
 import com.zybooks.todolist.data.TaskOrder
 import kotlinx.coroutines.launch
 
 class ToDoViewModel(
-   prefStorage: PrefStorage
+   prefStorage: PreferenceStorage
 ) : ViewModel() {
 
    var taskList = mutableStateListOf<Task>()
