@@ -17,6 +17,7 @@ enum class AppScreen {
 @Composable
 fun ToDoListApp() {
    val navController = rememberNavController()
+   val viewModel = ToDoViewModel(PrefStorage(LocalContext.current))
 
    NavHost(
       navController = navController,
@@ -24,6 +25,7 @@ fun ToDoListApp() {
    ) {
       composable(route = AppScreen.LIST.name) {
          ToDoScreen(
+            todoViewModel = viewModel,
             onClickSettings = {
                navController.navigate(AppScreen.SETTINGS.name)
             }

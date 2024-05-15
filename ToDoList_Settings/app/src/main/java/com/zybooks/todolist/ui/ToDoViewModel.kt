@@ -21,13 +21,15 @@ class ToDoViewModel(
    prefStorage: PrefStorage
 ) : ViewModel() {
 
-   val appPrefs: StateFlow<AppPreferences> = prefStorage
+   /*
+   private val appPrefs: StateFlow<AppPreferences> = prefStorage
       .appPreferencesFlow
       .stateIn(
          scope = viewModelScope,
          started = SharingStarted.WhileSubscribed(5000),
          initialValue = AppPreferences()
       )
+    */
 
    var taskList = mutableStateListOf<Task>()
       private set
@@ -36,18 +38,20 @@ class ToDoViewModel(
 
    private val archivedTasks = mutableListOf<Task>()
 
+   private var taskOrder = TaskOrder.NEWEST_IS_LAST
+
    private fun sortList() {
       taskList.clear()
-      if (appPrefs.value.taskOrder == TaskOrder.ALPHABETIC) {
-         taskList.addAll(taskListOrig.sortedBy { it.body })
-      } else if (appPrefs.value.taskOrder == TaskOrder.NEWEST_IS_FIRST) {
-         taskList.addAll(taskListOrig.reversed())
-      } else {
-         taskList.addAll(taskListOrig)
+      when (taskOrder) {
+         TaskOrder.ALPHABETIC -> taskList.addAll(taskListOrig.sortedBy { it.body })
+         TaskOrder.NEWEST_IS_FIRST -> taskList.addAll(taskListOrig.reversed())
+         else -> taskList.addAll(taskListOrig)
       }
    }
 
    var confirmDelete by mutableStateOf(true)
+
+   private var numTasks: Int = 10
 
    fun addTask(body: String) {
       taskListOrig.add(Task(body = body))
@@ -56,7 +60,8 @@ class ToDoViewModel(
 
    fun deleteTask(task: Task) {
       taskListOrig.remove(task)
-      sortList()
+      //sortList()
+      taskList.remove(task)
    }
 
    val archivedTasksExist: Boolean
@@ -65,8 +70,8 @@ class ToDoViewModel(
    fun archiveTask(task: Task) {
       // Remove from current task list but archive for later
       taskListOrig.remove(task)
+      taskList.remove(task)
       archivedTasks.add(task)
-      sortList()
    }
 
    val completedTasksExist: Boolean
@@ -75,12 +80,12 @@ class ToDoViewModel(
    fun deleteCompletedTasks() {
       // Remove only tasks that are completed
       taskListOrig.removeIf { it.completed }
-      sortList()
+      taskList.removeIf { it.completed }
    }
 
    fun createTasks() {
       // Add tasks for testing purposes
-      for (i in 1..appPrefs.value.numTasks) {
+      for (i in 1..numTasks) {
          taskListOrig.add(Task(body = "task $i"))
       }
       sortList()
@@ -104,7 +109,11 @@ class ToDoViewModel(
    init {
       viewModelScope.launch {
          prefStorage.appPreferencesFlow.collect {
+            println("Collect in ViewModel")
             confirmDelete = it.confirmDelete
+            numTasks = it.numTasks
+            taskOrder = it.taskOrder
+            sortList()
          }
       }
    }
