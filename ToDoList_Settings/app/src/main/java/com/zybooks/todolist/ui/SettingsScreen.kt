@@ -48,7 +48,6 @@ import kotlin.math.roundToInt
 @Composable
 fun SettingsScreen(
    modifier: Modifier = Modifier,
-   //settingsViewModel: SettingsViewModel = viewModel(),
    onUpClick: () -> Unit = {}
 ) {
    val store = PrefStorage(LocalContext.current)
@@ -76,7 +75,7 @@ fun SettingsScreen(
             .padding(innerPadding)
             .fillMaxWidth()
             .padding(8.dp),
-         verticalArrangement = Arrangement.spacedBy(16.dp)
+         verticalArrangement = Arrangement.spacedBy(20.dp)
       ) {
          val taskOptions = TaskOrder.entries.map { it.text }
          val selectedIndex = when (appPrefs.value.taskOrder) {
@@ -110,8 +109,8 @@ fun SettingsScreen(
             }
          )
          SliderPreference(
-            title = "Number of tasks",
-            initValue = appPrefs.value.numTasks,
+            title = "Number of test tasks",
+            initValue = appPrefs.value.numTestTasks,
             valueRange = 1..20,
             onValueChangeFinished = {
                coroutineScope.launch {

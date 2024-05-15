@@ -18,16 +18,16 @@ class PrefStorage(private val context: Context) {
       private object PreferenceKeys {
          val TASK_ORDER = stringPreferencesKey("taskOrder")
          val CONFIRM_DELETE = booleanPreferencesKey("confirmDelete")
-         val NUM_TASKS = intPreferencesKey("numTasks")
+         val NUM_TEST_TASKS = intPreferencesKey("numTestTasks")
       }
    }
 
    val appPreferencesFlow: Flow<AppPreferences> = context.dataStore.data.map { preferences ->
       val taskOrder = preferences[PreferenceKeys.TASK_ORDER] ?: TaskOrder.NEWEST_IS_LAST.name
-      val confirmDelete = preferences[PreferenceKeys.CONFIRM_DELETE] ?: false
-      val numTasks = preferences[PreferenceKeys.NUM_TASKS] ?: 10
+      val confirmDelete = preferences[PreferenceKeys.CONFIRM_DELETE] ?: true
+      val numTestTasks = preferences[PreferenceKeys.NUM_TEST_TASKS] ?: 10
 
-      AppPreferences(enumValueOf<TaskOrder>(taskOrder), confirmDelete, numTasks)
+      AppPreferences(enumValueOf<TaskOrder>(taskOrder), confirmDelete, numTestTasks)
    }
 
    suspend fun saveTaskOrder(order: TaskOrder) {
@@ -44,7 +44,7 @@ class PrefStorage(private val context: Context) {
 
    suspend fun saveNumTasks(numTasks: Int) {
       context.dataStore.edit { preferences ->
-         preferences[PreferenceKeys.NUM_TASKS] = numTasks
+         preferences[PreferenceKeys.NUM_TEST_TASKS] = numTasks
       }
    }
 }

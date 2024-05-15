@@ -9,5 +9,5 @@ enum class TaskOrder(val text: String) {
 class AppPreferences (
    val taskOrder: TaskOrder = TaskOrder.NEWEST_IS_LAST,
    val confirmDelete: Boolean = true,
-   val numTasks: Int = 10
+   val numTestTasks: Int = 10
 )

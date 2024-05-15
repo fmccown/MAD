@@ -52,7 +52,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
 import com.zybooks.todolist.R
 import com.zybooks.todolist.Task
 import com.zybooks.todolist.data.PrefStorage
@@ -69,7 +68,7 @@ fun ToDoScreen(
          ToDoAppTopBar(
             completedTasksExist = todoViewModel.completedTasksExist,
             onDeleteCompletedTasks = todoViewModel::deleteCompletedTasks,
-            onCreateTasks = todoViewModel::createTasks,
+            onCreateTasks = todoViewModel::createTestTasks,
             archivedTasksExist = todoViewModel.archivedTasksExist,
             onRestoreArchive = todoViewModel::restoreArchivedTasks,
             onClickSettings = onClickSettings,
@@ -315,7 +314,7 @@ fun ToDoAppTopBar(
 @Composable
 fun ToDoScreenPreview() {
    val viewModel = ToDoViewModel(PrefStorage(LocalContext.current))
-   viewModel.createTasks()
+   viewModel.createTestTasks()
    ToDoListTheme {
       ToDoScreen(todoViewModel = viewModel)
    }

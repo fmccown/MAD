@@ -3,18 +3,12 @@ package com.zybooks.todolist.ui
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zybooks.todolist.Task
-import com.zybooks.todolist.data.AppPreferences
 import com.zybooks.todolist.data.PrefStorage
 import com.zybooks.todolist.data.TaskOrder
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 
 class ToDoViewModel(
@@ -34,33 +28,51 @@ class ToDoViewModel(
    var taskList = mutableStateListOf<Task>()
       private set
 
-   private val taskListOrig = mutableListOf<Task>()
+   //private val taskListOrig = mutableListOf<Task>()
 
    private val archivedTasks = mutableListOf<Task>()
 
    private var taskOrder = TaskOrder.NEWEST_IS_LAST
 
    private fun sortList() {
+      /*
       taskList.clear()
       when (taskOrder) {
          TaskOrder.ALPHABETIC -> taskList.addAll(taskListOrig.sortedBy { it.body })
          TaskOrder.NEWEST_IS_FIRST -> taskList.addAll(taskListOrig.reversed())
          else -> taskList.addAll(taskListOrig)
+      }*/
+
+      /*
+      when (taskOrder) {
+         TaskOrder.ALPHABETIC -> taskList.addAll(taskList.sortedBy { it.body })
+         TaskOrder.NEWEST_IS_FIRST -> taskList.addAll(taskList.sortedByDescending { it.id })
+         else -> taskList.addAll(taskList.sortedBy { it.id })
+      }*/
+
+      when (taskOrder) {
+         TaskOrder.ALPHABETIC -> taskList.sortBy { it.body }
+         TaskOrder.NEWEST_IS_FIRST -> taskList.sortByDescending { it.id }
+         else -> taskList.sortBy { it.id }
       }
    }
 
    var confirmDelete by mutableStateOf(true)
 
-   private var numTasks: Int = 10
+   private var numTestTasks: Int = 10
 
    fun addTask(body: String) {
-      taskListOrig.add(Task(body = body))
+      // Create ID that is one larger than existing IDs
+      val taskId = if (taskList.isEmpty()) 1 else taskList.maxOf { it.id } + 1
+      taskList.add(Task(
+         id = taskId,
+         body = body
+      ))
+
       sortList()
    }
 
    fun deleteTask(task: Task) {
-      taskListOrig.remove(task)
-      //sortList()
       taskList.remove(task)
    }
 
@@ -69,7 +81,7 @@ class ToDoViewModel(
 
    fun archiveTask(task: Task) {
       // Remove from current task list but archive for later
-      taskListOrig.remove(task)
+      //taskListOrig.remove(task)
       taskList.remove(task)
       archivedTasks.add(task)
    }
@@ -79,29 +91,26 @@ class ToDoViewModel(
 
    fun deleteCompletedTasks() {
       // Remove only tasks that are completed
-      taskListOrig.removeIf { it.completed }
       taskList.removeIf { it.completed }
    }
 
-   fun createTasks() {
+   fun createTestTasks() {
       // Add tasks for testing purposes
-      for (i in 1..numTasks) {
-         taskListOrig.add(Task(body = "task $i"))
+      for (i in 1..numTestTasks) {
+         addTask("task $i")
       }
-      sortList()
    }
 
    fun toggleTaskCompleted(task: Task) {
-      // Observer of MutableList not notified when changing a property, so
-      // need to replace element in the list for notification to go through
-      val index = taskListOrig.indexOf(task)
-      taskListOrig[index] = taskListOrig[index].copy(completed = !task.completed)
-      sortList()
+      // Observer of MutableList is not notified when changing a property,
+      // so need to replace the element for observer to be notified
+      val index = taskList.indexOf(task)
+      taskList[index] = taskList[index].copy(completed = !task.completed)
    }
 
    fun restoreArchivedTasks() {
       // Restore all archived tasks, then clear the list
-      taskListOrig.addAll(archivedTasks)
+      taskList.addAll(archivedTasks)
       archivedTasks.clear()
       sortList()
    }
@@ -111,7 +120,7 @@ class ToDoViewModel(
          prefStorage.appPreferencesFlow.collect {
             println("Collect in ViewModel")
             confirmDelete = it.confirmDelete
-            numTasks = it.numTasks
+            numTestTasks = it.numTestTasks
             taskOrder = it.taskOrder
             sortList()
          }
