@@ -15,7 +15,7 @@ import com.zybooks.studyhelper.ui.question.QuestionScreen
 import com.zybooks.studyhelper.ui.subject.SubjectScreen
 import com.zybooks.studyhelper.ui.theme.StudyHelperTheme
 
-enum class StudyScreen() {
+enum class StudyScreen {
    SUBJECT,
    QUESTION,
    ADD_QUESTION,
