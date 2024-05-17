@@ -6,7 +6,7 @@ enum class TaskOrder(val text: String) {
    ALPHABETIC("Alphabetical")
 }
 
-class AppPreferences (
+data class AppPreferences (
    val taskOrder: TaskOrder = TaskOrder.NEWEST_IS_LAST,
    val confirmDelete: Boolean = true,
    val numTestTasks: Int = 10
