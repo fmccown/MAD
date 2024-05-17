@@ -34,10 +34,10 @@ class ToDoViewModel : ViewModel() {
       taskList.removeIf { it.completed }
    }
 
-   fun createTasks(numTasks: Int = 10) {
+   fun createTestTasks(numTasks: Int = 10) {
       // Add tasks for testing purposes
       for (i in 1..numTasks) {
-         taskList.add(Task(body = "task $i"))
+         addTask("task $i")
       }
    }
 

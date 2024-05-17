@@ -1,5 +1,6 @@
 package com.zybooks.todolist.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,14 +9,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.DismissState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
@@ -45,6 +49,7 @@ fun ToDoScreen(
    }
 }
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun TaskList(
    taskList: List<Task>,
@@ -54,17 +59,37 @@ fun TaskList(
 ) {
    LazyColumn {
       items(
-         items = taskList
+         items = taskList,
+         key = { task -> task.id }
       ) { task ->
-         TaskCard(
-            task = task,
-            toggleCompleted = onToggleTaskComplete
+         val dismissState = rememberDismissState()
+
+         SwipeToDismiss(
+            state = dismissState,
+            background = { SwipeBackground(dismissState) },
+            modifier = Modifier
+               .padding(vertical = 1.dp)
+               .animateItemPlacement(),
+            dismissContent = {
+               TaskCard(
+                  task = task,
+                  toggleCompleted = onToggleTaskComplete
+               )
+            }
          )
       }
    }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+fun SwipeBackground(
+   dismissState: DismissState,
+   modifier: Modifier = Modifier
+) {
+   // TODO: Implement later
+}
+
 @Composable
 fun AddTaskInput(onEnterTask: (String) -> Unit) {
    val keyboardController = LocalSoftwareKeyboardController.current
@@ -97,7 +122,7 @@ fun TaskCard(
    Text(
       text = task.body,
       fontSize = 26.sp,
-      modifier = modifier.padding(start = 12.dp),
+      modifier = modifier.padding(start = 12.dp)
    )
 }
 
@@ -105,7 +130,7 @@ fun TaskCard(
 @Composable
 fun ToDoScreenPreview() {
    val viewModel = ToDoViewModel()
-   viewModel.createTasks(5)
+   viewModel.createTestTasks(5)
    ToDoListTheme {
       ToDoScreen(todoViewModel = viewModel)
    }
