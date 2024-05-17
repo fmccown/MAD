@@ -64,7 +64,7 @@ fun ToDoScreen(
          ToDoAppTopBar(
             completedTasksExist = todoViewModel.completedTasksExist,
             onDeleteCompletedTasks = todoViewModel::deleteCompletedTasks,
-            onCreateTasks = todoViewModel::createTasks,
+            onCreateTasks = todoViewModel::createTestTasks,
             archivedTasksExist = todoViewModel.archivedTasksExist,
             onRestoreArchive = todoViewModel::restoreArchivedTasks
          )
@@ -205,7 +205,6 @@ fun SwipeBackground(
    }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AddTaskInput(onEnterTask: (String) -> Unit) {
    val keyboardController = LocalSoftwareKeyboardController.current
@@ -292,7 +291,7 @@ fun ToDoAppTopBar(
 @Composable
 fun ToDoScreenPreview() {
    val viewModel = ToDoViewModel()
-   viewModel.createTasks(5)
+   viewModel.createTestTasks()
    ToDoListTheme {
       ToDoScreen(todoViewModel = viewModel)
    }
