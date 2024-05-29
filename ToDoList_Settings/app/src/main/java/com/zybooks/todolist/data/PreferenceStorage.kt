@@ -1,14 +1,11 @@
 package com.zybooks.todolist.data
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class PreferenceStorage(private val context: Context) {
@@ -22,7 +19,7 @@ class PreferenceStorage(private val context: Context) {
       }
    }
 
-   val appPreferencesFlow: Flow<AppPreferences> = context.dataStore.data.map { preferences ->
+   val appPreferencesFlow = context.dataStore.data.map { preferences ->
       val taskOrder = preferences[PreferenceKeys.TASK_ORDER] ?: TaskOrder.NEWEST_IS_LAST.name
       val confirmDelete = preferences[PreferenceKeys.CONFIRM_DELETE] ?: true
       val numTestTasks = preferences[PreferenceKeys.NUM_TEST_TASKS] ?: 10
@@ -42,7 +39,7 @@ class PreferenceStorage(private val context: Context) {
       }
    }
 
-   suspend fun saveNumTasks(numTasks: Int) {
+   suspend fun saveNumTestTasks(numTasks: Int) {
       context.dataStore.edit { preferences ->
          preferences[PreferenceKeys.NUM_TEST_TASKS] = numTasks
       }

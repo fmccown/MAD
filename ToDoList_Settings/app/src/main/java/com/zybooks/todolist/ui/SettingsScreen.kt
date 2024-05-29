@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -78,23 +79,21 @@ fun SettingsScreen(
          verticalArrangement = Arrangement.spacedBy(20.dp)
       ) {
          val taskOptions = TaskOrder.entries.map { it.text }
+         /*
          val selectedIndex = when (appPrefs.value.taskOrder) {
             TaskOrder.NEWEST_IS_LAST -> 0
             TaskOrder.NEWEST_IS_FIRST -> 1
             else -> 2
-         }
+         }*/
+         val selectedIndex = appPrefs.value.taskOrder.ordinal
 
          ListPreference(
             title = "Task order",
             values = taskOptions,
             selectedIndex = selectedIndex,
-            onItemClick = {
+            onItemClick = { index ->
                coroutineScope.launch {
-                  val selectedOrder = when (it) {
-                     0 -> TaskOrder.NEWEST_IS_LAST
-                     1 -> TaskOrder.NEWEST_IS_FIRST
-                     else -> TaskOrder.ALPHABETIC
-                  }
+                  val selectedOrder = TaskOrder.entries[index]
                   store.saveTaskOrder(selectedOrder)
                }
             }
@@ -102,9 +101,9 @@ fun SettingsScreen(
          SwitchPreference(
             title = "Confirm delete",
             checked = appPrefs.value.confirmDelete,
-            onCheckChange = {
+            onCheckedChange = { checked ->
                coroutineScope.launch {
-                  store.saveConfirmDelete(it)
+                  store.saveConfirmDelete(checked)
                }
             }
          )
@@ -114,8 +113,7 @@ fun SettingsScreen(
             valueRange = 1..20,
             onValueChangeFinished = {
                coroutineScope.launch {
-                  println("Saving $it")
-                  store.saveNumTasks(it)
+                  store.saveNumTestTasks(it)
                }
             }
          )
@@ -151,7 +149,9 @@ fun ListPreference(
             value = values[selectedIndex],
             onValueChange = {},
             readOnly = true,
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            trailingIcon = {
+               ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
             modifier = modifier
                .menuAnchor()
                .width(200.dp)
@@ -178,7 +178,7 @@ fun ListPreference(
 fun SwitchPreference(
    title: String,
    checked: Boolean,
-   onCheckChange: (Boolean) -> Unit,
+   onCheckedChange: (Boolean) -> Unit,
    modifier: Modifier = Modifier
 ) {
    Row(
@@ -192,11 +192,12 @@ fun SwitchPreference(
       )
       Switch(
          checked = checked,
-         onCheckedChange = onCheckChange
+         onCheckedChange = onCheckedChange
       )
    }
 }
 
+/*
 @Composable
 fun SliderPreference(
    title: String,
@@ -233,5 +234,45 @@ fun SliderPreference(
    // Set initial slider position when initValue changes
    LaunchedEffect(initValue) {
       sliderPosition = initValue.toFloat()
+   }
+}
+ */
+
+@Composable
+fun SliderPreference(
+   title: String,
+   initValue: Int,
+   valueRange: ClosedRange<Int>,
+   onValueChangeFinished: (Int) -> Unit,
+   modifier: Modifier = Modifier
+) {
+   var sliderPosition by remember { mutableIntStateOf(initValue) }
+
+   Column {
+      Text(
+         text = title,
+         fontSize = 20.sp
+      )
+      Row(
+         verticalAlignment = Alignment.CenterVertically,
+         modifier = modifier.fillMaxWidth()
+      ) {
+         Slider(
+            value = sliderPosition.toFloat(),
+            steps = valueRange.endInclusive - valueRange.start - 1,
+            valueRange = valueRange.start.toFloat()..valueRange.endInclusive.toFloat(),
+            onValueChange = { sliderPosition = it.roundToInt() },
+            onValueChangeFinished = {
+               onValueChangeFinished(sliderPosition)
+            },
+            modifier = modifier.weight(1f)
+         )
+         Text(sliderPosition.toString())
+      }
+   }
+
+   // Set initial slider position when initValue changes
+   LaunchedEffect(key1 = initValue) {
+      sliderPosition = initValue
    }
 }
