@@ -14,13 +14,14 @@ import kotlinx.coroutines.launch
 class ToDoViewModel(
    prefStorage: PreferenceStorage
 ) : ViewModel() {
+   // App setting variables
+   var confirmDelete by mutableStateOf(true)
+   private var numTestTasks: Int = 10
+   private var taskOrder = TaskOrder.NEWEST_IS_LAST
 
-   var taskList = mutableStateListOf<Task>()
-      private set
+   val taskList = mutableStateListOf<Task>()
 
    private val archivedTasks = mutableListOf<Task>()
-
-   private var taskOrder = TaskOrder.NEWEST_IS_LAST
 
    private fun sortList() {
       when (taskOrder) {
@@ -30,17 +31,15 @@ class ToDoViewModel(
       }
    }
 
-   var confirmDelete by mutableStateOf(true)
-
-   private var numTestTasks: Int = 10
-
    fun addTask(body: String) {
       // Create ID that is one larger than existing IDs
       val taskId = if (taskList.isEmpty()) 1 else taskList.maxOf { it.id } + 1
-      taskList.add(Task(
-         id = taskId,
-         body = body
-      ))
+      taskList.add(
+         Task(
+            id = taskId,
+            body = body
+         )
+      )
 
       sortList()
    }
