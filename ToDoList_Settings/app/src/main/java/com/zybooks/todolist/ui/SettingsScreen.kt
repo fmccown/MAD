@@ -79,12 +79,6 @@ fun SettingsScreen(
          verticalArrangement = Arrangement.spacedBy(20.dp)
       ) {
          val taskOptions = TaskOrder.entries.map { it.text }
-         /*
-         val selectedIndex = when (appPrefs.value.taskOrder) {
-            TaskOrder.NEWEST_IS_LAST -> 0
-            TaskOrder.NEWEST_IS_FIRST -> 1
-            else -> 2
-         }*/
          val selectedIndex = appPrefs.value.taskOrder.ordinal
 
          ListPreference(
