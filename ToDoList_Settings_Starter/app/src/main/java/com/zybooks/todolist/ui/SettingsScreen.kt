@@ -58,16 +58,8 @@ fun SettingsScreen(
             .padding(8.dp),
          verticalArrangement = Arrangement.spacedBy(20.dp)
       ) {
-         Column(
-            modifier = Modifier
-               .padding(innerPadding)
-               .fillMaxWidth()
-               .padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
-         ) {
-            // TODO: Add preference composables here
-
-         }
+         // TODO: Add preference composables here
+         
       }
    }
 }
