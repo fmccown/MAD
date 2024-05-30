@@ -59,7 +59,7 @@ fun SettingsScreen(
          verticalArrangement = Arrangement.spacedBy(20.dp)
       ) {
          // TODO: Add preference composables here
-         
+
       }
    }
 }

@@ -39,7 +39,7 @@ class PreferenceStorage(private val context: Context) {
       }
    }
 
-   suspend fun saveNumTasks(numTasks: Int) {
+   suspend fun saveNumTestTasks(numTasks: Int) {
       context.dataStore.edit { preferences ->
          preferences[PreferenceKeys.NUM_TEST_TASKS] = numTasks
       }
