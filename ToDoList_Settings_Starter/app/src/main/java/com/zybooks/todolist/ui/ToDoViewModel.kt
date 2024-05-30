@@ -13,7 +13,12 @@ class ToDoViewModel(
    private val archivedTasks = mutableListOf<Task>()
 
    fun addTask(body: String) {
-      taskList.add(Task(body = body))
+      // Create ID that is one larger than existing IDs
+      val taskId = if (taskList.isEmpty()) 1 else taskList.maxOf { it.id } + 1
+      taskList.add(Task(
+         id = taskId,
+         body = body
+      ))
    }
 
    fun deleteTask(task: Task) {
