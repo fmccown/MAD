@@ -50,7 +50,7 @@ class ToDoViewModel : ViewModel() {
 
    fun restoreArchivedTasks() {
       // Restore all archived tasks, then clear the list
-      taskList.addAll(archivedTasks)
+      archivedTasks.forEach { addTask(it.body) }
       archivedTasks.clear()
    }
 }
