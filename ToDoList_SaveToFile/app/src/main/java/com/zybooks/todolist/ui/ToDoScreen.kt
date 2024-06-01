@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -44,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -52,21 +54,25 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zybooks.todolist.R
 import com.zybooks.todolist.Task
+import com.zybooks.todolist.data.PreferenceStorage
 import com.zybooks.todolist.ui.theme.ToDoListTheme
 
 @Composable
 fun ToDoScreen(
    modifier: Modifier = Modifier,
-   todoViewModel: ToDoViewModel = viewModel()
+   todoViewModel: ToDoViewModel = viewModel(),
+   onClickSettings: () -> Unit = {}
 ) {
    Scaffold(
       topBar = {
          ToDoAppTopBar(
             completedTasksExist = todoViewModel.completedTasksExist,
             onDeleteCompletedTasks = todoViewModel::deleteCompletedTasks,
-            onCreateTasks = todoViewModel::createTasks,
+            onCreateTasks = todoViewModel::createTestTasks,
             archivedTasksExist = todoViewModel.archivedTasksExist,
-            onRestoreArchive = todoViewModel::restoreArchivedTasks
+            onRestoreArchive = todoViewModel::restoreArchivedTasks,
+            onClickSettings = onClickSettings,
+            confirmDelete = todoViewModel.confirmDelete
          )
       }
    ) { innerPadding ->
@@ -209,6 +215,8 @@ fun SwipeBackground(
 @Composable
 fun AddTaskInput(onEnterTask: (String) -> Unit) {
    val keyboardController = LocalSoftwareKeyboardController.current
+
+   // state for our new task body
    var taskBody by remember { mutableStateOf("") }
 
    OutlinedTextField(
@@ -235,7 +243,9 @@ fun ToDoAppTopBar(
    onDeleteCompletedTasks: () -> Unit,
    archivedTasksExist: Boolean,
    onRestoreArchive: () -> Unit,
-   onCreateTasks: () -> Unit
+   onCreateTasks: () -> Unit,
+   onClickSettings: () -> Unit,
+   confirmDelete: Boolean = true
 ) {
    var showDeleteTasksDialog by remember { mutableStateOf(false) }
 
@@ -276,12 +286,24 @@ fun ToDoAppTopBar(
             )
          }
          IconButton(
-            onClick = { showDeleteTasksDialog = true },
+            onClick = {
+               if (confirmDelete) {
+                  showDeleteTasksDialog = true
+               } else {
+                  onDeleteCompletedTasks()
+               }
+            },
             enabled = completedTasksExist
          ) {
             Icon(
                Icons.Default.Delete,
                contentDescription = "Delete"
+            )
+         }
+         IconButton(onClick = onClickSettings) {
+            Icon(
+               Icons.Default.Settings,
+               contentDescription = "Settings"
             )
          }
       }
@@ -291,8 +313,8 @@ fun ToDoAppTopBar(
 @Preview(showBackground = true)
 @Composable
 fun ToDoScreenPreview() {
-   val viewModel = ToDoViewModel()
-   viewModel.createTasks(5)
+   val viewModel = ToDoViewModel(PreferenceStorage(LocalContext.current))
+   viewModel.createTestTasks()
    ToDoListTheme {
       ToDoScreen(todoViewModel = viewModel)
    }

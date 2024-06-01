@@ -1,17 +1,47 @@
 package com.zybooks.todolist.ui
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.zybooks.todolist.Task
+import com.zybooks.todolist.data.PreferenceStorage
+import com.zybooks.todolist.data.TaskOrder
+import kotlinx.coroutines.launch
 
-class ToDoViewModel : ViewModel() {
-   var taskList = mutableStateListOf<Task>()
-      private set
+class ToDoViewModel(
+   prefStorage: PreferenceStorage
+) : ViewModel() {
+   // App setting variables
+   var confirmDelete by mutableStateOf(true)
+   private var numTestTasks: Int = 10
+   private var taskOrder = TaskOrder.NEWEST_IS_LAST
+
+   val taskList = mutableStateListOf<Task>()
 
    private val archivedTasks = mutableListOf<Task>()
 
+   private fun sortList() {
+      when (taskOrder) {
+         TaskOrder.ALPHABETIC -> taskList.sortBy { it.body }
+         TaskOrder.NEWEST_IS_FIRST -> taskList.sortByDescending { it.id }
+         else -> taskList.sortBy { it.id }
+      }
+   }
+
    fun addTask(body: String) {
-      taskList.add(Task(body = body))
+      // Create ID that is one larger than existing IDs
+      val taskId = if (taskList.isEmpty()) 1 else taskList.maxOf { it.id } + 1
+      taskList.add(
+         Task(
+            id = taskId,
+            body = body
+         )
+      )
+
+      sortList()
    }
 
    fun deleteTask(task: Task) {
@@ -35,23 +65,35 @@ class ToDoViewModel : ViewModel() {
       taskList.removeIf { it.completed }
    }
 
-   fun createTasks(numTasks: Int = 10) {
+   fun createTestTasks() {
       // Add tasks for testing purposes
-      for (i in 1..numTasks) {
-         taskList.add(Task(body = "task $i"))
+      for (i in 1..numTestTasks) {
+         addTask("task $i")
       }
    }
 
    fun toggleTaskCompleted(task: Task) {
-      // Observer of MutableList not notified when changing a property, so
-      // need to replace element in the list for notification to go through
+      // Observer of MutableList is not notified when changing a property,
+      // so need to replace the element for observer to be notified
       val index = taskList.indexOf(task)
       taskList[index] = taskList[index].copy(completed = !task.completed)
    }
 
    fun restoreArchivedTasks() {
       // Restore all archived tasks, then clear the list
-      taskList.addAll(archivedTasks)
+      archivedTasks.forEach { addTask(it.body) }
       archivedTasks.clear()
+   }
+
+   init {
+      // Get app settings
+      viewModelScope.launch {
+         prefStorage.appPreferencesFlow.collect {
+            confirmDelete = it.confirmDelete
+            numTestTasks = it.numTestTasks
+            taskOrder = it.taskOrder
+            sortList()
+         }
+      }
    }
 }
