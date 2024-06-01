@@ -71,7 +71,7 @@ fun ToDoScreen(
             onCreateTasks = todoViewModel::createTestTasks,
             archivedTasksExist = todoViewModel.archivedTasksExist,
             onRestoreArchive = todoViewModel::restoreArchivedTasks,
-            onClickSettings = onClickSettings
+            onClickSettings = onClickSettings,
          )
       }
    ) { innerPadding ->
@@ -241,7 +241,7 @@ fun ToDoAppTopBar(
    archivedTasksExist: Boolean,
    onRestoreArchive: () -> Unit,
    onCreateTasks: () -> Unit,
-   onClickSettings: () -> Unit
+   onClickSettings: () -> Unit,
 ) {
    var showDeleteTasksDialog by remember { mutableStateOf(false) }
 
@@ -282,7 +282,9 @@ fun ToDoAppTopBar(
             )
          }
          IconButton(
-            onClick = { showDeleteTasksDialog = true },
+            onClick = {
+               showDeleteTasksDialog = true
+            },
             enabled = completedTasksExist
          ) {
             Icon(
