@@ -1,5 +1,6 @@
 package com.zybooks.todolist.ui
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -9,10 +10,12 @@ import androidx.lifecycle.viewModelScope
 import com.zybooks.todolist.Task
 import com.zybooks.todolist.data.PreferenceStorage
 import com.zybooks.todolist.data.TaskOrder
+import com.zybooks.todolist.data.TaskRepository
 import kotlinx.coroutines.launch
 
 class ToDoViewModel(
-   prefStorage: PreferenceStorage
+   prefStorage: PreferenceStorage,
+   private val taskRepository: TaskRepository
 ) : ViewModel() {
    // App setting variables
    var confirmDelete by mutableStateOf(true)
@@ -32,19 +35,17 @@ class ToDoViewModel(
    }
 
    fun addTask(body: String) {
-      // Create ID that is one larger than existing IDs
-      val taskId = if (taskList.isEmpty()) 1 else taskList.maxOf { it.id } + 1
-      taskList.add(
-         Task(
-            id = taskId,
-            body = body
-         )
-      )
-
-      sortList()
+      Log.d("ToDoViewModel", "addTask $body")
+      viewModelScope.launch {
+         taskList.add(taskRepository.addTask(body))
+         sortList()
+      }
    }
 
    fun deleteTask(task: Task) {
+      viewModelScope.launch {
+         taskRepository.deleteTask(task)
+      }
       taskList.remove(task)
    }
 
@@ -52,6 +53,10 @@ class ToDoViewModel(
       get() = archivedTasks.isNotEmpty()
 
    fun archiveTask(task: Task) {
+      viewModelScope.launch {
+         taskRepository.deleteTask(task)
+      }
+
       // Remove from current task list but archive for later
       taskList.remove(task)
       archivedTasks.add(task)
@@ -61,7 +66,9 @@ class ToDoViewModel(
       get() = taskList.count { it.completed } > 0
 
    fun deleteCompletedTasks() {
-      // Remove only tasks that are completed
+      viewModelScope.launch {
+         taskRepository.deleteCompletedTasks()
+      }
       taskList.removeIf { it.completed }
    }
 
@@ -73,6 +80,10 @@ class ToDoViewModel(
    }
 
    fun toggleTaskCompleted(task: Task) {
+      viewModelScope.launch {
+         taskRepository.toggleTaskCompleted(task)
+      }
+
       // Observer of MutableList is not notified when changing a property,
       // so need to replace the element for observer to be notified
       val index = taskList.indexOf(task)
@@ -85,7 +96,42 @@ class ToDoViewModel(
       archivedTasks.clear()
    }
 
+   suspend fun initTaskList() {
+      viewModelScope.launch {
+         Log.d("ToDoViewModel", "initTaskList: Adding tasks")
+
+         if (taskList.isEmpty()) {
+            Log.d("ToDoViewModel", "initTaskList: Task list is empty")
+            taskList.addAll(taskRepository.loadTasks())
+
+            // For some reason adding the tasks individually like below
+            // allows the completed to be set properly but calling
+            // addAll() means that clicking a task's completion does
+            // not toggle it until clicked a second time!
+            // That's because the code below is creating a separate
+            // copy in memory for each task but getAllTasks() is returning
+            // references to Tasks in memory that taskList is referring to!
+            // Issue fixed by having getAllTasks() return copy of Task references.
+            /*taskRepository.taskList.forEach { task ->
+               //taskList.add(task.copy())
+               val t = Task(
+                  id = task.id,
+                  body = task.body,
+                  completed = task.completed
+               )
+               taskList.add(t)
+            }*/
+            //taskList.addAll(taskRepository.getAllTasks())
+
+         } else {
+            Log.d("ToDoViewModel", "initTaskList: Task list NOT empty")
+         }
+      }
+   }
+
    init {
+      Log.d("ToDoViewModel", "init")
+
       // Get app settings
       viewModelScope.launch {
          prefStorage.appPreferencesFlow.collect {

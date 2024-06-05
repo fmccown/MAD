@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.zybooks.todolist.data.PreferenceStorage
+import com.zybooks.todolist.data.TaskRepository
 
 enum class AppScreen {
    LIST,
@@ -15,7 +16,10 @@ enum class AppScreen {
 @Composable
 fun ToDoListApp() {
    val navController = rememberNavController()
-   val viewModel = ToDoViewModel(PreferenceStorage(LocalContext.current))
+   val viewModel = ToDoViewModel(
+      PreferenceStorage(LocalContext.current),
+      TaskRepository(LocalContext.current.applicationContext)
+   )
 
    NavHost(
       navController = navController,

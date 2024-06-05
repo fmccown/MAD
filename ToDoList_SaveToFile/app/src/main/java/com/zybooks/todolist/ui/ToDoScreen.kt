@@ -36,6 +36,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,6 +56,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zybooks.todolist.R
 import com.zybooks.todolist.Task
 import com.zybooks.todolist.data.PreferenceStorage
+import com.zybooks.todolist.data.TaskRepository
 import com.zybooks.todolist.ui.theme.ToDoListTheme
 
 @Composable
@@ -89,6 +91,10 @@ fun ToDoScreen(
             onToggleTaskComplete = todoViewModel::toggleTaskCompleted
          )
       }
+   }
+
+   LaunchedEffect(Unit) {
+      todoViewModel.initTaskList()
    }
 }
 
@@ -313,7 +319,10 @@ fun ToDoAppTopBar(
 @Preview(showBackground = true)
 @Composable
 fun ToDoScreenPreview() {
-   val viewModel = ToDoViewModel(PreferenceStorage(LocalContext.current))
+   val viewModel = ToDoViewModel(
+      PreferenceStorage(LocalContext.current),
+      TaskRepository(LocalContext.current.applicationContext)
+   )
    viewModel.createTestTasks()
    ToDoListTheme {
       ToDoScreen(todoViewModel = viewModel)

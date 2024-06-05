@@ -1,101 +1,105 @@
 package com.zybooks.todolist.data
 
 import android.content.Context
+import android.util.Log
 import com.zybooks.todolist.Task
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.FileNotFoundException
 import java.io.PrintWriter
 
 class TaskRepository(private val context: Context) {
-   val taskList = mutableListOf<Task>()
-   private val archivedTasks = mutableListOf<Task>()
+   private val taskList = mutableListOf<Task>()
 
-   init {
-      loadTasks()
+   companion object {
+      val TODO_FILENAME = "todofile"
    }
 
-   private fun loadTasks() {
-      val inputStream = context.openFileInput("todofile")
-      val reader = inputStream.bufferedReader()
+   suspend fun loadTasks(): List<Task> {
+      withContext(Dispatchers.IO) {
+         try {
+            val inputStream = context.openFileInput(TODO_FILENAME)
+            val reader = inputStream.bufferedReader()
 
-      // Append each task to stringBuilder
-      taskList.clear()
-      val line = reader.readLine()
-      while (line != null) {
-         // Convert this line to task ID
-         val task = Task()
-         task.id = line.toInt()
+            taskList.clear()
 
-         // Next line is task body
-         task.body = reader.readLine()
+            // Read first line from file
+            var line: String? = reader.readLine()
 
-         // Next line is task completed
-         task.completed = reader.readLine().toBoolean()
+            // Keep reading until no lines remain
+            while (line != null) {
+               // Convert this line to task ID
+               val task = Task()
+               task.id = line.toInt()
 
-         taskList.add(task)
+               // Next line is task body
+               line = reader.readLine()
+               if (line != null) {
+                  task.body = line
+               }
+
+               // Next line is "true" or "false"
+               line = reader.readLine()
+               if (line != null) {
+                  task.completed = line == "true"
+               }
+
+               // Append each task
+               taskList.add(task)
+
+               // Attempt to read next task's ID
+               line = reader.readLine()
+            }
+         } catch (ex: FileNotFoundException) {
+            Log.d("TaskRepository", "$TODO_FILENAME does not exist")
+         }
+      }
+
+      return taskList.map { it.copy() }
+   }
+
+   private suspend fun saveTasks() {
+      withContext(Dispatchers.IO) {
+         val outputStream = context.openFileOutput(TODO_FILENAME, Context.MODE_PRIVATE)
+         val writer = PrintWriter(outputStream)
+
+         // Write each task on a separate line
+         taskList.forEach { task ->
+            writer.println(task.id)
+            writer.println(task.body)
+            writer.println(task.completed)
+         }
+
+         writer.close()
       }
    }
 
-   fun saveTasks() {
-      val outputStream = context.openFileOutput("todofile", Context.MODE_PRIVATE)
-      val writer = PrintWriter(outputStream)
-
-      // Write each task on a separate line
-      taskList.forEach { task ->
-         writer.println(task.id)
-         writer.println(task.body)
-         writer.println(task.completed)
-      }
-
-      writer.close()
-   }
-
-   fun addTask(body: String) {
+   suspend fun addTask(body: String): Task {
       // Create ID that is one larger than existing IDs
       val taskId = if (taskList.isEmpty()) 1 else taskList.maxOf { it.id } + 1
-      taskList.add(
-         Task(
-            id = taskId,
-            body = body
-         )
+      val newTask = Task(
+         id = taskId,
+         body = body
       )
+      taskList.add(newTask)
+
+      saveTasks()
+      return newTask.copy()
    }
 
-   fun deleteTask(task: Task) {
+   suspend fun deleteTask(task: Task) {
       taskList.remove(task)
+      saveTasks()
    }
 
-   val archivedTasksExist: Boolean
-      get() = archivedTasks.isNotEmpty()
-
-   fun archiveTask(task: Task) {
-      // Remove from current task list but archive for later
-      taskList.remove(task)
-      archivedTasks.add(task)
-   }
-
-   val completedTasksExist: Boolean
-      get() = taskList.count { it.completed } > 0
-
-   fun deleteCompletedTasks() {
-      // Remove only tasks that are completed
+   suspend fun deleteCompletedTasks() {
       taskList.removeIf { it.completed }
+      saveTasks()
    }
 
-   fun createTestTasks(numTestTasks: Int) {
-      // Add tasks for testing purposes
-      for (i in 1..numTestTasks) {
-         addTask("task $i")
-      }
-   }
-
-   fun toggleTaskCompleted(task: Task) {
+   suspend fun toggleTaskCompleted(task: Task) {
       val index = taskList.indexOf(task)
       taskList[index].completed = !task.completed
+      saveTasks()
    }
-
-   fun restoreArchivedTasks() {
-      // Restore all archived tasks, then clear the list
-      archivedTasks.forEach { addTask(it.body) }
-      archivedTasks.clear()
-   }
-
 }
