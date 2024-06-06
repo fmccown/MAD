@@ -8,17 +8,17 @@ import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
 import java.io.PrintWriter
 
-class TaskRepository(private val context: Context) {
+class TaskRepository(private val appContext: Context) {
    private val taskList = mutableListOf<Task>()
 
    companion object {
-      val TODO_FILENAME = "todofile"
+      const val TODO_FILENAME = "todofile"
    }
 
    suspend fun loadTasks(): List<Task> {
       withContext(Dispatchers.IO) {
          try {
-            val inputStream = context.openFileInput(TODO_FILENAME)
+            val inputStream = appContext.openFileInput(TODO_FILENAME)
             val reader = inputStream.bufferedReader()
 
             taskList.clear()
@@ -60,10 +60,10 @@ class TaskRepository(private val context: Context) {
 
    private suspend fun saveTasks() {
       withContext(Dispatchers.IO) {
-         val outputStream = context.openFileOutput(TODO_FILENAME, Context.MODE_PRIVATE)
+         val outputStream = appContext.openFileOutput(TODO_FILENAME, Context.MODE_PRIVATE)
          val writer = PrintWriter(outputStream)
 
-         // Write each task on a separate line
+         // Write each task property on a separate line
          taskList.forEach { task ->
             writer.println(task.id)
             writer.println(task.body)
@@ -75,7 +75,7 @@ class TaskRepository(private val context: Context) {
    }
 
    suspend fun addTask(body: String): Task {
-      // Create ID that is one larger than existing IDs
+      // Create an ID that is one larger than existing IDs
       val taskId = if (taskList.isEmpty()) 1 else taskList.maxOf { it.id } + 1
       val newTask = Task(
          id = taskId,
