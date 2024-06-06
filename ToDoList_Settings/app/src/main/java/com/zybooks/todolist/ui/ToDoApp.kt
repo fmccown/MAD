@@ -13,7 +13,7 @@ enum class AppScreen {
 }
 
 @Composable
-fun ToDoListApp() {
+fun ToDoApp() {
    val navController = rememberNavController()
    val viewModel = ToDoViewModel(PreferenceStorage(LocalContext.current))
 

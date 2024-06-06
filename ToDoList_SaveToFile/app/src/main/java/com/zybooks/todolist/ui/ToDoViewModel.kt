@@ -103,26 +103,6 @@ class ToDoViewModel(
          if (taskList.isEmpty()) {
             Log.d("ToDoViewModel", "initTaskList: Task list is empty")
             taskList.addAll(taskRepository.loadTasks())
-
-            // For some reason adding the tasks individually like below
-            // allows the completed to be set properly but calling
-            // addAll() means that clicking a task's completion does
-            // not toggle it until clicked a second time!
-            // That's because the code below is creating a separate
-            // copy in memory for each task but getAllTasks() is returning
-            // references to Tasks in memory that taskList is referring to!
-            // Issue fixed by having getAllTasks() return copy of Task references.
-            /*taskRepository.taskList.forEach { task ->
-               //taskList.add(task.copy())
-               val t = Task(
-                  id = task.id,
-                  body = task.body,
-                  completed = task.completed
-               )
-               taskList.add(t)
-            }*/
-            //taskList.addAll(taskRepository.getAllTasks())
-
          } else {
             Log.d("ToDoViewModel", "initTaskList: Task list NOT empty")
          }
