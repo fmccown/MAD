@@ -301,13 +301,3 @@ fun ToDoAppTopBar(
       }
    )
 }
-
-@Preview(showBackground = true)
-@Composable
-fun ToDoScreenPreview() {
-   val viewModel = ToDoViewModel(PreferenceStorage(LocalContext.current))
-   viewModel.createTestTasks()
-   ToDoListTheme {
-      ToDoScreen(todoViewModel = viewModel)
-   }
-}

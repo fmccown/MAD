@@ -3,22 +3,20 @@ package com.zybooks.todolist.ui
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.zybooks.todolist.Task
-import com.zybooks.todolist.data.PreferenceStorage
 
-class ToDoViewModel(
-   prefStorage: PreferenceStorage
-) : ViewModel() {
+class ToDoViewModel : ViewModel() {
    val taskList = mutableStateListOf<Task>()
-
    private val archivedTasks = mutableListOf<Task>()
 
    fun addTask(body: String) {
-      // Create ID that is one larger than existing IDs
+      // Create an ID that is one larger than existing IDs
       val taskId = if (taskList.isEmpty()) 1 else taskList.maxOf { it.id } + 1
-      taskList.add(Task(
-         id = taskId,
-         body = body
-      ))
+      taskList.add(
+         Task(
+            id = taskId,
+            body = body
+         )
+      )
    }
 
    fun deleteTask(task: Task) {
