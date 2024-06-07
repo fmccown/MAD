@@ -5,8 +5,12 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.zybooks.todolist.Task
+import com.zybooks.todolist.ToDoListApplication
 import com.zybooks.todolist.data.PreferenceStorage
 import com.zybooks.todolist.data.TaskOrder
 import kotlinx.coroutines.launch
@@ -14,6 +18,19 @@ import kotlinx.coroutines.launch
 class ToDoViewModel(
    prefStorage: PreferenceStorage
 ) : ViewModel() {
+
+   companion object {
+      val Factory: ViewModelProvider.Factory = viewModelFactory {
+         initializer {
+            val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
+                  as ToDoListApplication)
+            ToDoViewModel(
+               PreferenceStorage(application.appContext)
+            )
+         }
+      }
+   }
+
    // App setting variables
    var confirmDelete by mutableStateOf(true)
    private var numTestTasks: Int = 10
