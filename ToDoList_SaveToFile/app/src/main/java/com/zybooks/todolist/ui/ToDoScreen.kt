@@ -62,7 +62,9 @@ import com.zybooks.todolist.ui.theme.ToDoListTheme
 @Composable
 fun ToDoScreen(
    modifier: Modifier = Modifier,
-   todoViewModel: ToDoViewModel = viewModel(),
+   todoViewModel: ToDoViewModel = viewModel(
+      factory = ToDoViewModel.Factory
+   ),
    onClickSettings: () -> Unit = {}
 ) {
    Scaffold(
