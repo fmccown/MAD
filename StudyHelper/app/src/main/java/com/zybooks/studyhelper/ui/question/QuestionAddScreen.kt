@@ -2,7 +2,6 @@ package com.zybooks.studyhelper.ui.question
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,12 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zybooks.studyhelper.data.Question
-import com.zybooks.studyhelper.ui.theme.StudyHelperTheme
 
 @Composable
 fun QuestionAddScreen(
@@ -63,16 +60,6 @@ fun QuestionAddScreen(
          question = viewModel.question,
          onQuestionChange = { viewModel.changeQuestion(it) },
          modifier = modifier.padding(innerPadding).fillMaxSize()
-      )
-   }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewAddQuestionScreen() {
-   StudyHelperTheme {
-      QuestionAddScreen(
-         //subject = Subject(0, "History")
       )
    }
 }
