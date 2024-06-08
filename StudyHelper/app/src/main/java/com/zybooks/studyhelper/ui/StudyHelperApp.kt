@@ -1,8 +1,6 @@
 package com.zybooks.studyhelper.ui
 
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -23,12 +21,7 @@ enum class StudyScreen {
 }
 
 @Composable
-fun StudyHelperApp(
-   modifier: Modifier = Modifier,
-   //viewModel: StudyViewModel = viewModel(
-   //   factory = StudyViewModel.Factory
-   //)
-) {
+fun StudyHelperApp() {
    val navController = rememberNavController()
 
    NavHost(
@@ -79,7 +72,7 @@ fun StudyHelperApp(
       composable(
          route = "${StudyScreen.EDIT_QUESTION.name}/{questionId}",
 
-         // Specify subject ID argument so QuestionViewModel can determine selected subject
+         // Specify question ID argument so QuestionEditViewModel knows which question to show
          arguments = listOf(navArgument("questionId") {
             type = NavType.LongType
          })
