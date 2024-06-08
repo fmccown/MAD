@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
 class PetViewModel(
-   private val appSettingsRepo: AppSettingsRepo
+   appSettingsRepo: AppSettingsRepo
 ) : ViewModel() {
 
    companion object {
@@ -31,42 +31,7 @@ class PetViewModel(
       }
    }
 
-   //val petList = DataSource().loadPets()
-
-   // LiveData solution
-   /*
-   private val _petList = MutableLiveData<List<Pet>>()
-   val petList: LiveData<List<Pet>> get() = _petList
-*/
-
-   // Only downside is that it is exposed as mutable, so could be changed outside
-   //val petList = MutableLiveData<List<Pet>>()
-
-   // This is to use LiveData instead of Flows
-   /*
-   init {
-      viewModelScope.launch {
-         combine(
-            appSettingsRepo.includeCats,
-            appSettingsRepo.includeDogs,
-            appSettingsRepo.includeOther,
-            appSettingsRepo.maxAge
-         ) { includeCats, includeDogs, includeOther, maxAge ->
-            DataSource().loadPets().filter { pet ->
-               ((includeCats && pet.type == PetType.CAT) ||
-                     (includeDogs && pet.type == PetType.DOG) ||
-                     (includeOther && pet.type == PetType.OTHER)) &&
-                     pet.age <= maxAge
-            }
-         }.collect { pets ->
-            println("Return pets with length ${pets.size}")
-            _petList.value = pets
-            //petList.value = pets
-         }
-      }
-   }
-*/
-
+   // Apply the settings to the pet list
    val petList: StateFlow<List<Pet>> =
       combine(
          appSettingsRepo.includeCats,
@@ -85,44 +50,6 @@ class PetViewModel(
          started = SharingStarted.WhileSubscribed(5000),
          initialValue = emptyList()
       )
-   /*
-   val uiState: StateFlow<UiState> =
-      combine(
-         appSettingsRepo.includeCats,
-         appSettingsRepo.includeDogs,
-         appSettingsRepo.includeOther,
-         appSettingsRepo.maxAge
-      ) { includeCats, includeDogs, includeOther, maxAge ->
-         UiState(
-            DataSource().loadPets().filter { pet ->
-               ((includeCats && pet.type == PetType.CAT) ||
-               (includeDogs && pet.type == PetType.DOG) ||
-               (includeOther && pet.type == PetType.OTHER)) &&
-                  pet.age <= maxAge
-            }
-         )
-      }
-      .stateIn(
-         scope = viewModelScope,
-         started = SharingStarted.WhileSubscribed(5000),
-         initialValue = UiState(emptyList())
-      )
-    */
-
-   /*
-      appSettingsRepo.includeCats.map { includeCats ->
-         UiState(DataSource().loadPets().filter { includeCats && it.type == PetType.CAT })
-      }
-      .stateIn(
-         scope = viewModelScope,
-         started = SharingStarted.WhileSubscribed(5000),
-         initialValue = UiState(DataSource().loadPets())
-      )*/
 
    var selectedPet by mutableStateOf<Pet?>(null)
 }
-
-/*
-data class UiState (
-   val petList: List<Pet>
-)*/
