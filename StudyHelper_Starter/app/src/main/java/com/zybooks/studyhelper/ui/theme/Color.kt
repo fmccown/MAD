@@ -77,12 +77,12 @@ val dark_CustomColor1Container = Color(0xFF632C88)
 val dark_onCustomColor1Container = Color(0xFFF3DAFF)
 
 val subjectColors = listOf(
-   Color(0xFF1A237E),
-   Color(0xFF880E4F),
-   Color(0xFF006064),
+   Color(0xFF2C369C),
+   Color(0xFFC2086B),
+   Color(0xFF0FAF2A),
    Color(0xFFF57F17),
    Color(0xFFBF360C),
-   Color(0xFF01579B),
+   Color(0xFF0679D5),
    Color(0xFF33691E),
-   Color(0xFF4A148C)
+   Color(0xFF6A0BDD)
 )

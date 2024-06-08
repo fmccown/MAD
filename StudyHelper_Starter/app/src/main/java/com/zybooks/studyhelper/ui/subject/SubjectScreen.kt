@@ -15,25 +15,16 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,31 +45,17 @@ fun SubjectScreen(
 ) {
    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
-   if (uiState.value.isSubjectDialogVisible) {
-      AddSubjectDialog(
-         onDismissRequest = {
-            viewModel.hideSubjectDialog()
-         },
-         onConfirmation = {
-            viewModel.hideSubjectDialog()
-         },
-         onAddSubject = { title ->
-            viewModel.addSubject(title)
-         }
-      )
-   }
-
    Scaffold(
       topBar = {
          SubjectAppBar(
             inSelectionMode = uiState.value.inSelectionMode,
-            onDeleteClick = viewModel::deleteSelectedSubjects,
-            onUpClick = viewModel::stopDeleting
+            onDeleteClick = { },
+            onUpClick = { }
          )
       },
       floatingActionButton = {
          FloatingActionButton(
-            onClick = { viewModel.showSubjectDialog() },
+            onClick = { },
          ) {
             Icon(Icons.Filled.Add, "Add")
          }
@@ -89,7 +66,7 @@ fun SubjectScreen(
          inSelectionMode = uiState.value.inSelectionMode,
          selectedSubjects = uiState.value.selectedSubjects,
          onSubjectClick = onSubjectClick,
-         onSubjectLongClick = { viewModel.selectSubjectForDeleting(it) },
+         onSubjectLongClick = { },
          modifier = modifier.padding(innerPadding)
       )
    }
@@ -184,50 +161,5 @@ fun SubjectAppBar(
             }
          }
       }
-   )
-}
-
-@Composable
-fun AddSubjectDialog(
-   onConfirmation: () -> Unit,
-   onDismissRequest: () -> Unit,
-   onAddSubject: (String) -> Unit
-) {
-   var subject by remember { mutableStateOf("") }
-
-   AlertDialog(
-      onDismissRequest = {
-         onDismissRequest()
-      },
-      title = {
-         TextField(
-            label = { Text("Subject?") },
-            value = subject,
-            onValueChange = { subject = it }
-         )
-      },
-      confirmButton = {
-         Button(
-            colors = ButtonDefaults.buttonColors(
-               containerColor = MaterialTheme.colorScheme.primary
-            ),
-            onClick = {
-               onConfirmation()
-               onAddSubject(subject)
-            }) {
-            Text(text = "Add")
-         }
-      },
-      dismissButton = {
-         Button(
-            colors = ButtonDefaults.buttonColors(
-               containerColor = MaterialTheme.colorScheme.secondary
-            ),
-            onClick = {
-               onDismissRequest()
-            }) {
-            Text(text = "Cancel")
-         }
-      },
    )
 }

@@ -35,8 +35,29 @@ class QuestionViewModel(
    private val currQuestion = MutableStateFlow(Question())
    private val answerVisible = MutableStateFlow(true)
 
-   // TODO: Modify to update QuestionScreenUiState
-   val uiState: StateFlow<QuestionScreenUiState> = MutableStateFlow(QuestionScreenUiState())
+   private val testQuestions: List<Question> = listOf(
+      Question(
+         id = 1,
+         text = "What is the slope and y-intercept of y = 4x + 1?",
+         answer = "Slope = 4, y-intercept = 1",
+         subjectId = 1
+      ),
+      Question(
+         id = 2,
+         text = "What is the slope between the points (2, 6) and (4, -3)?",
+         answer = "Slope = (-3 - 6) / (4 - 2) = -9 / 2",
+         subjectId = 1
+      )
+   )
+
+   val uiState: StateFlow<QuestionScreenUiState> = MutableStateFlow(
+      QuestionScreenUiState(
+         subject = Subject(id = 1, title = "Algebra"),
+         currQuestion = testQuestions[0],
+         questionList = testQuestions,
+         totalQuestions = 2
+      )
+   )
 
    fun prevQuestion() {
       val index = (uiState.value.currQuestionNum - 2 + uiState.value.totalQuestions) %

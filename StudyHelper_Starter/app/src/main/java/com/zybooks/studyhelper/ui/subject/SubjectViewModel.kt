@@ -22,44 +22,19 @@ class SubjectViewModel(context: Context) : ViewModel() {
       }
    }
 
-   private val selectedSubjects = MutableStateFlow(emptySet<Subject>())
-   private val inSelectionMode = MutableStateFlow(false)
-   private val isSubjectDialogVisible = MutableStateFlow(false)
-
-   // TODO: Modify to update SubjectScreenUiState
-   val uiState: StateFlow<SubjectScreenUiState> = MutableStateFlow(SubjectScreenUiState())
-
-   fun addSubject(title: String) {
-      // TODO: Complete this function
-   }
-
-   fun selectSubjectForDeleting(subject: Subject) {
-      val selected = uiState.value.selectedSubjects.contains(subject)
-      selectedSubjects.value = if (selected) {
-         uiState.value.selectedSubjects.minus(subject)
-      } else {
-         uiState.value.selectedSubjects.plus(subject)
-      }
-
-      inSelectionMode.value = selectedSubjects.value.isNotEmpty()
-   }
-
-   fun stopDeleting() {
-      selectedSubjects.value = emptySet()
-      inSelectionMode.value = false
-   }
-
-   fun deleteSelectedSubjects() {
-      // TODO: Complete this function
-   }
-
-   fun showSubjectDialog() {
-      isSubjectDialogVisible.value = true
-   }
-
-   fun hideSubjectDialog() {
-      isSubjectDialogVisible.value = false
-   }
+   val uiState: StateFlow<SubjectScreenUiState> = MutableStateFlow(
+      SubjectScreenUiState(
+         subjectList = listOf(
+            Subject(id = 1, title = "Algebra"),
+            Subject(id = 2, title = "Computer Science"),
+            Subject(id = 3, title = "US History"),
+            Subject(id = 4, title = "Greek"),
+            Subject(id = 5, title = "Poetry"),
+            Subject(id = 6, title = "Biology"),
+            Subject(id = 7, title = "Accounting"),
+         )
+      )
+   )
 }
 
 data class SubjectScreenUiState(
