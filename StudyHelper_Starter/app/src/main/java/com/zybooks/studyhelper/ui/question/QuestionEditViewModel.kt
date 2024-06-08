@@ -45,13 +45,13 @@ class QuestionEditViewModel(
       question = ques
    }
 
+   fun updateQuestion() {
+      studyRepo.updateQuestion(question)
+   }
+
    init {
       viewModelScope.launch {
          question = studyRepo.getQuestion(questionId).filterNotNull().first()
       }
-   }
-
-   fun updateQuestion() {
-      studyRepo.updateQuestion(question)
    }
 }

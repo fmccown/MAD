@@ -38,7 +38,7 @@ class QuestionAddViewModel(
       question = ques
    }
 
-   // Get subject ID from composable()'s argument list and load subject from database
+   // Get subject ID from composable()'s argument list
    private val subjectId: Long = checkNotNull(savedStateHandle["subjectId"])
 
    fun addQuestion() {

@@ -85,7 +85,7 @@ class QuestionViewModel(
       val question = uiState.value.currQuestion
       val index = uiState.value.currQuestionNum - 1
 
-      // If deleting the very last question
+      // Special cases when deleting the very last question
       when (uiState.value.questionList.size) {
          1 -> {
             // Deleting very last question
