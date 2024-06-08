@@ -9,15 +9,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.zybooks.studyhelper.StudyHelperApplication
 import com.zybooks.studyhelper.data.Question
-import com.zybooks.studyhelper.data.StudyRepository
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 class QuestionEditViewModel(
    savedStateHandle: SavedStateHandle,
@@ -33,8 +28,6 @@ class QuestionEditViewModel(
       }
    }
 
-   private val studyRepo = StudyRepository.getInstance(context)
-
    // Get from composable()'s argument list
    private val questionId: Long = checkNotNull(savedStateHandle["questionId"])
 
@@ -46,12 +39,10 @@ class QuestionEditViewModel(
    }
 
    fun updateQuestion() {
-      studyRepo.updateQuestion(question)
+      // TODO: Complete this function
    }
 
    init {
-      viewModelScope.launch {
-         question = studyRepo.getQuestion(questionId).filterNotNull().first()
-      }
+      // TODO: Initialize question
    }
 }

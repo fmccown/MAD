@@ -1,25 +1,15 @@
 package com.zybooks.studyhelper.ui.subject
 
 import android.content.Context
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.zybooks.studyhelper.StudyHelperApplication
-import com.zybooks.studyhelper.data.StudyRepository
 import com.zybooks.studyhelper.data.Subject
-import com.zybooks.studyhelper.ui.question.QuestionScreenUiState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.stateIn
 
 class SubjectViewModel(context: Context) : ViewModel() {
 
@@ -32,38 +22,15 @@ class SubjectViewModel(context: Context) : ViewModel() {
       }
    }
 
-   private val studyRepo = StudyRepository.getInstance(context)
-
    private val selectedSubjects = MutableStateFlow(emptySet<Subject>())
    private val inSelectionMode = MutableStateFlow(false)
    private val isSubjectDialogVisible = MutableStateFlow(false)
 
-   val uiState: StateFlow<SubjectScreenUiState> = transformedFlow()
-      .stateIn(
-         scope = viewModelScope,
-         started = SharingStarted.WhileSubscribed(5000L),
-         initialValue = SubjectScreenUiState(),
-      )
-
-   private fun transformedFlow() = combine(
-      studyRepo.getSubjects().filterNotNull(),
-      selectedSubjects,
-      inSelectionMode,
-      isSubjectDialogVisible
-   ) { subjects, selectSubs, inSelectMode, dialogVisible ->
-      SubjectScreenUiState(
-         subjectList = subjects,
-         selectedSubjects = selectSubs,
-         inSelectionMode = inSelectMode,
-         isSubjectDialogVisible = dialogVisible
-      )
-   }
+   // TODO: Modify to update SubjectScreenUiState
+   val uiState: StateFlow<SubjectScreenUiState> = MutableStateFlow(SubjectScreenUiState())
 
    fun addSubject(title: String) {
-      val subTitle = title.trim()
-      if (subTitle != "") {
-         studyRepo.addSubject(Subject(title = subTitle))
-      }
+      // TODO: Complete this function
    }
 
    fun selectSubjectForDeleting(subject: Subject) {
@@ -83,10 +50,7 @@ class SubjectViewModel(context: Context) : ViewModel() {
    }
 
    fun deleteSelectedSubjects() {
-      for (subject in uiState.value.selectedSubjects) {
-         studyRepo.deleteSubject(subject)
-      }
-      stopDeleting()
+      // TODO: Complete this function
    }
 
    fun showSubjectDialog() {

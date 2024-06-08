@@ -13,7 +13,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.zybooks.studyhelper.StudyHelperApplication
 import com.zybooks.studyhelper.data.Question
-import com.zybooks.studyhelper.data.StudyRepository
 
 class QuestionAddViewModel(
    savedStateHandle: SavedStateHandle,
@@ -29,8 +28,6 @@ class QuestionAddViewModel(
       }
    }
 
-   private val studyRepo = StudyRepository.getInstance(context)
-
    var question by mutableStateOf(Question(0))
       private set
 
@@ -42,7 +39,6 @@ class QuestionAddViewModel(
    private val subjectId: Long = checkNotNull(savedStateHandle["subjectId"])
 
    fun addQuestion() {
-      question.subjectId = subjectId
-      studyRepo.addQuestion(question)
+      // TODO: Complete this function
    }
 }
