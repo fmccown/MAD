@@ -80,7 +80,7 @@ fun SettingsScreen(
          val taskOptions = TaskOrder.entries.map { it.text }
          val selectedIndex = appPrefs.value.taskOrder.ordinal
 
-         ListPreference(
+         ListSetting(
             title = "Task order",
             values = taskOptions,
             selectedIndex = selectedIndex,
@@ -91,7 +91,7 @@ fun SettingsScreen(
                }
             }
          )
-         SwitchPreference(
+         SwitchSetting(
             title = "Confirm delete",
             checked = appPrefs.value.confirmDelete,
             onCheckedChange = { checked ->
@@ -100,7 +100,7 @@ fun SettingsScreen(
                }
             }
          )
-         SliderPreference(
+         SliderSetting(
             title = "Number of test tasks",
             initValue = appPrefs.value.numTestTasks,
             valueRange = 1..20,
@@ -116,7 +116,7 @@ fun SettingsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListPreference(
+fun ListSetting(
    title: String,
    values: List<String>,
    selectedIndex: Int,
@@ -168,7 +168,7 @@ fun ListPreference(
 }
 
 @Composable
-fun SwitchPreference(
+fun SwitchSetting(
    title: String,
    checked: Boolean,
    onCheckedChange: (Boolean) -> Unit,
@@ -232,7 +232,7 @@ fun SliderPreference(
  */
 
 @Composable
-fun SliderPreference(
+fun SliderSetting(
    title: String,
    initValue: Int,
    valueRange: ClosedRange<Int>,
