@@ -165,7 +165,7 @@ fun QuestionAndAnswer(
 @Composable
 fun PreviewQuestionAndAnswer() {
    QuestionAndAnswer(
-      question = Question(0, "What is 2 + 2?\nline2\nline3\nline4\nline5\nline6", "The answer is 4."),
+      question = Question(0, "What is 2 + 2?", "The answer is 4."),
       totalQuestions = 2,
       onPrevClick = {},
       onNextClick = {},

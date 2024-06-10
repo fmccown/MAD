@@ -63,24 +63,18 @@ fun SubjectScreen(
    ) { innerPadding ->
       SubjectGrid(
          subjectList = uiState.value.subjectList,
-         inSelectionMode = uiState.value.inSelectionMode,
-         selectedSubjects = uiState.value.selectedSubjects,
          onSubjectClick = onSubjectClick,
-         onSubjectLongClick = { },
          modifier = modifier.padding(innerPadding)
       )
    }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SubjectGrid(
    subjectList: List<Subject>,
    onSubjectClick: (Subject) -> Unit,
-   onSubjectLongClick: (Subject) -> Unit,
    modifier: Modifier = Modifier,
-   inSelectionMode: Boolean = false,
-   selectedSubjects: Set<Subject> = emptySet()
 ) {
    LazyVerticalGrid(
       columns = GridCells.Adaptive(minSize = 128.dp),
@@ -93,38 +87,16 @@ fun SubjectGrid(
                containerColor = subjectColors[
                   subject.title.length % subjectColors.size]
             ),
+            onClick = { onSubjectClick(subject) },
             modifier = Modifier
                .animateItemPlacement()  // Requires key in items()
                .height(100.dp)
                .padding(4.dp)
-               .combinedClickable(
-                  onLongClick = { onSubjectLongClick(subject) },
-                  onClick = {
-                     if (inSelectionMode) {
-                        onSubjectLongClick(subject)
-                     } else {
-                        onSubjectClick(subject)
-                     }
-                  },
-                  onClickLabel = subject.title
-               )
          ) {
             Box(
                contentAlignment = Alignment.Center,
                modifier = Modifier.fillMaxSize()
             ) {
-               if (inSelectionMode) {
-                  if (selectedSubjects.contains(subject)) {
-                     Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier
-                           .align(Alignment.TopStart)
-                           .padding(4.dp)
-                     )
-                  }
-               }
                Text(
                   text = subject.title,
                   textAlign = TextAlign.Center,
