@@ -77,10 +77,12 @@ fun SubjectScreen(
          )
       },
       floatingActionButton = {
-         FloatingActionButton(
-            onClick = { viewModel.showSubjectDialog() },
-         ) {
-            Icon(Icons.Filled.Add, "Add")
+         if (!uiState.value.inSelectionMode) {
+            FloatingActionButton(
+               onClick = { viewModel.showSubjectDialog() },
+            ) {
+               Icon(Icons.Filled.Add, "Add")
+            }
          }
       }
    ) { innerPadding ->
