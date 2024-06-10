@@ -94,7 +94,7 @@ fun SubjectGrid(
                   subject.title.length % subjectColors.size]
             ),
             modifier = Modifier
-               .animateItemPlacement()  // Requires key in items()!
+               .animateItemPlacement()  // Requires key in items()
                .height(100.dp)
                .padding(4.dp)
                .combinedClickable(

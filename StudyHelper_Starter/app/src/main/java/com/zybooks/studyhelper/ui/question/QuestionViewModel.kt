@@ -10,20 +10,25 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.zybooks.studyhelper.StudyHelperApplication
 import com.zybooks.studyhelper.data.Question
+import com.zybooks.studyhelper.data.StudyRepository
 import com.zybooks.studyhelper.data.Subject
+import com.zybooks.studyhelper.ui.subject.SubjectViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class QuestionViewModel(
    savedStateHandle: SavedStateHandle,
-   context: Context
+   private val studyRepo: StudyRepository
 ) : ViewModel() {
 
    companion object {
       val Factory: ViewModelProvider.Factory = viewModelFactory {
          initializer {
             val application = (this[APPLICATION_KEY] as StudyHelperApplication)
-            QuestionViewModel(this.createSavedStateHandle(), application.appContext)
+            QuestionViewModel(
+               savedStateHandle = this.createSavedStateHandle(),
+               studyRepo = application.studyRepository
+            )
          }
       }
    }
@@ -35,27 +40,13 @@ class QuestionViewModel(
    private val currQuestion = MutableStateFlow(Question())
    private val answerVisible = MutableStateFlow(true)
 
-   private val testQuestions: List<Question> = listOf(
-      Question(
-         id = 1,
-         text = "What is the slope and y-intercept of y = 4x + 1?",
-         answer = "Slope = 4, y-intercept = 1",
-         subjectId = 1
-      ),
-      Question(
-         id = 2,
-         text = "What is the slope between the points (2, 6) and (4, -3)?",
-         answer = "Slope = (-3 - 6) / (4 - 2) = -9 / 2",
-         subjectId = 1
-      )
-   )
-
    val uiState: StateFlow<QuestionScreenUiState> = MutableStateFlow(
       QuestionScreenUiState(
-         subject = Subject(id = 1, title = "Algebra"),
-         currQuestion = testQuestions[0],
-         questionList = testQuestions,
-         totalQuestions = 2
+         subject = studyRepo.getSubject(subjectId)!!,
+         currQuestion = if (studyRepo.getQuestions(subjectId).isEmpty()) Question() else
+            studyRepo.getQuestions(subjectId).first(),
+         questionList = studyRepo.getQuestions(subjectId),
+         totalQuestions = studyRepo.getQuestions(subjectId).size
       )
    )
 
@@ -70,10 +61,6 @@ class QuestionViewModel(
       val index = uiState.value.currQuestionNum % uiState.value.totalQuestions
       currQuestion.value = uiState.value.questionList[index]
       currQuestionNum.value = index + 1
-   }
-
-   fun deleteQuestion() {
-      // TODO: Complete function
    }
 
    fun toggleAnswer() {

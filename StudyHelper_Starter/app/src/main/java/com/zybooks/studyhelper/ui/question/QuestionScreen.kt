@@ -60,7 +60,7 @@ fun QuestionScreen(
             showAddOnly = uiState.value.totalQuestions == 0,
             onAddClick = onAddClick,
             onEditClick = { onEditClick(uiState.value.currQuestion.id) },
-            onDeleteClick = viewModel::deleteQuestion
+            onDeleteClick = {  }
          )
       }
    ) { innerPadding ->
@@ -72,7 +72,9 @@ fun QuestionScreen(
             onNextClick = viewModel::nextQuestion,
             onToggleAnswerClick = viewModel::toggleAnswer,
             answerVisible = uiState.value.answerVisible,
-            modifier = Modifier.padding(innerPadding).fillMaxSize()
+            modifier = Modifier
+               .padding(innerPadding)
+               .fillMaxSize()
          )
       }
    }
