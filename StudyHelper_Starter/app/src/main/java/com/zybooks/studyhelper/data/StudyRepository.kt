@@ -25,8 +25,8 @@ class StudyRepository(context: Context) {
          return listOf(
             Question(
                id = 1,
-               text = "What is the slope and y-intercept of y = 4x + 1?",
-               answer = "Slope = 4, y-intercept = 1",
+               text = "What is the y-intercept of y = 4x + 1?",
+               answer = "y-intercept = 1",
                subjectId = 1
             ),
             Question(
