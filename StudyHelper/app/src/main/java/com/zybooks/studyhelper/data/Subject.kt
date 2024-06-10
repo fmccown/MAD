@@ -12,5 +12,5 @@ data class Subject(
    var title: String = "",
 
    @ColumnInfo(name = "updated")
-   var updateTime: Long = System.currentTimeMillis()) {
-}
+   var updateTime: Long = System.currentTimeMillis()
+)
