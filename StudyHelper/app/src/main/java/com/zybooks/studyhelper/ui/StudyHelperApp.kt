@@ -31,18 +31,24 @@ fun StudyHelperApp() {
       composable(route = StudyScreen.SUBJECT.name) {
          SubjectScreen(
             onSubjectClick = { subject ->
-               navController.navigate("${StudyScreen.QUESTION.name}/${subject.id}")
+               navController.navigate("${StudyScreen.QUESTION.name}/${subject.id}/false")
             }
          )
       }
 
       composable(
-         route = "${StudyScreen.QUESTION.name}/{subjectId}",
+         route = "${StudyScreen.QUESTION.name}/{subjectId}/{showLastQuestion}",
 
          // Specify subject ID argument so QuestionViewModel can determine selected subject
-         arguments = listOf(navArgument("subjectId") {
-            type = NavType.LongType
-         })
+         arguments = listOf(
+            navArgument("subjectId") {
+               type = NavType.LongType
+            },
+            navArgument("showLastQuestion") {
+               type = NavType.BoolType
+               defaultValue = false
+            }
+         )
       ) { backStackEntry ->
          val subjectId = backStackEntry.arguments?.getLong("subjectId")
          QuestionScreen(
@@ -57,15 +63,22 @@ fun StudyHelperApp() {
       }
       composable(
          route = "${StudyScreen.ADD_QUESTION.name}/{subjectId}",
-         arguments = listOf(navArgument("subjectId") {
-            type = NavType.LongType
-         })
-      ) {
+         arguments = listOf(
+            navArgument("subjectId") {
+               type = NavType.LongType
+            }
+         )
+      ) {backStackEntry ->
+         val subjectId = backStackEntry.arguments?.getLong("subjectId")
          QuestionAddScreen(
             onUpClick = { navController.popBackStack() },
             onSaveClick = {
+               // Pop edit screen and previous question screen
                navController.popBackStack()
-               // TODO: Navigate to new question
+               navController.popBackStack()
+
+               // Navigate to new question
+               navController.navigate("${StudyScreen.QUESTION.name}/${subjectId}/true")
             }
          )
       }

@@ -1,13 +1,11 @@
 package com.zybooks.studyhelper.data
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class StudyRepository(context: Context) {
@@ -75,8 +73,8 @@ class StudyRepository(context: Context) {
       var subjectId = subjectDao.addSubject(Subject(title = "Math"))
       questionDao.addQuestion(
          Question(
-            text = "What is 2 + 3?",
-            answer = "2 + 3 = 5",
+            text = "What is the y-intercept of y = 4x + 1?",
+            answer = "y-intercept is 1",
             subjectId = subjectId
          )
       )

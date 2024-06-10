@@ -35,6 +35,7 @@ class QuestionViewModel(
 
    // Get from composable()'s argument list
    private val subjectId: Long = checkNotNull(savedStateHandle["subjectId"])
+   private val showLastQuestion: Boolean = checkNotNull(savedStateHandle["showLastQuestion"])
 
    private val currQuestionNum = MutableStateFlow(1)
    private val currQuestion = MutableStateFlow(Question())
@@ -57,9 +58,14 @@ class QuestionViewModel(
       QuestionScreenUiState(
          subject = subject,
          questionList = questions,
-         currQuestion = if (currQuest.id == 0L && questions.isNotEmpty()) questions.first()
-            else if (questions.isEmpty()) currQuest else questions[currNum - 1],
-         currQuestionNum = currNum,
+         currQuestion =
+            if (currQuest.id == 0L && questions.isNotEmpty() && showLastQuestion) questions.last()
+            else if (currQuest.id == 0L && questions.isNotEmpty()) questions.first()
+            else if (questions.isEmpty()) currQuest
+            else questions[currNum - 1],
+         currQuestionNum =
+            if (currQuest.id == 0L && questions.isNotEmpty() && showLastQuestion) questions.size
+            else currNum,
          totalQuestions = questions.size,
          answerVisible = ansVisible
       )
