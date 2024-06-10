@@ -1,7 +1,6 @@
 package com.zybooks.studyhelper.ui.subject
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,15 +11,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -47,11 +42,7 @@ fun SubjectScreen(
 
    Scaffold(
       topBar = {
-         SubjectAppBar(
-            inSelectionMode = uiState.value.inSelectionMode,
-            onDeleteClick = { },
-            onUpClick = { }
-         )
+         SubjectAppBar()
       },
       floatingActionButton = {
          FloatingActionButton(
@@ -111,27 +102,10 @@ fun SubjectGrid(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubjectAppBar(
-   inSelectionMode: Boolean,
-   onDeleteClick: () -> Unit,
-   onUpClick: () -> Unit,
    modifier: Modifier = Modifier
 ) {
    TopAppBar(
       title = { Text("Study Helper") },
-      modifier = modifier,
-      navigationIcon = {
-         if (inSelectionMode) {
-            IconButton(onClick = onUpClick) {
-               Icon(Icons.Filled.ArrowBack,"Back")
-            }
-         }
-      },
-      actions = {
-         if (inSelectionMode) {
-            IconButton(onClick = onDeleteClick) {
-               Icon(Icons.Filled.Delete, "Delete")
-            }
-         }
-      }
+      modifier = modifier
    )
 }

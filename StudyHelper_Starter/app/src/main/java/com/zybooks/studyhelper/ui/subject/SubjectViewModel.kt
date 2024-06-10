@@ -1,6 +1,5 @@
 package com.zybooks.studyhelper.ui.subject
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -32,7 +31,5 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
 
 data class SubjectScreenUiState(
    val subjectList: List<Subject> = emptyList(),
-   val selectedSubjects: Set<Subject> = emptySet(),
-   val inSelectionMode: Boolean = false,
    val isSubjectDialogVisible: Boolean = false
 )
