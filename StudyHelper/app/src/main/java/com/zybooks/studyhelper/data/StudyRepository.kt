@@ -10,24 +10,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class StudyRepository private constructor(context: Context) {
-   companion object {
-      private var instance: StudyRepository? = null
-
-      fun getInstance(context: Context): StudyRepository {
-         if (instance == null) {
-            instance = StudyRepository(context)
-         }
-         return instance!!
-      }
-   }
+class StudyRepository(context: Context) {
 
    private val databaseCallback = object : RoomDatabase.Callback() {
       override fun onCreate(db: SupportSQLiteDatabase) {
          super.onCreate(db)
 
          CoroutineScope(Dispatchers.IO).launch {
-            instance?.addStarterData()
+            addStarterData()
          }
       }
    }

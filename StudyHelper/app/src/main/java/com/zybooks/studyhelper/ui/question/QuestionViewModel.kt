@@ -1,6 +1,5 @@
 package com.zybooks.studyhelper.ui.question
 
-import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -22,19 +21,17 @@ import kotlinx.coroutines.flow.stateIn
 
 class QuestionViewModel(
    savedStateHandle: SavedStateHandle,
-   context: Context
+   private val studyRepo: StudyRepository
 ) : ViewModel() {
 
    companion object {
       val Factory: ViewModelProvider.Factory = viewModelFactory {
          initializer {
             val application = (this[APPLICATION_KEY] as StudyHelperApplication)
-            QuestionViewModel(this.createSavedStateHandle(), application.appContext)
+            QuestionViewModel(this.createSavedStateHandle(), application.studyRepository)
          }
       }
    }
-
-   private val studyRepo = StudyRepository.getInstance(context)
 
    // Get from composable()'s argument list
    private val subjectId: Long = checkNotNull(savedStateHandle["subjectId"])

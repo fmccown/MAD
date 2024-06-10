@@ -1,6 +1,5 @@
 package com.zybooks.studyhelper.ui.question
 
-import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,19 +16,17 @@ import com.zybooks.studyhelper.data.StudyRepository
 
 class QuestionAddViewModel(
    savedStateHandle: SavedStateHandle,
-   context: Context
+   private val studyRepo: StudyRepository
 ) : ViewModel() {
 
    companion object {
       val Factory: ViewModelProvider.Factory = viewModelFactory {
          initializer {
             val application = (this[APPLICATION_KEY] as StudyHelperApplication)
-            QuestionAddViewModel(this.createSavedStateHandle(), application.appContext)
+            QuestionAddViewModel(this.createSavedStateHandle(), application.studyRepository)
          }
       }
    }
-
-   private val studyRepo = StudyRepository.getInstance(context)
 
    var question by mutableStateOf(Question(0))
       private set
