@@ -39,7 +39,7 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
       )
 
    private fun transformedFlow() = combine(
-      studyRepo.getSubjects().filterNotNull(),
+      studyRepo.getSubjects(),
       selectedSubjects,
       inSelectionMode,
       isSubjectDialogVisible
