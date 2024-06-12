@@ -20,7 +20,7 @@ class StudyRepository(context: Context) {
       }
    }
 
-   private val database : StudyDatabase = Room.databaseBuilder(
+   private val database: StudyDatabase = Room.databaseBuilder(
       context,
       StudyDatabase::class.java,
       "study.db"
@@ -86,7 +86,7 @@ class StudyRepository(context: Context) {
          )
       )
 
-      subjectId = subjectDao.addSubject(Subject(title = "History"))
+      subjectId = subjectDao.addSubject(Subject(title = "US History"))
       questionDao.addQuestion(
          Question(
             text = "On what date was the U.S. Declaration of Independence adopted?",
@@ -96,6 +96,8 @@ class StudyRepository(context: Context) {
       )
 
       subjectDao.addSubject(Subject(title = "Computing"))
+      subjectDao.addSubject(Subject(title = "Biology"))
+      subjectDao.addSubject(Subject(title = "Greek"))
    }
 }
 
