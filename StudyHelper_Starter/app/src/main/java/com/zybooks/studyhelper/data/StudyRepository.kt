@@ -6,7 +6,7 @@ class StudyRepository(context: Context) {
 
    private val subjectList = listOf(
       Subject(id = 1, title = "Algebra"),
-      Subject(id = 2, title = "Computer Science"),
+      Subject(id = 2, title = "Computing"),
       Subject(id = 3, title = "US History"),
       Subject(id = 4, title = "Greek"),
       Subject(id = 5, title = "Poetry"),
@@ -26,7 +26,7 @@ class StudyRepository(context: Context) {
             Question(
                id = 1,
                text = "What is the y-intercept of y = 4x + 1?",
-               answer = "y-intercept = 1",
+               answer = "y-intercept is 1",
                subjectId = 1
             ),
             Question(
