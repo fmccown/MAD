@@ -53,10 +53,7 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
    }
 
    fun addSubject(title: String) {
-      val subjectTitle = title.trim()
-      if (subjectTitle != "") {
-         studyRepo.addSubject(Subject(title = subjectTitle))
-      }
+      studyRepo.addSubject(Subject(title = title))
    }
 
    fun selectSubjectForDeleting(subject: Subject) {

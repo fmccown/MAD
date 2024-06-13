@@ -36,8 +36,10 @@ class StudyRepository(context: Context) {
    fun getSubjects() = subjectDao.getSubjects()
 
    fun addSubject(subject: Subject) {
-      CoroutineScope(Dispatchers.IO).launch {
-         subject.id = subjectDao.addSubject(subject)
+      if (subject.title.trim() != "") {
+         CoroutineScope(Dispatchers.IO).launch {
+            subject.id = subjectDao.addSubject(subject)
+         }
       }
    }
 
