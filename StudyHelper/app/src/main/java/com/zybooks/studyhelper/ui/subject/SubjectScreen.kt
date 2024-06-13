@@ -56,14 +56,12 @@ fun SubjectScreen(
 
    if (uiState.value.isSubjectDialogVisible) {
       AddSubjectDialog(
+         onConfirmation = { title ->
+            viewModel.hideSubjectDialog()
+            viewModel.addSubject(title)
+         },
          onDismissRequest = {
             viewModel.hideSubjectDialog()
-         },
-         onConfirmation = {
-            viewModel.hideSubjectDialog()
-         },
-         onAddSubject = { title ->
-            viewModel.addSubject(title)
          }
       )
    }
@@ -191,9 +189,8 @@ fun SubjectAppBar(
 
 @Composable
 fun AddSubjectDialog(
-   onConfirmation: () -> Unit,
+   onConfirmation: (String) -> Unit,
    onDismissRequest: () -> Unit,
-   onAddSubject: (String) -> Unit
 ) {
    var subject by remember { mutableStateOf("") }
 
@@ -214,8 +211,7 @@ fun AddSubjectDialog(
                containerColor = MaterialTheme.colorScheme.primary
             ),
             onClick = {
-               onConfirmation()
-               onAddSubject(subject)
+               onConfirmation(subject)
             }) {
             Text(text = "Add")
          }
