@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -202,7 +203,13 @@ fun AddSubjectDialog(
          TextField(
             label = { Text("Subject?") },
             value = subject,
-            onValueChange = { subject = it }
+            onValueChange = { subject = it },
+            singleLine = true,
+            keyboardActions = KeyboardActions(
+               onDone = {
+                  onConfirmation(subject)
+               }
+            )
          )
       },
       confirmButton = {
