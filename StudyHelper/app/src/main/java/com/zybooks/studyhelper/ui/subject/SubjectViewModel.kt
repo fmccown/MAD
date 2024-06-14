@@ -27,7 +27,7 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
    }
 
    private val selectedSubjects = MutableStateFlow(emptySet<Subject>())
-   private val inContextualMode = MutableStateFlow(false)
+   private val isCabVisible = MutableStateFlow(false)
    private val isSubjectDialogVisible = MutableStateFlow(false)
 
    val uiState: StateFlow<SubjectScreenUiState> = transformedFlow()
@@ -40,13 +40,13 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
    private fun transformedFlow() = combine(
       studyRepo.getSubjects(),
       selectedSubjects,
-      inContextualMode,
+      isCabVisible,
       isSubjectDialogVisible
-   ) { subjects, selectSubs, contextMode, dialogVisible ->
+   ) { subjects, selectSubs, cab, dialogVisible ->
       SubjectScreenUiState(
          subjectList = subjects,
          selectedSubjects = selectSubs,
-         inContextualMode = contextMode,
+         isCabVisible = cab,
          isSubjectDialogVisible = dialogVisible
       )
    }
@@ -63,19 +63,19 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
          uiState.value.selectedSubjects.plus(subject)
       }
 
-      inContextualMode.value = selectedSubjects.value.isNotEmpty()
+      isCabVisible.value = selectedSubjects.value.isNotEmpty()
    }
 
-   fun leaveContextualMode() {
+   fun hideCab() {
       selectedSubjects.value = emptySet()
-      inContextualMode.value = false
+      isCabVisible.value = false
    }
 
    fun deleteSelectedSubjects() {
       for (subject in uiState.value.selectedSubjects) {
          studyRepo.deleteSubject(subject)
       }
-      leaveContextualMode()
+      hideCab()
    }
 
    fun showSubjectDialog() {
@@ -90,6 +90,6 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
 data class SubjectScreenUiState(
    val subjectList: List<Subject> = emptyList(),
    val selectedSubjects: Set<Subject> = emptySet(),
-   val inContextualMode: Boolean = false,
+   val isCabVisible: Boolean = false,
    val isSubjectDialogVisible: Boolean = false
 )

@@ -70,13 +70,13 @@ fun SubjectScreen(
    Scaffold(
       topBar = {
          SubjectAppBar(
-            inContextualMode = uiState.value.inContextualMode,
+            isCabVisible = uiState.value.isCabVisible,
             onDeleteClick = { viewModel.deleteSelectedSubjects() },
-            onUpClick = { viewModel.leaveContextualMode() }
+            onUpClick = { viewModel.hideCab() }
          )
       },
       floatingActionButton = {
-         if (!uiState.value.inContextualMode) {
+         if (!uiState.value.isCabVisible) {
             FloatingActionButton(
                onClick = { viewModel.showSubjectDialog() },
             ) {
@@ -87,7 +87,7 @@ fun SubjectScreen(
    ) { innerPadding ->
       SubjectGrid(
          subjectList = uiState.value.subjectList,
-         inSelectionMode = uiState.value.inContextualMode,
+         inSelectionMode = uiState.value.isCabVisible,
          selectedSubjects = uiState.value.selectedSubjects,
          onSubjectClick = onSubjectClick,
          onSubjectLongClick = { viewModel.selectSubject(it) },
@@ -163,27 +163,27 @@ fun SubjectGrid(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubjectAppBar(
-   inContextualMode: Boolean,
+   isCabVisible: Boolean,
    onDeleteClick: () -> Unit,
    onUpClick: () -> Unit,
    modifier: Modifier = Modifier
 ) {
    TopAppBar(
       title = {
-         if (!inContextualMode) {
+         if (!isCabVisible) {
             Text("Study Helper")
          }
       },
       modifier = modifier,
       navigationIcon = {
-         if (inContextualMode) {
+         if (isCabVisible) {
             IconButton(onClick = onUpClick) {
                Icon(Icons.Filled.ArrowBack,"Back")
             }
          }
       },
       actions = {
-         if (inContextualMode) {
+         if (isCabVisible) {
             IconButton(onClick = onDeleteClick) {
                Icon(Icons.Filled.Delete, "Delete")
             }
