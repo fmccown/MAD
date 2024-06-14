@@ -169,7 +169,11 @@ fun SubjectAppBar(
    modifier: Modifier = Modifier
 ) {
    TopAppBar(
-      title = { Text("Study Helper") },
+      title = {
+         if (!inContextualMode) {
+            Text("Study Helper")
+         }
+      },
       modifier = modifier,
       navigationIcon = {
          if (inContextualMode) {
