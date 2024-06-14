@@ -53,11 +53,11 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
    }
 
    fun selectSubject(subject: Subject) {
-      val selected = uiState.value.selectedSubjects.contains(subject)
+      val selected = selectedSubjects.value.contains(subject)
       selectedSubjects.value = if (selected) {
-         uiState.value.selectedSubjects.minus(subject)
+         selectedSubjects.value.minus(subject)
       } else {
-         uiState.value.selectedSubjects.plus(subject)
+         selectedSubjects.value.plus(subject)
       }
    }
 

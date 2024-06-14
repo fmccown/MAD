@@ -143,17 +143,15 @@ fun SubjectGrid(
                contentAlignment = Alignment.Center,
                modifier = Modifier.fillMaxSize()
             ) {
-               if (inSelectionMode) {
-                  if (selectedSubjects.contains(subject)) {
-                     Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier
-                           .align(Alignment.TopStart)
-                           .padding(4.dp)
-                     )
-                  }
+               if (inSelectionMode && selectedSubjects.contains(subject)) {
+                  Icon(
+                     imageVector = Icons.Default.CheckCircle,
+                     contentDescription = null,
+                     tint = Color.White,
+                     modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(4.dp)
+                  )
                }
                Text(
                   text = subject.title,
