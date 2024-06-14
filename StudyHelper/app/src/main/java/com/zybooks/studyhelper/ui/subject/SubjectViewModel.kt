@@ -42,11 +42,11 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
       selectedSubjects,
       isCabVisible,
       isSubjectDialogVisible
-   ) { subjects, selectSubs, cab, dialogVisible ->
+   ) { subjects, selectSubs, cabVisible, dialogVisible ->
       SubjectScreenUiState(
          subjectList = subjects,
          selectedSubjects = selectSubs,
-         isCabVisible = cab,
+         isCabVisible = cabVisible,
          isSubjectDialogVisible = dialogVisible
       )
    }
@@ -72,7 +72,7 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
    }
 
    fun deleteSelectedSubjects() {
-      for (subject in uiState.value.selectedSubjects) {
+      for (subject in selectedSubjects.value) {
          studyRepo.deleteSubject(subject)
       }
       hideCab()
