@@ -45,6 +45,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zybooks.studyhelper.data.Subject
 import com.zybooks.studyhelper.ui.theme.subjectColors
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubjectScreen(
    modifier: Modifier = Modifier,
@@ -69,11 +70,16 @@ fun SubjectScreen(
 
    Scaffold(
       topBar = {
-         SubjectAppBar(
-            isCabVisible = uiState.value.isCabVisible,
-            onDeleteClick = { viewModel.deleteSelectedSubjects() },
-            onUpClick = { viewModel.hideCab() }
-         )
+         if (uiState.value.isCabVisible) {
+            CabAppBar(
+               onDeleteClick = { viewModel.deleteSelectedSubjects() },
+               onUpClick = { viewModel.hideCab() }
+            )
+         } else {
+            TopAppBar(
+               title = { Text("Study Helper") }
+            )
+         }
       },
       floatingActionButton = {
          if (!uiState.value.isCabVisible) {
@@ -162,31 +168,22 @@ fun SubjectGrid(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SubjectAppBar(
-   isCabVisible: Boolean,
+fun CabAppBar(
    onDeleteClick: () -> Unit,
    onUpClick: () -> Unit,
    modifier: Modifier = Modifier
 ) {
    TopAppBar(
-      title = {
-         if (!isCabVisible) {
-            Text("Study Helper")
-         }
-      },
+      title = { },
       modifier = modifier,
       navigationIcon = {
-         if (isCabVisible) {
-            IconButton(onClick = onUpClick) {
-               Icon(Icons.Filled.ArrowBack,"Back")
-            }
+         IconButton(onClick = onUpClick) {
+            Icon(Icons.Filled.ArrowBack,"Back")
          }
       },
       actions = {
-         if (isCabVisible) {
-            IconButton(onClick = onDeleteClick) {
-               Icon(Icons.Filled.Delete, "Delete")
-            }
+         IconButton(onClick = onDeleteClick) {
+            Icon(Icons.Filled.Delete, "Delete")
          }
       }
    )
