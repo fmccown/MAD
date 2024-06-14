@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
 
 class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
@@ -28,7 +27,7 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
    }
 
    private val selectedSubjects = MutableStateFlow(emptySet<Subject>())
-   private val inSelectionMode = MutableStateFlow(false)
+   private val inContextualMode = MutableStateFlow(false)
    private val isSubjectDialogVisible = MutableStateFlow(false)
 
    val uiState: StateFlow<SubjectScreenUiState> = transformedFlow()
@@ -41,13 +40,13 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
    private fun transformedFlow() = combine(
       studyRepo.getSubjects(),
       selectedSubjects,
-      inSelectionMode,
+      inContextualMode,
       isSubjectDialogVisible
-   ) { subjects, selectSubs, inSelectMode, dialogVisible ->
+   ) { subjects, selectSubs, contextMode, dialogVisible ->
       SubjectScreenUiState(
          subjectList = subjects,
          selectedSubjects = selectSubs,
-         inSelectionMode = inSelectMode,
+         inContextualMode = contextMode,
          isSubjectDialogVisible = dialogVisible
       )
    }
@@ -56,7 +55,7 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
       studyRepo.addSubject(Subject(title = title))
    }
 
-   fun selectSubjectForDeleting(subject: Subject) {
+   fun selectSubject(subject: Subject) {
       val selected = uiState.value.selectedSubjects.contains(subject)
       selectedSubjects.value = if (selected) {
          uiState.value.selectedSubjects.minus(subject)
@@ -64,19 +63,19 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
          uiState.value.selectedSubjects.plus(subject)
       }
 
-      inSelectionMode.value = selectedSubjects.value.isNotEmpty()
+      inContextualMode.value = selectedSubjects.value.isNotEmpty()
    }
 
-   fun stopDeleting() {
+   fun leaveContextualMode() {
       selectedSubjects.value = emptySet()
-      inSelectionMode.value = false
+      inContextualMode.value = false
    }
 
    fun deleteSelectedSubjects() {
       for (subject in uiState.value.selectedSubjects) {
          studyRepo.deleteSubject(subject)
       }
-      stopDeleting()
+      leaveContextualMode()
    }
 
    fun showSubjectDialog() {
@@ -91,6 +90,6 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
 data class SubjectScreenUiState(
    val subjectList: List<Subject> = emptyList(),
    val selectedSubjects: Set<Subject> = emptySet(),
-   val inSelectionMode: Boolean = false,
+   val inContextualMode: Boolean = false,
    val isSubjectDialogVisible: Boolean = false
 )

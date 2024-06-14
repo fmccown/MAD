@@ -70,13 +70,13 @@ fun SubjectScreen(
    Scaffold(
       topBar = {
          SubjectAppBar(
-            inSelectionMode = uiState.value.inSelectionMode,
-            onDeleteClick = viewModel::deleteSelectedSubjects,
-            onUpClick = viewModel::stopDeleting
+            inContextualMode = uiState.value.inContextualMode,
+            onDeleteClick = { viewModel.deleteSelectedSubjects() },
+            onUpClick = { viewModel.leaveContextualMode() }
          )
       },
       floatingActionButton = {
-         if (!uiState.value.inSelectionMode) {
+         if (!uiState.value.inContextualMode) {
             FloatingActionButton(
                onClick = { viewModel.showSubjectDialog() },
             ) {
@@ -87,10 +87,10 @@ fun SubjectScreen(
    ) { innerPadding ->
       SubjectGrid(
          subjectList = uiState.value.subjectList,
-         inSelectionMode = uiState.value.inSelectionMode,
+         inSelectionMode = uiState.value.inContextualMode,
          selectedSubjects = uiState.value.selectedSubjects,
          onSubjectClick = onSubjectClick,
-         onSubjectLongClick = { viewModel.selectSubjectForDeleting(it) },
+         onSubjectLongClick = { viewModel.selectSubject(it) },
          modifier = modifier.padding(innerPadding)
       )
    }
@@ -163,7 +163,7 @@ fun SubjectGrid(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubjectAppBar(
-   inSelectionMode: Boolean,
+   inContextualMode: Boolean,
    onDeleteClick: () -> Unit,
    onUpClick: () -> Unit,
    modifier: Modifier = Modifier
@@ -172,14 +172,14 @@ fun SubjectAppBar(
       title = { Text("Study Helper") },
       modifier = modifier,
       navigationIcon = {
-         if (inSelectionMode) {
+         if (inContextualMode) {
             IconButton(onClick = onUpClick) {
                Icon(Icons.Filled.ArrowBack,"Back")
             }
          }
       },
       actions = {
-         if (inSelectionMode) {
+         if (inContextualMode) {
             IconButton(onClick = onDeleteClick) {
                Icon(Icons.Filled.Delete, "Delete")
             }
