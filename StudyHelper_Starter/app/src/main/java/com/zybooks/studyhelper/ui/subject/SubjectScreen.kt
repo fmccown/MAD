@@ -30,6 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zybooks.studyhelper.data.Subject
 import com.zybooks.studyhelper.ui.theme.subjectColors
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubjectScreen(
    modifier: Modifier = Modifier,
@@ -42,7 +43,9 @@ fun SubjectScreen(
 
    Scaffold(
       topBar = {
-         SubjectAppBar()
+         TopAppBar(
+            title = { Text("Study Helper") }
+         )
       },
       floatingActionButton = {
          FloatingActionButton(
@@ -97,15 +100,4 @@ fun SubjectGrid(
          }
       }
    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SubjectAppBar(
-   modifier: Modifier = Modifier
-) {
-   TopAppBar(
-      title = { Text("Study Helper") },
-      modifier = modifier
-   )
 }
