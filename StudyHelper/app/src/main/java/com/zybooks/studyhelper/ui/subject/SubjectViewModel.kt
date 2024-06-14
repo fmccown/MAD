@@ -27,7 +27,6 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
    }
 
    private val selectedSubjects = MutableStateFlow(emptySet<Subject>())
-   private val isCabVisible = MutableStateFlow(false)
    private val isSubjectDialogVisible = MutableStateFlow(false)
 
    val uiState: StateFlow<SubjectScreenUiState> = transformedFlow()
@@ -40,13 +39,11 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
    private fun transformedFlow() = combine(
       studyRepo.getSubjects(),
       selectedSubjects,
-      isCabVisible,
       isSubjectDialogVisible
-   ) { subjects, selectSubs, cabVisible, dialogVisible ->
+   ) { subjects, selectSubs, dialogVisible ->
       SubjectScreenUiState(
          subjectList = subjects,
          selectedSubjects = selectSubs,
-         isCabVisible = cabVisible,
          isSubjectDialogVisible = dialogVisible
       )
    }
@@ -62,13 +59,10 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
       } else {
          uiState.value.selectedSubjects.plus(subject)
       }
-
-      isCabVisible.value = selectedSubjects.value.isNotEmpty()
    }
 
    fun hideCab() {
       selectedSubjects.value = emptySet()
-      isCabVisible.value = false
    }
 
    fun deleteSelectedSubjects() {
@@ -90,6 +84,6 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
 data class SubjectScreenUiState(
    val subjectList: List<Subject> = emptyList(),
    val selectedSubjects: Set<Subject> = emptySet(),
-   val isCabVisible: Boolean = false,
+   val isCabVisible: Boolean = selectedSubjects.isNotEmpty(),
    val isSubjectDialogVisible: Boolean = false
 )
