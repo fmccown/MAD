@@ -146,7 +146,7 @@ fun SubjectGrid(
                if (inSelectionMode && selectedSubjects.contains(subject)) {
                   Icon(
                      imageVector = Icons.Default.CheckCircle,
-                     contentDescription = null,
+                     contentDescription = "Check",
                      tint = Color.White,
                      modifier = Modifier
                         .align(Alignment.TopStart)
