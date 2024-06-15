@@ -37,7 +37,7 @@ fun SubjectScreen(
    viewModel: SubjectViewModel = viewModel(
       factory = SubjectViewModel.Factory
    ),
-   onSubjectClick: (Subject) -> Unit = {}
+   onSubjectClick: (Subject) -> Unit = {},
 ) {
    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -58,7 +58,7 @@ fun SubjectScreen(
       SubjectGrid(
          subjectList = uiState.value.subjectList,
          onSubjectClick = onSubjectClick,
-         modifier = modifier.padding(innerPadding)
+         modifier = modifier.padding(innerPadding),
       )
    }
 }
