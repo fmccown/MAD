@@ -38,7 +38,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -107,8 +106,8 @@ fun SubjectScreen(
 fun SubjectGrid(
    subjectList: List<Subject>,
    onSubjectClick: (Subject) -> Unit,
-   onSubjectLongClick: (Subject) -> Unit,
    modifier: Modifier = Modifier,
+   onSubjectLongClick: (Subject) -> Unit = { },
    inSelectionMode: Boolean = false,
    selectedSubjects: Set<Subject> = emptySet()
 ) {
@@ -143,7 +142,7 @@ fun SubjectGrid(
                contentAlignment = Alignment.Center,
                modifier = Modifier.fillMaxSize()
             ) {
-               if (inSelectionMode && selectedSubjects.contains(subject)) {
+               if (selectedSubjects.contains(subject)) {
                   Icon(
                      imageVector = Icons.Default.CheckCircle,
                      contentDescription = "Check",
@@ -155,7 +154,6 @@ fun SubjectGrid(
                }
                Text(
                   text = subject.title,
-                  textAlign = TextAlign.Center,
                   color = Color.White
                )
             }
