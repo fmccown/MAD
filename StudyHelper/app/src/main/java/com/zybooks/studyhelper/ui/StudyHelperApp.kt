@@ -2,11 +2,9 @@ package com.zybooks.studyhelper.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.navigation.toRoute
 import com.zybooks.studyhelper.ui.question.QuestionAddScreen
 import com.zybooks.studyhelper.ui.question.QuestionEditScreen
@@ -90,11 +88,8 @@ fun StudyHelperApp() {
             }
          )
       }
-      composable<Routes.EditQuestion> { backStackEntry ->
-         val routeArgs = backStackEntry.toRoute<Routes.EditQuestion>()
-
+      composable<Routes.EditQuestion> {
          QuestionEditScreen(
-            //questionId = routeArgs.questionId,
             onUpClick = { navController.navigateUp() },
             onSaveClick = { navController.popBackStack() }
          )
