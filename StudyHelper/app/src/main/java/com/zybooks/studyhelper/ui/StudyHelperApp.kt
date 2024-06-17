@@ -57,7 +57,7 @@ fun StudyHelperApp() {
          val routeArgs = backStackEntry.toRoute<Routes.Question>()
 
          QuestionScreen(
-            onUpClick = { navController.popBackStack() },
+            onUpClick = { navController.navigateUp() },
             onAddClick = {
                navController.navigate(
                   Routes.AddQuestion(subjectId = routeArgs.subjectId)
@@ -74,7 +74,7 @@ fun StudyHelperApp() {
          val routeArgs = backStackEntry.toRoute<Routes.AddQuestion>()
 
          QuestionAddScreen(
-            onUpClick = { navController.popBackStack() },
+            onUpClick = { navController.navigateUp() },
             onSaveClick = {
                // Pop edit screen and previous question screen
                navController.popBackStack()
@@ -95,7 +95,7 @@ fun StudyHelperApp() {
 
          QuestionEditScreen(
             //questionId = routeArgs.questionId,
-            onUpClick = { navController.popBackStack() },
+            onUpClick = { navController.navigateUp() },
             onSaveClick = { navController.popBackStack() }
          )
       }
