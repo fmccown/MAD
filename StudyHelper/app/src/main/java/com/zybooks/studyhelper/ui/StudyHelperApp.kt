@@ -7,17 +7,33 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import com.zybooks.studyhelper.ui.question.QuestionAddScreen
 import com.zybooks.studyhelper.ui.question.QuestionEditScreen
 import com.zybooks.studyhelper.ui.question.QuestionScreen
 import com.zybooks.studyhelper.ui.subject.SubjectScreen
 import com.zybooks.studyhelper.ui.theme.StudyHelperTheme
+import kotlinx.serialization.Serializable
 
-enum class StudyScreen {
-   SUBJECT,
-   QUESTION,
-   ADD_QUESTION,
-   EDIT_QUESTION
+sealed class Routes {
+   @Serializable
+   data object Subject
+
+   @Serializable
+   data class Question(
+      val subjectId: Long,
+      val showLastQuestion: Boolean = false
+   )
+
+   @Serializable
+   data class AddQuestion(
+      val subjectId: Long
+   )
+
+   @Serializable
+   data class EditQuestion(
+      val questionId: Long
+   )
 }
 
 @Composable
@@ -26,50 +42,37 @@ fun StudyHelperApp() {
 
    NavHost(
       navController = navController,
-      startDestination = StudyScreen.SUBJECT.name
+      startDestination = Routes.Subject
    ) {
-      composable(route = StudyScreen.SUBJECT.name) {
+      composable<Routes.Subject> {
          SubjectScreen(
             onSubjectClick = { subject ->
-               navController.navigate("${StudyScreen.QUESTION.name}/${subject.id}/false")
+               navController.navigate(
+                  Routes.Question(subjectId = subject.id)
+               )
             }
          )
       }
+      composable<Routes.Question> { backStackEntry ->
+         val routeArgs = backStackEntry.toRoute<Routes.Question>()
 
-      composable(
-         route = "${StudyScreen.QUESTION.name}/{subjectId}/{showLastQuestion}",
-
-         // Specify subject ID argument so QuestionViewModel can determine selected subject
-         arguments = listOf(
-            navArgument("subjectId") {
-               type = NavType.LongType
-            },
-            navArgument("showLastQuestion") {
-               type = NavType.BoolType
-               defaultValue = false
-            }
-         )
-      ) { backStackEntry ->
-         val subjectId = backStackEntry.arguments?.getLong("subjectId")
          QuestionScreen(
             onUpClick = { navController.popBackStack() },
             onAddClick = {
-               navController.navigate("${StudyScreen.ADD_QUESTION.name}/${subjectId}")
+               navController.navigate(
+                  Routes.AddQuestion(subjectId = routeArgs.subjectId)
+               )
             },
             onEditClick = { questionId ->
-               navController.navigate("${StudyScreen.EDIT_QUESTION.name}/${questionId}")
+               navController.navigate(
+                  Routes.EditQuestion(questionId = questionId)
+               )
             }
          )
       }
-      composable(
-         route = "${StudyScreen.ADD_QUESTION.name}/{subjectId}",
-         arguments = listOf(
-            navArgument("subjectId") {
-               type = NavType.LongType
-            }
-         )
-      ) {backStackEntry ->
-         val subjectId = backStackEntry.arguments?.getLong("subjectId")
+      composable<Routes.AddQuestion> { backStackEntry ->
+         val routeArgs = backStackEntry.toRoute<Routes.AddQuestion>()
+
          QuestionAddScreen(
             onUpClick = { navController.popBackStack() },
             onSaveClick = {
@@ -78,19 +81,20 @@ fun StudyHelperApp() {
                navController.popBackStack()
 
                // Navigate to new question
-               navController.navigate("${StudyScreen.QUESTION.name}/${subjectId}/true")
+               navController.navigate(
+                  Routes.Question(
+                     subjectId = routeArgs.subjectId,
+                     showLastQuestion = true
+                  )
+               )
             }
          )
       }
-      composable(
-         route = "${StudyScreen.EDIT_QUESTION.name}/{questionId}",
+      composable<Routes.EditQuestion> { backStackEntry ->
+         val routeArgs = backStackEntry.toRoute<Routes.EditQuestion>()
 
-         // Specify question ID argument so QuestionEditViewModel knows which question to show
-         arguments = listOf(navArgument("questionId") {
-            type = NavType.LongType
-         })
-      ) {
          QuestionEditScreen(
+            //questionId = routeArgs.questionId,
             onUpClick = { navController.popBackStack() },
             onSaveClick = { navController.popBackStack() }
          )
