@@ -37,7 +37,7 @@ class QuestionViewModel(
    private val subjectId: Long = checkNotNull(savedStateHandle["subjectId"])
 
    private val currQuestionNum = MutableStateFlow(1)
-   private val currQuestion = MutableStateFlow(Question())
+   private val currQuestion = MutableStateFlow(Question(id = 0L))
    private val answerVisible = MutableStateFlow(true)
 
    val uiState: StateFlow<QuestionScreenUiState> = MutableStateFlow(
