@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zybooks.studyhelper.data.Question
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddQuestionScreen(
    modifier: Modifier = Modifier,
@@ -40,8 +41,14 @@ fun AddQuestionScreen(
 ) {
    Scaffold(
       topBar = {
-         AddQuestionAppBar(
-            onUpClick = onUpClick
+         TopAppBar(
+            title = { Text("Add Question") },
+            modifier = modifier,
+            navigationIcon = {
+               IconButton(onClick = onUpClick) {
+                  Icon(Icons.Filled.ArrowBack, "Back")
+               }
+            }
          )
       },
       floatingActionButton = {
@@ -58,7 +65,9 @@ fun AddQuestionScreen(
       QuestionEntry(
          question = viewModel.question,
          onQuestionChange = { viewModel.changeQuestion(it) },
-         modifier = modifier.padding(innerPadding).fillMaxSize()
+         modifier = modifier
+            .padding(innerPadding)
+            .fillMaxSize()
       )
    }
 }
@@ -75,9 +84,10 @@ fun QuestionEntry(
       modifier = modifier,
       verticalArrangement = Arrangement.SpaceBetween,
    ) {
-      Row(modifier = Modifier
-         .weight(1f)
-         .fillMaxWidth()
+      Row(
+         modifier = Modifier
+            .weight(1f)
+            .fillMaxWidth()
       ) {
          Text(
             text = "Q",
@@ -97,8 +107,8 @@ fun QuestionEntry(
       }
       Row(
          modifier = Modifier
-         .weight(1f)
-         .fillMaxWidth()
+            .weight(1f)
+            .fillMaxWidth()
       ) {
          Text(
             text = "A",
@@ -122,21 +132,3 @@ fun QuestionEntry(
       }
    }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AddQuestionAppBar(
-   modifier: Modifier = Modifier,
-   onUpClick: () -> Unit = {}
-) {
-   TopAppBar(
-      title = { Text("Add Question") },
-      modifier = modifier,
-      navigationIcon = {
-         IconButton(onClick = onUpClick) {
-            Icon(Icons.Filled.ArrowBack,"Back")
-         }
-      }
-   )
-}
-

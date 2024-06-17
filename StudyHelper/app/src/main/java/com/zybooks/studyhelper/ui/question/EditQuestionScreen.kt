@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionEditScreen(
    modifier: Modifier = Modifier,
@@ -29,9 +30,14 @@ fun QuestionEditScreen(
 
    Scaffold(
       topBar = {
-         EditQuestionAppBar(
-            title = "Edit Question",
-            onUpClick = onUpClick
+         TopAppBar(
+            title = { Text("Edit Question") },
+            modifier = modifier,
+            navigationIcon = {
+               IconButton(onClick = onUpClick) {
+                  Icon(Icons.Filled.ArrowBack,"Back")
+               }
+            }
          )
       },
       floatingActionButton = {
@@ -51,23 +57,5 @@ fun QuestionEditScreen(
          modifier = modifier.padding(innerPadding).fillMaxSize(),
       )
    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun EditQuestionAppBar(
-   title: String,
-   modifier: Modifier = Modifier,
-   onUpClick: () -> Unit = {}
-) {
-   TopAppBar(
-      title = { Text(title) },
-      modifier = modifier,
-      navigationIcon = {
-         IconButton(onClick = onUpClick) {
-            Icon(Icons.Filled.ArrowBack,"Back")
-         }
-      }
-   )
 }
 
