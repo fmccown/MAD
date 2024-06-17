@@ -1,6 +1,7 @@
 plugins {
-   alias(libs.plugins.androidApplication)
-   alias(libs.plugins.jetbrainsKotlinAndroid)
+   alias(libs.plugins.android.application)
+   alias(libs.plugins.jetbrains.kotlin.android)
+   alias(libs.plugins.jetbrains.kotlin.serialization)
    id("com.google.devtools.ksp")
 }
 
@@ -64,6 +65,7 @@ dependencies {
    implementation(libs.androidx.ui.tooling.preview)
    implementation(libs.androidx.material3)
    implementation(libs.androidx.navigation.compose)
+   implementation(libs.kotlinx.serialization.json)
    implementation(libs.androidx.room.common)
    implementation(libs.androidx.room.ktx)
    testImplementation(libs.junit)
