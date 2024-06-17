@@ -38,6 +38,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -95,7 +97,7 @@ fun SubjectScreen(
          inSelectionMode = uiState.value.isCabVisible,
          selectedSubjects = uiState.value.selectedSubjects,
          onSubjectClick = onSubjectClick,
-         onSubjectLongClick = { viewModel.selectSubject(it) },
+         onSelectSubject = { viewModel.selectSubject(it) },
          modifier = modifier.padding(innerPadding)
       )
    }
@@ -107,10 +109,12 @@ fun SubjectGrid(
    subjectList: List<Subject>,
    onSubjectClick: (Subject) -> Unit,
    modifier: Modifier = Modifier,
-   onSubjectLongClick: (Subject) -> Unit = { },
+   onSelectSubject: (Subject) -> Unit = { },
    inSelectionMode: Boolean = false,
    selectedSubjects: Set<Subject> = emptySet()
 ) {
+   val haptics = LocalHapticFeedback.current
+
    LazyVerticalGrid(
       columns = GridCells.Adaptive(minSize = 128.dp),
       contentPadding = PaddingValues(0.dp),
@@ -123,19 +127,23 @@ fun SubjectGrid(
                   subject.title.length % subjectColors.size]
             ),
             modifier = Modifier
-               .animateItemPlacement()  // Requires key in items()
+               .animateItemPlacement()
                .height(100.dp)
                .padding(4.dp)
                .combinedClickable(
-                  onLongClick = { onSubjectLongClick(subject) },
+                  onLongClick = {
+                     haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                     onSelectSubject(subject)
+                  },
                   onClick = {
                      if (inSelectionMode) {
-                        onSubjectLongClick(subject)
+                        onSelectSubject(subject)
                      } else {
                         onSubjectClick(subject)
                      }
                   },
-                  onClickLabel = subject.title
+                  onClickLabel = subject.title,
+                  onLongClickLabel = "Select for deleting"
                )
          ) {
             Box(
@@ -174,7 +182,7 @@ fun CabAppBar(
       modifier = modifier,
       navigationIcon = {
          IconButton(onClick = onUpClick) {
-            Icon(Icons.Filled.ArrowBack,"Back")
+            Icon(Icons.Filled.ArrowBack, "Back")
          }
       },
       actions = {
