@@ -28,15 +28,15 @@ class AddQuestionViewModel(
       }
    }
 
+   // Get subject ID from composable()'s route argument list
+   private val subjectId: Long = checkNotNull(savedStateHandle["subjectId"])
+
    var question by mutableStateOf(Question(0))
       private set
 
    fun changeQuestion(ques: Question) {
       question = ques
    }
-
-   // Get subject ID from composable()'s argument list
-   private val subjectId: Long = checkNotNull(savedStateHandle["subjectId"])
 
    fun addQuestion() {
       question.subjectId = subjectId
