@@ -14,16 +14,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.zybooks.studyhelper.data.Question
-import com.zybooks.studyhelper.ui.theme.StudyHelperTheme
 
 @Composable
 fun QuestionEditScreen(
    modifier: Modifier = Modifier,
-   viewModel: QuestionEditViewModel = viewModel(
-      factory = QuestionEditViewModel.Factory
+   viewModel: EditQuestionViewModel = viewModel(
+      factory = EditQuestionViewModel.Factory
    ),
    onUpClick: () -> Unit = {},
    onSaveClick: () -> Unit = {}

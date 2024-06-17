@@ -8,13 +8,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.zybooks.studyhelper.StudyHelperApplication
 import com.zybooks.studyhelper.data.Question
 import com.zybooks.studyhelper.data.StudyRepository
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
-class QuestionAddViewModel(
+class EditQuestionViewModel(
    savedStateHandle: SavedStateHandle,
    private val studyRepo: StudyRepository
 ) : ViewModel() {
@@ -23,10 +27,13 @@ class QuestionAddViewModel(
       val Factory: ViewModelProvider.Factory = viewModelFactory {
          initializer {
             val application = (this[APPLICATION_KEY] as StudyHelperApplication)
-            QuestionAddViewModel(this.createSavedStateHandle(), application.studyRepository)
+            EditQuestionViewModel(this.createSavedStateHandle(), application.studyRepository)
          }
       }
    }
+
+   // Get from composable()'s argument list
+   private val questionId: Long = checkNotNull(savedStateHandle["questionId"])
 
    var question by mutableStateOf(Question(0))
       private set
@@ -35,11 +42,13 @@ class QuestionAddViewModel(
       question = ques
    }
 
-   // Get subject ID from composable()'s argument list
-   private val subjectId: Long = checkNotNull(savedStateHandle["subjectId"])
+   fun updateQuestion() {
+      studyRepo.updateQuestion(question)
+   }
 
-   fun addQuestion() {
-      question.subjectId = subjectId
-      studyRepo.addQuestion(question)
+   init {
+      viewModelScope.launch {
+         question = studyRepo.getQuestion(questionId).filterNotNull().first()
+      }
    }
 }

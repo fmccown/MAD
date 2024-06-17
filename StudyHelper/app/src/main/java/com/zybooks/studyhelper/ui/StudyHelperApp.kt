@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.zybooks.studyhelper.ui.question.QuestionAddScreen
+import com.zybooks.studyhelper.ui.question.AddQuestionScreen
 import com.zybooks.studyhelper.ui.question.QuestionEditScreen
 import com.zybooks.studyhelper.ui.question.QuestionScreen
 import com.zybooks.studyhelper.ui.subject.SubjectScreen
@@ -71,7 +71,7 @@ fun StudyHelperApp() {
       composable<Routes.AddQuestion> { backStackEntry ->
          val routeArgs = backStackEntry.toRoute<Routes.AddQuestion>()
 
-         QuestionAddScreen(
+         AddQuestionScreen(
             onUpClick = { navController.navigateUp() },
             onSaveClick = {
                // Pop edit screen and previous question screen
