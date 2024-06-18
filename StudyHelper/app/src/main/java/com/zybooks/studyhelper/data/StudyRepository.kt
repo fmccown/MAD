@@ -87,6 +87,13 @@ class StudyRepository(context: Context) {
             subjectId = subjectId
          )
       )
+      questionDao.addQuestion(
+         Question(
+            text = "What formula calculates the area of a triangle?",
+            answer = "area = base * height / 2",
+            subjectId = subjectId
+         )
+      )
 
       subjectId = subjectDao.addSubject(Subject(title = "US History"))
       questionDao.addQuestion(

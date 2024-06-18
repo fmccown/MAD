@@ -33,7 +33,7 @@ class QuestionViewModel(
       }
    }
 
-   // Get from composable()'s argument list
+   // Get from composable()'s route arguments
    private val subjectId: Long = checkNotNull(savedStateHandle["subjectId"])
    private val showLastQuestion: Boolean = checkNotNull(savedStateHandle["showLastQuestion"])
 

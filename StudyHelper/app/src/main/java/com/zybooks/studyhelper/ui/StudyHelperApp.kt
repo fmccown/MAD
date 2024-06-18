@@ -74,7 +74,7 @@ fun StudyHelperApp() {
          AddQuestionScreen(
             onUpClick = { navController.navigateUp() },
             onSaveClick = {
-               // Pop add question screen before going up
+               // Pop the Add Question screen before going up
                navController.popBackStack()
                navController.navigateUp()
 
