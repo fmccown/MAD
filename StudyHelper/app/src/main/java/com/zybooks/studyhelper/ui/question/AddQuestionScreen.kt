@@ -99,6 +99,7 @@ fun QuestionEntry(
             value = question.text,
             onValueChange = { onQuestionChange(question.copy(text = it)) },
             singleLine = false,
+            maxLines = 7,
             keyboardOptions = KeyboardOptions(
                imeAction = ImeAction.Next
             ),
@@ -119,8 +120,8 @@ fun QuestionEntry(
          TextField(
             value = question.answer,
             onValueChange = { onQuestionChange(question.copy(answer = it)) },
-            label = { },
             singleLine = false,
+            maxLines = 7,
             keyboardActions = KeyboardActions(
                onDone = { focusManager.clearFocus() }
             ),
