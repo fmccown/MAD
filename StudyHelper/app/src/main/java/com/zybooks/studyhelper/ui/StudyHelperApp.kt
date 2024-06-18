@@ -74,9 +74,9 @@ fun StudyHelperApp() {
          AddQuestionScreen(
             onUpClick = { navController.navigateUp() },
             onSaveClick = {
-               // Pop edit screen and previous question screen
+               // Pop add question screen before going up
                navController.popBackStack()
-               navController.popBackStack()
+               navController.navigateUp()
 
                // Navigate to new question
                navController.navigate(
