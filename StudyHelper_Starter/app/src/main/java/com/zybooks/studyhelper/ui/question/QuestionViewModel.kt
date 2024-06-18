@@ -51,16 +51,11 @@ class QuestionViewModel(
    )
 
    fun prevQuestion() {
-      val index = (uiState.value.currQuestionNum - 2 + uiState.value.totalQuestions) %
-            uiState.value.totalQuestions
-      currQuestion.value = uiState.value.questionList[index]
-      currQuestionNum.value = index + 1
+      // TODO: Complete this function
    }
 
    fun nextQuestion() {
-      val index = uiState.value.currQuestionNum % uiState.value.totalQuestions
-      currQuestion.value = uiState.value.questionList[index]
-      currQuestionNum.value = index + 1
+      // TODO: Complete this function
    }
 
    fun toggleAnswer() {

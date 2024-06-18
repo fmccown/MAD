@@ -191,7 +191,7 @@ fun QuestionTopBar(
       modifier = modifier,
       navigationIcon = {
          IconButton(onClick = onUpClick) {
-            Icon(Icons.Filled.ArrowBack,"Back")
+            Icon(Icons.Filled.ArrowBack, "Back")
          }
       }
    )
