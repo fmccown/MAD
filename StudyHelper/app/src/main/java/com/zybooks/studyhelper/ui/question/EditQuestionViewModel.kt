@@ -32,7 +32,7 @@ class EditQuestionViewModel(
       }
    }
 
-   // Get from composable()'s argument list
+   // Get from composable()'s route argument
    private val questionId: Long = checkNotNull(savedStateHandle["questionId"])
 
    var question by mutableStateOf(Question(0))
