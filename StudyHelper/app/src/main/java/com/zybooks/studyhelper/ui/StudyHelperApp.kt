@@ -91,7 +91,7 @@ fun StudyHelperApp() {
       composable<Routes.EditQuestion> {
          EditQuestionScreen(
             onUpClick = { navController.navigateUp() },
-            onSaveClick = { navController.popBackStack() }
+            onSaveClick = { navController.navigateUp() }
          )
       }
    }
