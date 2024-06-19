@@ -43,7 +43,7 @@ fun StudyHelperApp() {
          QuestionScreen(
             onUpClick = { navController.navigateUp() },
             onAddClick = { },
-            onEditClick = { }
+            onEditClick = { questionId -> }
          )
       }
    }
