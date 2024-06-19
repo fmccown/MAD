@@ -58,6 +58,10 @@ class QuestionViewModel(
       // TODO: Complete this function
    }
 
+   fun deleteQuestion() {
+      // TODO: Complete this function
+   }
+
    fun toggleAnswer() {
       answerVisible.value = !answerVisible.value
    }

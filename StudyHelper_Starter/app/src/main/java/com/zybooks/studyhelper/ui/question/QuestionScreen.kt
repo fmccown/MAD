@@ -60,7 +60,7 @@ fun QuestionScreen(
             showAddOnly = uiState.value.totalQuestions == 0,
             onAddClick = onAddClick,
             onEditClick = { onEditClick(uiState.value.currQuestion.id) },
-            onDeleteClick = {  }
+            onDeleteClick = viewModel::deleteQuestion
          )
       }
    ) { innerPadding ->
