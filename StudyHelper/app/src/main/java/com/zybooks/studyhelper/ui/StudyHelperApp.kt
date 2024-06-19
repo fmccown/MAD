@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.zybooks.studyhelper.ui.question.AddQuestionScreen
-import com.zybooks.studyhelper.ui.question.QuestionEditScreen
+import com.zybooks.studyhelper.ui.question.EditQuestionScreen
 import com.zybooks.studyhelper.ui.question.QuestionScreen
 import com.zybooks.studyhelper.ui.subject.SubjectScreen
 import com.zybooks.studyhelper.ui.theme.StudyHelperTheme
@@ -89,7 +89,7 @@ fun StudyHelperApp() {
          )
       }
       composable<Routes.EditQuestion> {
-         QuestionEditScreen(
+         EditQuestionScreen(
             onUpClick = { navController.navigateUp() },
             onSaveClick = { navController.popBackStack() }
          )

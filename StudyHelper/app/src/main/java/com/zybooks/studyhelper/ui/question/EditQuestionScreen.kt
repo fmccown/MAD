@@ -18,7 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuestionEditScreen(
+fun EditQuestionScreen(
    modifier: Modifier = Modifier,
    viewModel: EditQuestionViewModel = viewModel(
       factory = EditQuestionViewModel.Factory
@@ -35,7 +35,7 @@ fun QuestionEditScreen(
             modifier = modifier,
             navigationIcon = {
                IconButton(onClick = onUpClick) {
-                  Icon(Icons.Filled.ArrowBack,"Back")
+                  Icon(Icons.Filled.ArrowBack, "Back")
                }
             }
          )
@@ -54,7 +54,9 @@ fun QuestionEditScreen(
       QuestionEntry(
          question = question,
          onQuestionChange = { viewModel.changeQuestion(it) },
-         modifier = modifier.padding(innerPadding).fillMaxSize(),
+         modifier = modifier
+            .padding(innerPadding)
+            .fillMaxSize()
       )
    }
 }
