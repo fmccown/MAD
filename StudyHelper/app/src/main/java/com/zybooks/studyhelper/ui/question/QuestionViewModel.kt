@@ -85,11 +85,11 @@ class QuestionViewModel(
    }
 
    fun deleteQuestion() {
-      val question = uiState.value.currQuestion
+      val questionToDelete = uiState.value.currQuestion
       val index = uiState.value.currQuestionNum - 1
 
       // Special cases when deleting the very last question
-      when (uiState.value.questionList.size) {
+      when (uiState.value.totalQuestions) {
          1 -> {
             // Deleting very last question
             currQuestion.value = Question()
@@ -105,7 +105,7 @@ class QuestionViewModel(
          }
       }
 
-      studyRepo.deleteQuestion(question)
+      studyRepo.deleteQuestion(questionToDelete)
    }
 
    fun toggleAnswer() {

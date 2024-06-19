@@ -23,6 +23,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -99,6 +100,7 @@ fun QuestionEntry(
             value = question.text,
             onValueChange = { onQuestionChange(question.copy(text = it)) },
             singleLine = false,
+            textStyle = TextStyle.Default.copy(fontSize = 30.sp),
             keyboardOptions = KeyboardOptions(
                imeAction = ImeAction.Next
             ),
@@ -120,6 +122,7 @@ fun QuestionEntry(
             value = question.answer,
             onValueChange = { onQuestionChange(question.copy(answer = it)) },
             singleLine = false,
+            textStyle = TextStyle.Default.copy(fontSize = 30.sp),
             keyboardActions = KeyboardActions(
                onDone = { focusManager.clearFocus() }
             ),
