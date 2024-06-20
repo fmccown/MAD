@@ -11,6 +11,6 @@ data class Subject(
 
    var title: String = "",
 
-   @ColumnInfo(name = "updated")
-   var updateTime: Long = System.currentTimeMillis()
+   @ColumnInfo(name = "created")
+   var creationTime: Long = System.currentTimeMillis()
 )
