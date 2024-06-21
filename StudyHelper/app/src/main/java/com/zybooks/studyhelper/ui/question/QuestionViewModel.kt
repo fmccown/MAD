@@ -8,10 +8,12 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.navigation.toRoute
 import com.zybooks.studyhelper.StudyHelperApplication
 import com.zybooks.studyhelper.data.Question
 import com.zybooks.studyhelper.data.StudyRepository
 import com.zybooks.studyhelper.data.Subject
+import com.zybooks.studyhelper.ui.Routes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -33,9 +35,9 @@ class QuestionViewModel(
       }
    }
 
-   // Get from composable()'s route arguments
-   private val subjectId: Long = checkNotNull(savedStateHandle["subjectId"])
-   private val showLastQuestion: Boolean = checkNotNull(savedStateHandle["showLastQuestion"])
+   // Get from composable's route arguments
+   private val subjectId: Long = savedStateHandle.toRoute<Routes.Question>().subjectId
+   private val showLastQuestion: Boolean = savedStateHandle.toRoute<Routes.Question>().showLastQuestion
 
    private val currQuestionNum = MutableStateFlow(1)
    private val currQuestion = MutableStateFlow(Question())

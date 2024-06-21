@@ -11,9 +11,11 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.navigation.toRoute
 import com.zybooks.studyhelper.StudyHelperApplication
 import com.zybooks.studyhelper.data.Question
 import com.zybooks.studyhelper.data.StudyRepository
+import com.zybooks.studyhelper.ui.Routes
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -32,8 +34,8 @@ class EditQuestionViewModel(
       }
    }
 
-   // Get from composable()'s route argument
-   private val questionId: Long = checkNotNull(savedStateHandle["questionId"])
+   // Get from composable's route argument
+   private val questionId: Long = savedStateHandle.toRoute<Routes.EditQuestion>().questionId
 
    var question by mutableStateOf(Question(0))
       private set

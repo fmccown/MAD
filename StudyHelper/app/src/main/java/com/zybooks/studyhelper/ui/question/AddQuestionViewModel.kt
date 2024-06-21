@@ -10,9 +10,11 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.navigation.toRoute
 import com.zybooks.studyhelper.StudyHelperApplication
 import com.zybooks.studyhelper.data.Question
 import com.zybooks.studyhelper.data.StudyRepository
+import com.zybooks.studyhelper.ui.Routes
 
 class AddQuestionViewModel(
    savedStateHandle: SavedStateHandle,
@@ -28,8 +30,8 @@ class AddQuestionViewModel(
       }
    }
 
-   // Get subject ID from composable()'s route argument list
-   private val subjectId: Long = checkNotNull(savedStateHandle["subjectId"])
+   // Get from composable's route argument
+   private val subjectId: Long = savedStateHandle.toRoute<Routes.AddQuestion>().subjectId
 
    var question by mutableStateOf(Question(0))
       private set
