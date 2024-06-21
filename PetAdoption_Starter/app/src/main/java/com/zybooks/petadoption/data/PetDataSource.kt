@@ -2,7 +2,7 @@ package com.zybooks.petadoption.data
 
 import com.zybooks.petadoption.R
 
-class DataSource {
+class PetDataSource {
    fun loadPets(): List<Pet> {
       return listOf(
          Pet(
