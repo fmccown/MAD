@@ -9,5 +9,5 @@ import com.zybooks.petadoption.data.Pet
 
 class PetViewModel : ViewModel() {
    val petList = PetDataSource().loadPets()
-   var selectedPet by mutableStateOf<Pet?>(null)
+   var selectedPet by mutableStateOf(Pet())
 }

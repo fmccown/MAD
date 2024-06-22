@@ -47,18 +47,15 @@ import com.zybooks.petadoption.data.PetGender
 import com.zybooks.petadoption.ui.theme.PetAdoptionTheme
 import kotlinx.serialization.Serializable
 
-@Serializable
-sealed class PetScreen(val title: String)
-
 sealed class Routes {
    @Serializable
-   data object List: PetScreen("Find a Friend")
+   data object List
 
    @Serializable
-   data object Detail: PetScreen("Details")
+   data object Detail
 
    @Serializable
-   data object Adopt: PetScreen("Thank You!")
+   data object Adopt
 }
 
 @Composable
@@ -69,12 +66,10 @@ fun PetApp(
    val navController = rememberNavController()
    val backStackEntry by navController.currentBackStackEntryAsState()
    val currentRoute = backStackEntry?.destination?.route
-   val screenTitle = when (currentRoute) {
-      "com.zybooks.petadoption.ui.Routes.List" -> Routes.List.title
-      "com.zybooks.petadoption.ui.Routes.Detail" -> Routes.Detail.title
-      "com.zybooks.petadoption.ui.Routes.Adopt" -> Routes.Adopt.title
-      else -> ""
-   }
+   val screenTitle = if (currentRoute?.contains("Routes.List") == true) "Find a Friend"
+      else if (currentRoute?.contains("Routes.Detail") == true) "Details"
+      else if (currentRoute?.contains("Routes.Adopt") == true) "Thank You!"
+      else ""
 
    Scaffold(
       topBar = {
@@ -101,7 +96,7 @@ fun PetApp(
          }
          composable<Routes.Detail> {
             DetailScreen(
-               pet = petViewModel.selectedPet!!,
+               pet = petViewModel.selectedPet,
                onAdoptClick = {
                   navController.navigate(Routes.Adopt)
                }
@@ -109,7 +104,7 @@ fun PetApp(
          }
          composable<Routes.Adopt> {
             AdoptScreen(
-               pet = petViewModel.selectedPet!!
+               pet = petViewModel.selectedPet
             )
          }
       }
