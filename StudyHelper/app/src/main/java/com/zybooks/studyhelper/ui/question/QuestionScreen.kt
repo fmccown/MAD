@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.BottomAppBar
@@ -120,7 +120,7 @@ fun QuestionAndAnswer(
       ) {
          if (totalQuestions > 1) {
             OutlinedIconButton(onClick = onPrevClick) {
-               Icon(Icons.Filled.ArrowBack, "Previous")
+               Icon(Icons.AutoMirrored.Filled.ArrowBack, "Previous")
             }
          } else {
             Spacer(Modifier)
@@ -132,7 +132,7 @@ fun QuestionAndAnswer(
          }
          if (totalQuestions > 1) {
             OutlinedIconButton(onClick = onNextClick) {
-               Icon(Icons.Filled.ArrowForward, "Next")
+               Icon(Icons.AutoMirrored.Filled.ArrowForward, "Next")
             }
          } else {
             Spacer(Modifier)
@@ -189,7 +189,7 @@ fun QuestionTopBar(
       modifier = modifier,
       navigationIcon = {
          IconButton(onClick = onUpClick) {
-            Icon(Icons.Filled.ArrowBack,"Back")
+            Icon(Icons.AutoMirrored.Filled.ArrowBack,"Back")
          }
       }
    )
