@@ -27,7 +27,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -39,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.zybooks.petadoption.data.Pet
 import com.zybooks.petadoption.data.PetDataSource
@@ -60,14 +58,13 @@ sealed class Routes {
 
 @Composable
 fun PetApp(
-   modifier: Modifier = Modifier,
    petViewModel: PetViewModel = viewModel()
 ) {
    val navController = rememberNavController()
 
    NavHost(
       navController = navController,
-      startDestination = Routes.List,
+      startDestination = Routes.List
    ) {
       composable<Routes.List> {
          ListScreen(
