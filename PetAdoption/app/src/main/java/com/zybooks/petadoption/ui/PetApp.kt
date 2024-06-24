@@ -64,49 +64,38 @@ fun PetApp(
    petViewModel: PetViewModel = viewModel()
 ) {
    val navController = rememberNavController()
-   val backStackEntry by navController.currentBackStackEntryAsState()
-   val currentRoute = backStackEntry?.destination?.route
-   val screenTitle = if (currentRoute?.contains("Routes.List") == true) "Find a Friend"
-      else if (currentRoute?.contains("Routes.Detail") == true) "Details"
-      else if (currentRoute?.contains("Routes.Adopt") == true) "Thank You!"
-      else ""
 
-   Scaffold(
-      topBar = {
-         PetAppBar(
-            title = screenTitle,
-            canNavigateBack = navController.previousBackStackEntry != null,
-            onUpClick = { navController.navigateUp() }
+   NavHost(
+      navController = navController,
+      startDestination = Routes.List,
+   ) {
+      composable<Routes.List> {
+         ListScreen(
+            petList = petViewModel.petList,
+            onImageClick = {
+               petViewModel.selectedPet = it
+               navController.navigate(Routes.Detail)
+            }
          )
       }
-   ) { innerPadding ->
-      NavHost(
-         navController = navController,
-         startDestination = Routes.List,
-         modifier = modifier.padding(innerPadding)
-      ) {
-         composable<Routes.List> {
-            ListScreen(
-               petList = petViewModel.petList,
-               onImageClick = {
-                  petViewModel.selectedPet = it
-                  navController.navigate(Routes.Detail)
-               }
-            )
-         }
-         composable<Routes.Detail> {
-            DetailScreen(
-               pet = petViewModel.selectedPet,
-               onAdoptClick = {
-                  navController.navigate(Routes.Adopt)
-               }
-            )
-         }
-         composable<Routes.Adopt> {
-            AdoptScreen(
-               pet = petViewModel.selectedPet
-            )
-         }
+      composable<Routes.Detail> {
+         DetailScreen(
+            pet = petViewModel.selectedPet,
+            onAdoptClick = {
+               navController.navigate(Routes.Adopt)
+            },
+            onUpClick = {
+               navController.navigateUp()
+            }
+         )
+      }
+      composable<Routes.Adopt> {
+         AdoptScreen(
+            pet = petViewModel.selectedPet,
+            onUpClick = {
+               navController.navigateUp()
+            }
+         )
       }
    }
 }
@@ -115,9 +104,9 @@ fun PetApp(
 @Composable
 fun PetAppBar(
    title: String,
-   canNavigateBack: Boolean,
-   onUpClick: () -> Unit,
-   modifier: Modifier = Modifier
+   modifier: Modifier = Modifier,
+   canNavigateBack: Boolean = false,
+   onUpClick: () -> Unit = { },
 ) {
    TopAppBar(
       title = { Text(title) },
@@ -128,7 +117,7 @@ fun PetAppBar(
       navigationIcon = {
          if (canNavigateBack) {
             IconButton(onClick = onUpClick) {
-               Icon(Icons.AutoMirrored.Filled.ArrowBack,"Back")
+               Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
             }
          }
       }
@@ -138,21 +127,31 @@ fun PetAppBar(
 @Composable
 fun ListScreen(
    petList: List<Pet>,
-   onImageClick: (Pet) -> Unit
+   onImageClick: (Pet) -> Unit,
+   modifier: Modifier = Modifier
 ) {
-   LazyVerticalGrid(
-      columns = GridCells.Adaptive(minSize = 128.dp),
-      contentPadding = PaddingValues(0.dp)
-   ) {
-      items(petList) { pet ->
-         Image(
-            painter = painterResource(id = pet.imageId),
-            contentDescription = "${pet.type} ${pet.gender}",
-            modifier = Modifier.clickable(
-               onClick = { onImageClick(pet) },
-               onClickLabel = "Select the pet"
-            )
+   Scaffold(
+      topBar = {
+         PetAppBar(
+            title = "Find a Friend"
          )
+      }
+   ) { innerPadding ->
+      LazyVerticalGrid(
+         columns = GridCells.Adaptive(minSize = 128.dp),
+         contentPadding = PaddingValues(0.dp),
+         modifier = modifier.padding(innerPadding)
+      ) {
+         items(petList) { pet ->
+            Image(
+               painter = painterResource(id = pet.imageId),
+               contentDescription = "${pet.type} ${pet.gender}",
+               modifier = Modifier.clickable(
+                  onClick = { onImageClick(pet) },
+                  onClickLabel = "Select the pet"
+               )
+            )
+         }
       }
    }
 }
@@ -161,45 +160,58 @@ fun ListScreen(
 fun DetailScreen(
    pet: Pet,
    onAdoptClick: () -> Unit,
-   modifier: Modifier = Modifier
+   modifier: Modifier = Modifier,
+   onUpClick: () -> Unit = { }
 ) {
    val gender = if (pet.gender == PetGender.MALE) "Male" else "Female"
 
-   Column {
-      Image(
-         painter = painterResource(pet.imageId),
-         contentDescription = pet.name,
-         contentScale = ContentScale.FillWidth
-      )
+   Scaffold(
+      topBar = {
+         PetAppBar(
+            title = "Details",
+            canNavigateBack = true,
+            onUpClick = onUpClick
+         )
+      }
+   ) { innerPadding ->
       Column(
-         verticalArrangement = Arrangement.spacedBy(6.dp),
-         modifier = modifier.padding(6.dp)
+         modifier = modifier.padding(innerPadding)
       ) {
-         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier.fillMaxWidth()
+         Image(
+            painter = painterResource(pet.imageId),
+            contentDescription = pet.name,
+            contentScale = ContentScale.FillWidth
+         )
+         Column(
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+            modifier = modifier.padding(6.dp)
          ) {
-            Text(
-               text = pet.name,
-               style = MaterialTheme.typography.headlineMedium
-            )
-            Button(onClick = onAdoptClick) {
-               Text("Adopt Me!")
+            Row(
+               horizontalArrangement = Arrangement.SpaceBetween,
+               verticalAlignment = Alignment.CenterVertically,
+               modifier = modifier.fillMaxWidth()
+            ) {
+               Text(
+                  text = pet.name,
+                  style = MaterialTheme.typography.headlineMedium
+               )
+               Button(onClick = onAdoptClick) {
+                  Text("Adopt Me!")
+               }
             }
+            Text(
+               text = "Gender: $gender",
+               style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+               text = "Age: ${pet.age}",
+               style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+               text = pet.description,
+               style = MaterialTheme.typography.bodyMedium
+            )
          }
-         Text(
-            text = "Gender: $gender",
-            style = MaterialTheme.typography.bodyLarge
-         )
-         Text(
-            text = "Age: ${pet.age}",
-            style = MaterialTheme.typography.bodyLarge
-         )
-         Text(
-            text = pet.description,
-            style = MaterialTheme.typography.bodyMedium
-         )
       }
    }
 }
@@ -207,33 +219,47 @@ fun DetailScreen(
 @Composable
 fun AdoptScreen(
    pet: Pet,
-   modifier: Modifier = Modifier
+   modifier: Modifier = Modifier,
+   onUpClick: () -> Unit = { }
 ) {
    val context = LocalContext.current
-   Column {
-      Row(verticalAlignment = Alignment.CenterVertically) {
-         Image(
-            painter = painterResource(pet.imageId),
-            contentDescription = pet.name,
-            modifier = modifier.size(150.dp)
-         )
-         Text(
-            text = "Thank you for adopting ${pet.name}!",
-            modifier = modifier.padding(horizontal = 28.dp),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.headlineLarge,
+
+   Scaffold(
+      topBar = {
+         PetAppBar(
+            title = "Thank You!",
+            canNavigateBack = true,
+            onUpClick = onUpClick
          )
       }
-      Text(
-         text = "Please pick up your new family member during business hours.",
-         modifier = modifier.padding(6.dp),
-      )
-      Button(
-         onClick = { shareAdoption(context, pet) },
-         modifier = modifier.padding(6.dp)
+   ) { innerPadding ->
+      Column(
+         modifier = modifier.padding(innerPadding)
       ) {
-         Icon(Icons.Default.Share, null)
-         Text("Share", modifier = modifier.padding(start = 8.dp))
+         Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+               painter = painterResource(pet.imageId),
+               contentDescription = pet.name,
+               modifier = modifier.size(150.dp)
+            )
+            Text(
+               text = "Thank you for adopting ${pet.name}!",
+               modifier = modifier.padding(horizontal = 28.dp),
+               textAlign = TextAlign.Center,
+               style = MaterialTheme.typography.headlineLarge,
+            )
+         }
+         Text(
+            text = "Please pick up your new family member during business hours.",
+            modifier = modifier.padding(6.dp),
+         )
+         Button(
+            onClick = { shareAdoption(context, pet) },
+            modifier = modifier.padding(6.dp)
+         ) {
+            Icon(Icons.Default.Share, null)
+            Text("Share", modifier = modifier.padding(start = 8.dp))
+         }
       }
    }
 }
@@ -250,20 +276,14 @@ fun shareAdoption(context: Context, pet: Pet) {
    )
 }
 
-@Preview
-@Composable
-fun PreviewAdoptScreen() {
-   val pet = PetDataSource().loadPets()[0]
-   PetAdoptionTheme {
-      AdoptScreen(pet)
-   }
-}
-
 @Preview(showBackground = true)
 @Composable
-fun PreviewGridScreen() {
+fun PreviewListScreen() {
    PetAdoptionTheme {
-      PetApp()
+      ListScreen(
+         petList = PetDataSource().loadPets(),
+         onImageClick = { }
+      )
    }
 }
 
@@ -273,5 +293,14 @@ fun PreviewDetailScreen() {
    val pet = PetDataSource().loadPets()[0]
    PetAdoptionTheme {
       DetailScreen(pet, onAdoptClick = {})
+   }
+}
+
+@Preview
+@Composable
+fun PreviewAdoptScreen() {
+   val pet = PetDataSource().loadPets()[0]
+   PetAdoptionTheme {
+      AdoptScreen(pet)
    }
 }
