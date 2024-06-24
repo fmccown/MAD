@@ -167,8 +167,8 @@ fun DetailScreen(
    petId: Int,
    onAdoptClick: () -> Unit,
    modifier: Modifier = Modifier,
-   onUpClick: () -> Unit = { },
    viewModel: PetDetailViewModel = viewModel(),
+   onUpClick: () -> Unit = { }
 ) {
    val pet = viewModel.getPet(petId)
    val gender = if (pet.gender == PetGender.MALE) "Male" else "Female"
@@ -228,8 +228,8 @@ fun DetailScreen(
 fun AdoptScreen(
    petId: Int,
    modifier: Modifier = Modifier,
-   onUpClick: () -> Unit = { },
    viewModel: PetAdoptViewModel = viewModel(),
+   onUpClick: () -> Unit = { }
 ) {
    val pet = viewModel.getPet(petId)
    val context = LocalContext.current
