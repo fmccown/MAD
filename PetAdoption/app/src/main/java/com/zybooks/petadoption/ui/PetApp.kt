@@ -69,8 +69,8 @@ fun PetApp(
       composable<Routes.List> {
          ListScreen(
             petList = petViewModel.petList,
-            onImageClick = {
-               petViewModel.selectedPet = it
+            onImageClick = { pet ->
+               petViewModel.selectedPet = pet
                navController.navigate(Routes.Detail)
             }
          )
