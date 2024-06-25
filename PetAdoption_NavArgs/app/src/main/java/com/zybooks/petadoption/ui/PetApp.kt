@@ -133,7 +133,7 @@ fun PetAppBar(
 @Composable
 fun ListScreen(
    modifier: Modifier = Modifier,
-   viewModel: PetListViewModel = viewModel(),
+   viewModel: ListViewModel = viewModel(),
    onImageClick: (Pet) -> Unit
 ) {
    Scaffold(
@@ -167,7 +167,7 @@ fun DetailScreen(
    petId: Int,
    onAdoptClick: () -> Unit,
    modifier: Modifier = Modifier,
-   viewModel: PetDetailViewModel = viewModel(),
+   viewModel: DetailViewModel = viewModel(),
    onUpClick: () -> Unit = { }
 ) {
    val pet = viewModel.getPet(petId)
@@ -228,7 +228,7 @@ fun DetailScreen(
 fun AdoptScreen(
    petId: Int,
    modifier: Modifier = Modifier,
-   viewModel: PetAdoptViewModel = viewModel(),
+   viewModel: AdoptViewModel = viewModel(),
    onUpClick: () -> Unit = { }
 ) {
    val pet = viewModel.getPet(petId)

@@ -4,6 +4,6 @@ import androidx.lifecycle.ViewModel
 import com.zybooks.petadoption.data.Pet
 import com.zybooks.petadoption.data.PetDataSource
 
-class PetDetailViewModel : ViewModel() {
+class DetailViewModel : ViewModel() {
    fun getPet(id: Int): Pet = PetDataSource().getPet(id) ?: Pet()
 }
