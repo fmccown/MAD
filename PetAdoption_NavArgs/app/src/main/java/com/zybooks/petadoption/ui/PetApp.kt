@@ -85,7 +85,8 @@ fun PetApp() {
             petId = details.petId,
             onAdoptClick = {
                navController.navigate(
-                  Routes.Adopt(details.petId))
+                  Routes.Adopt(details.petId)
+               )
             },
             onUpClick = {
                navController.navigateUp()
