@@ -3,9 +3,9 @@ package com.zybooks.bottomnavdemo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
@@ -21,9 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -32,6 +32,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.zybooks.bottomnavdemo.ui.theme.BottomNavDemoTheme
+import kotlinx.serialization.Serializable
 
 
 class MainActivity : ComponentActivity() {
@@ -39,7 +40,6 @@ class MainActivity : ComponentActivity() {
       super.onCreate(savedInstanceState)
       setContent {
          BottomNavDemoTheme {
-            // A surface container using the 'background' color from the theme
             Surface(
                modifier = Modifier.fillMaxSize(),
                color = MaterialTheme.colorScheme.background
@@ -51,10 +51,21 @@ class MainActivity : ComponentActivity() {
    }
 }
 
-enum class AppScreen(val title: String, val icon: ImageVector) {
-   HOME("Home", Icons.Default.Home),
-   MESSAGES("Messages", Icons.Default.Email),
-   FAVORITES("Favorites", Icons.Default.Favorite)
+sealed class Routes {
+   @Serializable
+   data object Home
+
+   @Serializable
+   data object Messages
+
+   @Serializable
+   data object Favorites
+}
+
+enum class AppScreen(val route: Any, val title: String, val icon: ImageVector) {
+   HOME(Routes.Home, "Home", Icons.Default.Home),
+   MESSAGES(Routes.Messages, "Messages", Icons.Default.Email),
+   FAVORITES(Routes.Favorites, "Favorites", Icons.Default.Favorite)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,33 +87,56 @@ fun BottomNavBarDemoApp(
    ) { innerPadding ->
       NavHost(
          navController = navController,
-         startDestination = AppScreen.HOME.name,
+         startDestination = Routes.Home,
          modifier = modifier.padding(innerPadding)
       ) {
-         composable(route = AppScreen.HOME.name) {
-            Screen(AppScreen.HOME.title)
+         composable<Routes.Home> {
+            Home()
          }
-         composable(route = AppScreen.MESSAGES.name) {
-            Screen(AppScreen.MESSAGES.title)
+         composable<Routes.Messages> {
+            Messages()
          }
-         composable(route = AppScreen.FAVORITES.name) {
-            Screen(AppScreen.FAVORITES.title)
+         composable<Routes.Favorites> {
+            Favorites()
          }
       }
    }
 }
 
 @Composable
-fun Screen(title: String) {
-   Box(
-      Modifier.fillMaxSize()
-   ) {
-      Text(
-         title,
-         fontSize = 80.sp,
-         modifier = Modifier.align(Alignment.Center)
-      )
-   }
+fun Home() {
+   Text(
+      AppScreen.HOME.title,
+      textAlign = TextAlign.Center,
+      fontSize = 80.sp,
+      modifier = Modifier
+         .fillMaxSize()
+         .wrapContentHeight(),
+   )
+}
+
+@Composable
+fun Messages() {
+   Text(
+      AppScreen.MESSAGES.title,
+      textAlign = TextAlign.Center,
+      fontSize = 80.sp,
+      modifier = Modifier
+         .fillMaxSize()
+         .wrapContentHeight(),
+   )
+}
+
+@Composable
+fun Favorites() {
+   Text(
+      AppScreen.FAVORITES.title,
+      textAlign = TextAlign.Center,
+      fontSize = 80.sp,
+      modifier = Modifier
+         .fillMaxSize()
+         .wrapContentHeight(),
+   )
 }
 
 @Composable
@@ -113,9 +147,9 @@ fun BottomNavBar(navController: NavController) {
    NavigationBar {
       AppScreen.entries.forEach { item ->
          NavigationBarItem(
-            selected = currentRoute == item.name,
+            selected = currentRoute?.endsWith(item.route.toString()) == true,
             onClick = {
-               navController.navigate(item.name) {
+               navController.navigate(item.route) {
                   popUpTo(navController.graph.startDestinationId)
                }
             },
