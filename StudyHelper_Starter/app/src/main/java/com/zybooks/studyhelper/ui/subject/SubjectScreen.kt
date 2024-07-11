@@ -63,7 +63,7 @@ fun SubjectScreen(
    }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SubjectGrid(
    subjectList: List<Subject>,
@@ -83,7 +83,7 @@ fun SubjectGrid(
             ),
             onClick = { onSubjectClick(subject) },
             modifier = Modifier
-               .animateItemPlacement()  // Requires key in items()
+               .animateItem()
                .height(100.dp)
                .padding(4.dp)
          ) {
