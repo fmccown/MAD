@@ -164,7 +164,10 @@ fun BottomNavBar(navController: NavController) {
    }
 }
 
-@Preview(showBackground = true, device = "spec:id=reference_phone,shape=Normal,width=411,height=591,unit=dp,dpi=420")
+@Preview(
+   showBackground = true,
+   device = "spec:id=reference_phone,shape=Normal,width=411,height=591,unit=dp,dpi=420"
+)
 @Composable
 fun BottomNavBarPreview() {
    val navController = rememberNavController()
