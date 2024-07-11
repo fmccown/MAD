@@ -1,5 +1,6 @@
 package com.zybooks.studyhelper.ui.subject
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -12,8 +13,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
@@ -127,7 +128,7 @@ fun SubjectGrid(
                   subject.title.length % subjectColors.size]
             ),
             modifier = Modifier
-               .animateItemPlacement()
+               .animateItem()
                .height(100.dp)
                .padding(4.dp)
                .combinedClickable(
@@ -182,7 +183,7 @@ fun CabAppBar(
       modifier = modifier,
       navigationIcon = {
          IconButton(onClick = onUpClick) {
-            Icon(Icons.Filled.ArrowBack, "Back")
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
          }
       },
       actions = {
