@@ -40,9 +40,9 @@ fun QuestionScreen(
    viewModel: QuestionViewModel = viewModel(
       factory = QuestionViewModel.Factory
    ),
-   onUpClick: () -> Unit,
-   onAddClick: () -> Unit,
-   onEditClick: (Long) -> Unit,
+   onUpClick: () -> Unit = {},
+   onAddClick: () -> Unit = {},
+   onEditClick: (Long) -> Unit = {},
 ) {
    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 

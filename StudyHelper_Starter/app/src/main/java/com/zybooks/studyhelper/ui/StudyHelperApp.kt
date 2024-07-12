@@ -42,8 +42,6 @@ fun StudyHelperApp() {
       composable<Routes.Question> { backStackEntry ->
          QuestionScreen(
             onUpClick = { navController.navigateUp() },
-            onAddClick = { },
-            onEditClick = { questionId -> }
          )
       }
    }
