@@ -26,7 +26,7 @@ class QuestionViewModel(
          initializer {
             val application = (this[APPLICATION_KEY] as StudyHelperApplication)
             QuestionViewModel(
-               savedStateHandle = this.createSavedStateHandle(),
+               savedStateHandle = createSavedStateHandle(),
                studyRepo = application.studyRepository
             )
          }

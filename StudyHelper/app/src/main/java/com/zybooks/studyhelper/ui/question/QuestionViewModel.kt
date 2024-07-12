@@ -30,7 +30,10 @@ class QuestionViewModel(
       val Factory: ViewModelProvider.Factory = viewModelFactory {
          initializer {
             val application = (this[APPLICATION_KEY] as StudyHelperApplication)
-            QuestionViewModel(this.createSavedStateHandle(), application.studyRepository)
+            QuestionViewModel(
+               savedStateHandle = createSavedStateHandle(),
+               studyRepo = application.studyRepository
+            )
          }
       }
    }
