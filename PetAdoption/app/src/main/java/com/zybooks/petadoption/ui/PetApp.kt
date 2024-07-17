@@ -132,9 +132,9 @@ fun PetAppBar(
 
 @Composable
 fun ListScreen(
+   onImageClick: (Pet) -> Unit,
    modifier: Modifier = Modifier,
-   viewModel: ListViewModel = viewModel(),
-   onImageClick: (Pet) -> Unit
+   viewModel: ListViewModel = viewModel()
 ) {
    Scaffold(
       topBar = {
@@ -286,11 +286,13 @@ fun shareAdoption(context: Context, pet: Pet) {
    )
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun PreviewGridScreen() {
+fun PreviewListScreen() {
    PetAdoptionTheme {
-      PetApp()
+      ListScreen(
+         onImageClick = {}
+      )
    }
 }
 
@@ -299,7 +301,10 @@ fun PreviewGridScreen() {
 fun PreviewDetailScreen() {
    val pet = PetDataSource().loadPets()[0]
    PetAdoptionTheme {
-      DetailScreen(pet.id, onAdoptClick = {})
+      DetailScreen(
+         petId = pet.id,
+         onAdoptClick = {}
+      )
    }
 }
 
