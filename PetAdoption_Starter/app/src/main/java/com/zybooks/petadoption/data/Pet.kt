@@ -9,11 +9,11 @@ enum class PetGender {
 }
 
 data class Pet (
-   val id: Int,
-   val type: PetType,
-   val name: String,
-   val gender: PetGender,
-   val age: Int,
-   val description: String,
+   val id: Int = 0,
+   val type: PetType = PetType.DOG,
+   val name: String = "",
+   val gender: PetGender = PetGender.FEMALE,
+   val age: Int = 0,
+   val description: String = "",
    val imageId: Int = 0
 )
