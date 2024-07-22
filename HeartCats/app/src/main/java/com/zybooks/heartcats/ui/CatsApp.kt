@@ -104,7 +104,6 @@ fun CatScreen(cats: List<Cat>) {
                .crossfade(true)
                .build(),
             error = painterResource(R.drawable.baseline_broken_image_24),
-            //placeholder = painterResource(R.drawable.baseline_downloading_24),
             contentDescription = "Cat image",
             contentScale = ContentScale.Crop,
             modifier = Modifier
