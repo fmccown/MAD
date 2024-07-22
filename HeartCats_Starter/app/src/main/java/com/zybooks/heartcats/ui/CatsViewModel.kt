@@ -35,10 +35,10 @@ class CatsViewModel(private val catsRepository: CatRepository) : ViewModel() {
    }
 
    init {
-      getCats()
+      getCatImages()
    }
 
-   fun getCats() {
-      catsUiState = CatsUiState.Success(catsRepository.getCats())
+   fun getCatImages() {
+      catsUiState = CatsUiState.Success(catsRepository.getCatImages())
    }
 }

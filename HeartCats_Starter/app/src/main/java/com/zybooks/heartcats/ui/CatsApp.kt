@@ -32,7 +32,7 @@ fun CatsApp(
          TopAppBar(
             title = { Text("Heart Cats") },
             actions = {
-               IconButton(onClick = { viewModel.getCats() }) {
+               IconButton(onClick = { viewModel.getCatImages() }) {
                   Icon(
                      Icons.Filled.Refresh,
                      contentDescription = "More Cats",

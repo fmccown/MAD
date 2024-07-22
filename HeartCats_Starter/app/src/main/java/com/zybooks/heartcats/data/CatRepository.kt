@@ -1,7 +1,7 @@
 package com.zybooks.heartcats.data
 
 class CatRepository() {
-   fun getCats(): List<CatImage> = listOf(
+   fun getCatImages(): List<CatImage> = listOf(
       CatImage(
          id = "2bh",
          url = "https://cdn2.thecatapi.com/images/2bh.jpg",
