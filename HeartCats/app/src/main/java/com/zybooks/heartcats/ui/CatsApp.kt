@@ -34,7 +34,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.zybooks.heartcats.R
-import com.zybooks.heartcats.data.Cat
+import com.zybooks.heartcats.data.CatImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +48,7 @@ fun CatsApp(
          TopAppBar(
             title = { Text("Heart Cats") },
             actions = {
-               IconButton(onClick = { viewModel.getCats() }) {
+               IconButton(onClick = { viewModel.getCatImages() }) {
                   Icon(
                      Icons.Filled.Refresh,
                      contentDescription = "More Cats",
@@ -63,7 +63,7 @@ fun CatsApp(
       ) {
          when (val uiState = viewModel.catsUiState) {
             is CatsUiState.Loading -> LoadingScreen()
-            is CatsUiState.Success -> CatScreen(uiState.cats)
+            is CatsUiState.Success -> CatScreen(uiState.catImages)
             is CatsUiState.Error -> ErrorScreen(uiState.errorMessage)
          }
       }
@@ -91,13 +91,13 @@ fun LoadingScreen() {
 }
 
 @Composable
-fun CatScreen(cats: List<Cat>) {
+fun CatScreen(catImages: List<CatImage>) {
    LazyVerticalStaggeredGrid(
       columns = StaggeredGridCells.Fixed(2),
       verticalItemSpacing = 4.dp,
       horizontalArrangement = Arrangement.spacedBy(4.dp),
    ) {
-      items(items = cats, key = { cat -> cat.id }) { cat ->
+      items(items = catImages, key = { cat -> cat.id }) { cat ->
          AsyncImage(
             model = ImageRequest.Builder(context = LocalContext.current)
                .data(cat.url)

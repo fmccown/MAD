@@ -1,5 +1,5 @@
 package com.zybooks.heartcats.data
 
 class CatRepository(private val catsApiService: CatApiService) {
-   suspend fun getCats(): List<Cat> = catsApiService.getCats()
+   suspend fun getCatImages(): List<CatImage> = catsApiService.getCatImages()
 }

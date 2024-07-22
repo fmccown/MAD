@@ -10,13 +10,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.zybooks.heartcats.CatsApplication
-import com.zybooks.heartcats.data.Cat
+import com.zybooks.heartcats.data.CatImage
 import com.zybooks.heartcats.data.CatRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 sealed class CatsUiState {
-   data class Success(val cats: List<Cat>) : CatsUiState()
+   data class Success(val catImages: List<CatImage>) : CatsUiState()
    data class Error(val errorMessage: String) : CatsUiState()
    data object Loading : CatsUiState()
 }
@@ -38,15 +38,15 @@ class CatsViewModel(private val catsRepository: CatRepository) : ViewModel() {
    }
 
    init {
-      getCats()
+      getCatImages()
    }
 
-   fun getCats() {
+   fun getCatImages() {
       viewModelScope.launch {
          catsUiState = CatsUiState.Loading
          catsUiState = try {
             delay(1000)
-            CatsUiState.Success(catsRepository.getCats())
+            CatsUiState.Success(catsRepository.getCatImages())
          } catch (e: Exception) {
             CatsUiState.Error(e.message.toString())
          }

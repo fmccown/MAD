@@ -4,5 +4,5 @@ import retrofit2.http.GET
 
 interface CatApiService {
    @GET("search?limit=10")
-   suspend fun getCats(): List<Cat>
+   suspend fun getCatImages(): List<CatImage>
 }
