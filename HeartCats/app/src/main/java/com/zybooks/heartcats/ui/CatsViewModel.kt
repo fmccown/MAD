@@ -29,10 +29,7 @@ class CatsViewModel(private val catsRepository: CatRepository) : ViewModel() {
       val Factory: ViewModelProvider.Factory = viewModelFactory {
          initializer {
             val application = (this[APPLICATION_KEY] as CatsApplication)
-
-            CatsViewModel(
-               catsRepository = application.catsRepository
-            )
+            CatsViewModel(application.catsRepository)
          }
       }
    }
