@@ -6,19 +6,16 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.zybooks.heartcats.CatsApplication
-import com.zybooks.heartcats.data.Cat
+import com.zybooks.heartcats.data.CatImage
 import com.zybooks.heartcats.data.CatRepository
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
-sealed interface CatsUiState {
-   data class Success(val cats: List<Cat>) : CatsUiState
-   data class Error(val errorMessage: String) : CatsUiState
-   data object Loading : CatsUiState
+sealed class CatsUiState {
+   data class Success(val cats: List<CatImage>) : CatsUiState()
+   data class Error(val errorMessage: String) : CatsUiState()
+   data object Loading : CatsUiState()
 }
 
 class CatsViewModel(private val catsRepository: CatRepository) : ViewModel() {
@@ -42,14 +39,6 @@ class CatsViewModel(private val catsRepository: CatRepository) : ViewModel() {
    }
 
    fun getCats() {
-      viewModelScope.launch {
-         catsUiState = CatsUiState.Loading
-         catsUiState = try {
-            delay(1000)
-            CatsUiState.Success(catsRepository.getCats())
-         } catch (e: Exception) {
-            CatsUiState.Error(e.message.toString())
-         }
-      }
+      catsUiState = CatsUiState.Success(catsRepository.getCats())
    }
 }
