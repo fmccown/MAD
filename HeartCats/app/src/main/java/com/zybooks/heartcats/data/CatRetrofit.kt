@@ -8,7 +8,6 @@ class CatRetrofit {
 
    val catsApiService: CatApiService by lazy {
       val retrofit: Retrofit = Retrofit.Builder()
-         //.addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
          .addConverterFactory(GsonConverterFactory.create())
          .baseUrl(baseUrl)
          .build()
