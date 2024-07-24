@@ -14,7 +14,7 @@ import com.zybooks.heartcats.data.CatRepository
 
 sealed class CatsUiState {
    data class Success(val catImages: List<CatImage>) : CatsUiState()
-   data class Error(val errorMessage: String) : CatsUiState()
+   data object Error : CatsUiState()
    data object Loading : CatsUiState()
 }
 
