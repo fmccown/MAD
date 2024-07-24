@@ -41,7 +41,7 @@ fun CatsApp(
       ) {
          when (val uiState = viewModel.catsUiState) {
             is CatsUiState.Loading -> Text("Loading...")
-            is CatsUiState.Success -> Text(uiState.cats.toString())
+            is CatsUiState.Success -> Text(uiState.catImages.toString())
             is CatsUiState.Error -> Text("Error: ${uiState.errorMessage}")
          }
       }
