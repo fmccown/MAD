@@ -70,7 +70,6 @@ fun CatsApp(
    }
 }
 
-@Preview(showSystemUi = true)
 @Composable
 fun LoadingScreen() {
    Column(
