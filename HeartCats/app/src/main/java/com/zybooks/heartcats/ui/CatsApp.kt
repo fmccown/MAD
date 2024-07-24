@@ -64,7 +64,7 @@ fun CatsApp(
          when (val uiState = viewModel.catsUiState) {
             is CatsUiState.Loading -> LoadingScreen()
             is CatsUiState.Success -> CatScreen(uiState.catImages)
-            is CatsUiState.Error -> ErrorScreen(uiState.errorMessage)
+            is CatsUiState.Error -> ErrorScreen()
          }
       }
    }
@@ -99,10 +99,7 @@ fun CatScreen(catImages: List<CatImage>) {
    ) {
       items(items = catImages, key = { cat -> cat.id }) { cat ->
          AsyncImage(
-            model = ImageRequest.Builder(context = LocalContext.current)
-               .data(cat.url)
-               .crossfade(true)
-               .build(),
+            model = cat.url,
             error = painterResource(R.drawable.baseline_broken_image_24),
             contentDescription = "Cat image",
             contentScale = ContentScale.Crop,
@@ -115,20 +112,21 @@ fun CatScreen(catImages: List<CatImage>) {
 }
 
 @Composable
-fun ErrorScreen(errorMessage: String) {
+fun ErrorScreen() {
    Column(
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally,
-      modifier = Modifier.padding(16.dp)
+      modifier = Modifier.fillMaxSize()
    ) {
       Icon(
          painter = painterResource(R.drawable.baseline_error_24),
-         contentDescription = errorMessage,
+         contentDescription = null,
          modifier = Modifier
             .padding(bottom = 20.dp)
             .size(148.dp),
          tint = MaterialTheme.colorScheme.error
       )
-      Text(text = errorMessage)
+      Text(text = "Error loading images.")
+      Text("Check your internet connection.")
    }
 }

@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 
 sealed class CatsUiState {
    data class Success(val catImages: List<CatImage>) : CatsUiState()
-   data class Error(val errorMessage: String) : CatsUiState()
+   data object Error : CatsUiState()
    data object Loading : CatsUiState()
 }
 
@@ -45,7 +45,7 @@ class CatsViewModel(private val catsRepository: CatRepository) : ViewModel() {
             delay(1000)
             CatsUiState.Success(catsRepository.getCatImages())
          } catch (e: Exception) {
-            CatsUiState.Error(e.message.toString())
+            CatsUiState.Error
          }
       }
    }
