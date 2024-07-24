@@ -44,7 +44,7 @@ class CatsViewModel(private val catsRepository: CatRepository) : ViewModel() {
          catsUiState = try {
             delay(1000)
             CatsUiState.Success(catsRepository.getCatImages())
-         } catch (e: Exception) {
+         } catch (ex: Exception) {
             CatsUiState.Error
          }
       }
