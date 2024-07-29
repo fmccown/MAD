@@ -23,14 +23,13 @@ class SensorViewModel(private val proximitySensor: ProximitySensor) : ViewModel(
       }
    }
 
-   init {
+   fun startListening() {
       proximitySensor.startListening { values ->
          proximity = values[0]
       }
    }
 
-   override fun onCleared() {
-      super.onCleared()
+   fun stopListening() {
       proximitySensor.stopListening()
    }
 }

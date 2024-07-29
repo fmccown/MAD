@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
@@ -15,9 +16,19 @@ fun SensorApp(
    )
 ) {
    val proximity = viewModel.proximity
+
    Text(
       text = "Proximity: $proximity cm",
       fontSize = 34.sp,
       modifier = Modifier.padding(16.dp)
    )
+
+   LifecycleResumeEffect(Unit) {
+      viewModel.startListening()
+
+      onPauseOrDispose {
+         viewModel.stopListening()
+      }
+   }
+
 }

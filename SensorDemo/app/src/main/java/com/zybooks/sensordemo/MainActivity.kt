@@ -1,6 +1,7 @@
 package com.zybooks.sensordemo
 
 import android.app.Activity.SENSOR_SERVICE
+import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.os.Bundle
@@ -17,12 +18,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.zybooks.sensordemo.ui.SensorApp
+import com.zybooks.sensordemo.ui.SensorViewModel
 import com.zybooks.sensordemo.ui.theme.SensorDemoTheme
 
 class MainActivity : ComponentActivity() {
-   private lateinit var sensorManager: SensorManager
-
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       setContent {
@@ -36,29 +37,40 @@ class MainActivity : ComponentActivity() {
          }
       }
 
-      sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+      listSensors(this)
+      verifySensor(this)
+   }
 
-      listSensors(sensorManager)
-      verifySensor(sensorManager)
+   private fun listSensors(context: Context) {
+      val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+      val deviceSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
+
+      for (sensor in deviceSensors) {
+         println("Sensor: ${sensor.name} - ${sensor.type}")
+      }
+   }
+
+   private fun verifySensor(context: Context) {
+      val sensorManager = context.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+      val tempSensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
+
+      if (tempSensor == null) {
+         println("No ambient temperature sensor on this device")
+      } else {
+         println("Vendor: ${tempSensor.vendor}")
+         println("Version: ${tempSensor.version}")
+         println("Min delay: ${tempSensor.minDelay}")
+      }
+   }
+
+   override fun onPause() {
+      super.onPause()
+   }
+
+   override fun onResume() {
+      super.onResume()
    }
 }
 
-fun listSensors(sensorManager: SensorManager) {
-   val deviceSensors: List<Sensor> = sensorManager.getSensorList(Sensor.TYPE_ALL)
 
-   for (sensor in deviceSensors) {
-      println("Sensor: ${sensor.name} - ${sensor.type}")
-   }
-}
 
-fun verifySensor(sensorManager: SensorManager) {
-   val tempSensor: Sensor? = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
-
-   if (tempSensor == null) {
-      println("No ambient temperature sensor on this device")
-   } else {
-      println("Vendor: ${tempSensor.vendor}")
-      println("Version: ${tempSensor.version}")
-      println("Min delay: ${tempSensor.minDelay}")
-   }
-}
