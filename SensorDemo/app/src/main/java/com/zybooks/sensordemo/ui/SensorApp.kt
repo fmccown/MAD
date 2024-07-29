@@ -30,5 +30,4 @@ fun SensorApp(
          viewModel.stopListening()
       }
    }
-
 }
