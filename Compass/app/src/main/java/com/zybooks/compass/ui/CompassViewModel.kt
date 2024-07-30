@@ -18,11 +18,6 @@ class CompassViewModel(
    private val magnetometerSensor: MagnetometerSensor
 ) : ViewModel() {
 
-   var rotation by mutableFloatStateOf(0.0f)
-
-   private var accelValues = mutableListOf(0.0f, 0.0f, 0.0f)
-   private var magneticValues = mutableListOf(0.0f, 0.0f, 0.0f)
-
    companion object {
       val Factory: ViewModelProvider.Factory = viewModelFactory {
          initializer {
@@ -34,6 +29,10 @@ class CompassViewModel(
          }
       }
    }
+
+   var rotation by mutableFloatStateOf(0.0f)
+   private var accelValues = mutableListOf(0.0f, 0.0f, 0.0f)
+   private var magneticValues = mutableListOf(0.0f, 0.0f, 0.0f)
 
    fun startListening() {
       accelerometerSensor.startListening { values ->
@@ -53,9 +52,9 @@ class CompassViewModel(
    }
 
    private fun computeRotation(): Float {
+      val rotationMatrix = FloatArray(9)
 
       // Compute rotation matrix
-      val rotationMatrix = FloatArray(9)
       if (SensorManager.getRotationMatrix(rotationMatrix, null,
             accelValues.toFloatArray(), magneticValues.toFloatArray())) {
 
