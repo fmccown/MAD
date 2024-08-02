@@ -19,18 +19,18 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class ImageRepository(val context: Context) {
+class ImageRepository(private val context: Context) {
    private lateinit var photoFile: File
-   var photoUri: Uri = Uri.EMPTY
 
    init {
       createNewPhotoFile()
    }
 
-   fun createNewPhotoFile() {
+   fun createNewPhotoFile() : Uri {
       photoFile = createImageFile()
-      photoUri = FileProvider.getUriForFile(
+      val photoUri = FileProvider.getUriForFile(
          context, "com.zybooks.photoexpress.fileprovider", photoFile)
+      return photoUri
    }
 
    private fun createImageFile(): File {
@@ -61,9 +61,7 @@ class ImageRepository(val context: Context) {
       return LightingColorFilter(multColor, addColor)
    }
 
-   suspend fun saveAlteredPhoto(
-      colorFilter: LightingColorFilter
-   ) = withContext(Dispatchers.IO) {
+   suspend fun saveAlteredPhoto(colorFilter: LightingColorFilter) = withContext(Dispatchers.IO) {
       // Load original image from file
       val origBitmap = BitmapFactory.decodeFile(photoFile.absolutePath, null)
 

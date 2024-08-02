@@ -1,9 +1,6 @@
 package com.zybooks.photoexpress.ui
 
 import android.net.Uri
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.LightingColorFilter
 import androidx.lifecycle.ViewModel
@@ -13,6 +10,9 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.zybooks.photoexpress.PhotoExpressApplication
 import com.zybooks.photoexpress.data.ImageRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 
 class PhotoExpressViewModel(private val imageRepo: ImageRepository) : ViewModel() {
 
@@ -25,31 +25,43 @@ class PhotoExpressViewModel(private val imageRepo: ImageRepository) : ViewModel(
       }
    }
 
-   var photoUri by mutableStateOf(imageRepo.photoUri)
-   var colorFilter by mutableStateOf(LightingColorFilter(Color.White, Color.Black))
-   var imageVisible by mutableStateOf(false)
-   var photoSaved by mutableStateOf(false)
+   private val _uiState = MutableStateFlow(PhotoExpressUiState())
+   val uiState: StateFlow<PhotoExpressUiState> = _uiState
 
    suspend fun saveAlteredPhoto() {
-      imageRepo.saveAlteredPhoto(colorFilter)
-      photoSaved = true
+      imageRepo.saveAlteredPhoto(uiState.value.colorFilter)
+      _uiState.update {
+         it.copy(photoSaved = true)
+      }
    }
 
    fun photoTaken() {
-      imageVisible = true
+      _uiState.update {
+         it.copy(photoVisible = true)
+      }
    }
 
    fun changeBrightness(brightness: Float) {
-      colorFilter = imageRepo.changeBrightness(brightness)
-      photoSaved = false
+      _uiState.update {
+         it.copy(
+            colorFilter = imageRepo.changeBrightness(brightness),
+            photoSaved = false
+         )
+      }
    }
 
-   fun takePhoto() {
-      imageVisible = false
-      photoSaved = false
+   fun takePhoto(): Uri {
       changeBrightness(100f)   // Reset
-      imageRepo.createNewPhotoFile()
-      photoUri = imageRepo.photoUri
+
+      _uiState.update {
+         it.copy(
+            photoVisible = false,
+            photoSaved = true,
+            photoUri = imageRepo.createNewPhotoFile()
+         )
+      }
+
+      return _uiState.value.photoUri
    }
 }
 

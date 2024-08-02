@@ -21,6 +21,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -31,6 +32,8 @@ fun PhotoExpressApp(
       factory = PhotoExpressViewModel.Factory
    )
 ) {
+   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
    val cameraLauncher =
       rememberLauncherForActivityResult(
          ActivityResultContracts.TakePicture()
@@ -52,33 +55,32 @@ fun PhotoExpressApp(
          horizontalArrangement = Arrangement.SpaceBetween
       ) {
          Button(onClick = {
-            viewModel.takePhoto()
+            val photoUri = viewModel.takePhoto()
             sliderPosition = 100f
-            println("viewModel.photoUri = ${viewModel.photoUri}")
-            cameraLauncher.launch(viewModel.photoUri)
+            cameraLauncher.launch(photoUri)
          }) {
             Text("Take Picture")
          }
-         if (viewModel.imageVisible) {
+         if (uiState.photoVisible) {
             Button(
                onClick = {
                   coroutineScope.launch {
                      viewModel.saveAlteredPhoto()
                   }
                },
-               enabled = !viewModel.photoSaved
+               enabled = !uiState.photoSaved
             ) {
                Text("Save")
             }
          }
       }
 
-      if (viewModel.imageVisible) {
+      if (uiState.photoVisible) {
          Image(
-            painter = rememberAsyncImagePainter(viewModel.photoUri),
+            painter = rememberAsyncImagePainter(uiState.photoUri),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
-            colorFilter = viewModel.colorFilter
+            colorFilter = uiState.colorFilter
          )
 
          Slider(
