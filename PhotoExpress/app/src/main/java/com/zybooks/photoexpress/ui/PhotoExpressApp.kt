@@ -25,6 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 
 @Composable
 fun PhotoExpressApp(
@@ -76,13 +77,12 @@ fun PhotoExpressApp(
       }
 
       if (uiState.photoVisible) {
-         Image(
-            painter = rememberAsyncImagePainter(uiState.photoUri),
+         AsyncImage(
+            model = uiState.photoUri,
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             colorFilter = uiState.colorFilter
          )
-
          Slider(
             value = sliderPosition,
             valueRange = 0f..200f,
