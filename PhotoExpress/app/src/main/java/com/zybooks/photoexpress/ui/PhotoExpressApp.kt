@@ -35,7 +35,6 @@ fun PhotoExpressApp(
    )
 ) {
    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-   var sliderPosition by remember { mutableFloatStateOf(100f) }
    val coroutineScope = rememberCoroutineScope()
 
    val cameraLauncher = rememberLauncherForActivityResult(
@@ -51,7 +50,7 @@ fun PhotoExpressApp(
          PhotoExpressTopAppBar(
             onTakePhoto = {
                val photoUri = viewModel.takePhoto()
-               sliderPosition = 100f
+               viewModel.changeBrightness(100f)
                cameraLauncher.launch(photoUri)
             },
             onSavePhoto = {
@@ -75,11 +74,10 @@ fun PhotoExpressApp(
                colorFilter = uiState.colorFilter
             )
             Slider(
-               value = sliderPosition,
+               value = uiState.brightness,
                valueRange = 0f..200f,
                onValueChange = {
-                  sliderPosition = it
-                  viewModel.changeBrightness(sliderPosition)
+                  viewModel.changeBrightness(it)
                },
                modifier = Modifier.weight(1f)
             )
