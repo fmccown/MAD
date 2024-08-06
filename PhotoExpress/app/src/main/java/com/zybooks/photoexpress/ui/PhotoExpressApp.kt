@@ -28,7 +28,6 @@ import coil.compose.AsyncImage
 import com.zybooks.photoexpress.R
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PhotoExpressApp(
    viewModel: PhotoExpressViewModel = viewModel(
@@ -36,6 +35,8 @@ fun PhotoExpressApp(
    )
 ) {
    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+   var sliderPosition by remember { mutableFloatStateOf(100f) }
+   val coroutineScope = rememberCoroutineScope()
 
    val cameraLauncher = rememberLauncherForActivityResult(
          ActivityResultContracts.TakePicture()
@@ -44,9 +45,6 @@ fun PhotoExpressApp(
             viewModel.photoTaken()
          }
       }
-
-   var sliderPosition by remember { mutableFloatStateOf(100f) }
-   val coroutineScope = rememberCoroutineScope()
 
    Scaffold(
       topBar = {
@@ -58,7 +56,7 @@ fun PhotoExpressApp(
             },
             onSavePhoto = {
                coroutineScope.launch {
-                  viewModel.saveAlteredPhoto()
+                  viewModel.savePhoto()
                }
             },
             isPhotoSaved = uiState.photoSaved

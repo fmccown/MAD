@@ -61,7 +61,7 @@ class ImageRepository(private val context: Context) {
       return LightingColorFilter(multColor, addColor)
    }
 
-   suspend fun saveAlteredPhoto(colorFilter: LightingColorFilter) = withContext(Dispatchers.IO) {
+   suspend fun savePhoto(colorFilter: LightingColorFilter) = withContext(Dispatchers.IO) {
       // Load original image from file
       val origBitmap = BitmapFactory.decodeFile(photoFile.absolutePath, null)
 

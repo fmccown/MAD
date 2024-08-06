@@ -28,8 +28,8 @@ class PhotoExpressViewModel(private val imageRepo: ImageRepository) : ViewModel(
    private val _uiState = MutableStateFlow(PhotoExpressUiState())
    val uiState: StateFlow<PhotoExpressUiState> = _uiState
 
-   suspend fun saveAlteredPhoto() {
-      imageRepo.saveAlteredPhoto(uiState.value.colorFilter)
+   suspend fun savePhoto() {
+      imageRepo.savePhoto(uiState.value.colorFilter)
       _uiState.update {
          it.copy(photoSaved = true)
       }
@@ -44,6 +44,7 @@ class PhotoExpressViewModel(private val imageRepo: ImageRepository) : ViewModel(
    fun changeBrightness(brightness: Float) {
       _uiState.update {
          it.copy(
+            brightness = brightness,
             colorFilter = imageRepo.changeBrightness(brightness),
             photoSaved = false
          )
@@ -67,6 +68,7 @@ class PhotoExpressViewModel(private val imageRepo: ImageRepository) : ViewModel(
 
 data class PhotoExpressUiState(
    val photoUri: Uri = Uri.EMPTY,
+   val brightness: Float = 100f,
    val colorFilter: LightingColorFilter = LightingColorFilter(Color.White, Color.Black),
    val photoVisible: Boolean = false,
    val photoSaved: Boolean = true
