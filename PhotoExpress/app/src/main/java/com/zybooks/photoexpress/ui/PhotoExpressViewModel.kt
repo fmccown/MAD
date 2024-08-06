@@ -69,5 +69,5 @@ data class PhotoExpressUiState(
    val photoUri: Uri = Uri.EMPTY,
    val colorFilter: LightingColorFilter = LightingColorFilter(Color.White, Color.Black),
    val photoVisible: Boolean = false,
-   val photoSaved: Boolean = false
+   val photoSaved: Boolean = true
 )

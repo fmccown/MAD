@@ -50,33 +50,18 @@ fun PhotoExpressApp(
 
    Scaffold(
       topBar = {
-         TopAppBar(
-            title = { Text("Photo Express") },
-            actions = {
-               IconButton(onClick = {
-                  val photoUri = viewModel.takePhoto()
-                  sliderPosition = 100f
-                  cameraLauncher.launch(photoUri)
-               }) {
-                  Icon(
-                     painter = painterResource(R.drawable.camera),
-                     contentDescription = "Take Photo"
-                  )
+         PhotoExpressTopAppBar(
+            onTakePhoto = {
+               val photoUri = viewModel.takePhoto()
+               sliderPosition = 100f
+               cameraLauncher.launch(photoUri)
+            },
+            onSavePhoto = {
+               coroutineScope.launch {
+                  viewModel.saveAlteredPhoto()
                }
-               IconButton(
-                  onClick = {
-                     coroutineScope.launch {
-                        viewModel.saveAlteredPhoto()
-                     }
-                  },
-                  enabled = !uiState.photoSaved
-               ) {
-                  Icon(
-                     painter = painterResource(R.drawable.save),
-                     contentDescription = "Save"
-                  )
-               }
-            }
+            },
+            isPhotoSaved = uiState.photoSaved
          )
       }
    ) { innerPadding ->
@@ -108,4 +93,32 @@ fun PhotoExpressApp(
    }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PhotoExpressTopAppBar(
+   onTakePhoto: () -> Unit = {},
+   onSavePhoto: () -> Unit = {},
+   isPhotoSaved: Boolean = false
+) {
+   TopAppBar(
+      title = { Text("Photo Express") },
+      actions = {
+         IconButton(onClick = onTakePhoto) {
+            Icon(
+               painter = painterResource(R.drawable.camera),
+               contentDescription = "Take Photo"
+            )
+         }
+         IconButton(
+            onClick = onSavePhoto,
+            enabled = !isPhotoSaved
+         ) {
+            Icon(
+               painter = painterResource(R.drawable.save),
+               contentDescription = "Save"
+            )
+         }
+      }
+   )
+}
 
