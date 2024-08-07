@@ -12,7 +12,6 @@ import com.zybooks.photoexpress.PhotoExpressApplication
 import com.zybooks.photoexpress.data.ImageRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 
 class PhotoExpressViewModel(private val imageRepo: ImageRepository) : ViewModel() {
 
@@ -27,43 +26,6 @@ class PhotoExpressViewModel(private val imageRepo: ImageRepository) : ViewModel(
 
    private val _uiState = MutableStateFlow(PhotoExpressUiState())
    val uiState: StateFlow<PhotoExpressUiState> = _uiState
-
-   suspend fun savePhoto() {
-      imageRepo.savePhoto(uiState.value.colorFilter)
-      _uiState.update {
-         it.copy(photoSaved = true)
-      }
-   }
-
-   fun photoTaken() {
-      _uiState.update {
-         it.copy(photoVisible = true)
-      }
-   }
-
-   fun changeBrightness(brightness: Float) {
-      _uiState.update {
-         it.copy(
-            brightness = brightness,
-            colorFilter = imageRepo.changeBrightness(brightness),
-            photoSaved = false
-         )
-      }
-   }
-
-   fun takePhoto(): Uri {
-      changeBrightness(100f)   // Reset
-
-      _uiState.update {
-         it.copy(
-            photoVisible = false,
-            photoSaved = true,
-            photoUri = imageRepo.createNewPhotoFile()
-         )
-      }
-
-      return _uiState.value.photoUri
-   }
 }
 
 data class PhotoExpressUiState(
