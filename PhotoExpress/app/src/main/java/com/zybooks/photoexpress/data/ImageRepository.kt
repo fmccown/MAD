@@ -22,14 +22,6 @@ import java.util.Locale
 class ImageRepository(private val context: Context) {
    private lateinit var photoFile: File
 
-   fun createPhotoFile(): Uri {
-      photoFile = createEmptyImageFile()
-      val photoUri = FileProvider.getUriForFile(
-         context, "com.zybooks.photoexpress.fileprovider", photoFile
-      )
-      return photoUri
-   }
-
    private fun createEmptyImageFile(): File {
       // Create a unique filename
       val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
@@ -38,6 +30,14 @@ class ImageRepository(private val context: Context) {
       // Create the file in the Pictures directory on external storage
       val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
       return File(storageDir, imageFilename)
+   }
+
+   fun createPhotoFile(): Uri {
+      photoFile = createEmptyImageFile()
+      val photoUri = FileProvider.getUriForFile(
+         context, "com.zybooks.photoexpress.fileprovider", photoFile
+      )
+      return photoUri
    }
 
    fun changeBrightness(brightness: Float): LightingColorFilter {
