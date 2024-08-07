@@ -22,18 +22,15 @@ import java.util.Locale
 class ImageRepository(private val context: Context) {
    private lateinit var photoFile: File
 
-   init {
-      createNewPhotoFile()
-   }
-
-   fun createNewPhotoFile() : Uri {
-      photoFile = createImageFile()
+   fun createPhotoFile(): Uri {
+      photoFile = createEmptyImageFile()
       val photoUri = FileProvider.getUriForFile(
-         context, "com.zybooks.photoexpress.fileprovider", photoFile)
+         context, "com.zybooks.photoexpress.fileprovider", photoFile
+      )
       return photoUri
    }
 
-   private fun createImageFile(): File {
+   private fun createEmptyImageFile(): File {
       // Create a unique filename
       val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
       val imageFilename = "photo_$timeStamp.jpg"
@@ -43,7 +40,7 @@ class ImageRepository(private val context: Context) {
       return File(storageDir, imageFilename)
    }
 
-   fun changeBrightness(brightness: Float) : LightingColorFilter {
+   fun changeBrightness(brightness: Float): LightingColorFilter {
       var addColor = Color.Black
       var multColor = Color.White
 
@@ -67,7 +64,8 @@ class ImageRepository(private val context: Context) {
 
       // Create a new Bitmap with the same dimensions as the original
       val alteredBitmap = Bitmap.createBitmap(
-         origBitmap.width, origBitmap.height, origBitmap.config)
+         origBitmap.width, origBitmap.height, origBitmap.config
+      )
 
       // Draw original origBitmap on canvas and apply the color filter
       val canvas = Canvas(alteredBitmap.asImageBitmap())

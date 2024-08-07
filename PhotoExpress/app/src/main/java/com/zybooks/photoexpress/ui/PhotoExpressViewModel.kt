@@ -58,7 +58,7 @@ class PhotoExpressViewModel(private val imageRepo: ImageRepository) : ViewModel(
          it.copy(
             photoVisible = false,
             photoSaved = true,
-            photoUri = imageRepo.createNewPhotoFile()
+            photoUri = imageRepo.createPhotoFile()
          )
       }
 
