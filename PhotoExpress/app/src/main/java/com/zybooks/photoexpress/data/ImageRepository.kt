@@ -40,7 +40,7 @@ class ImageRepository(private val context: Context) {
       return photoUri
    }
 
-   fun changeBrightness(brightness: Float): LightingColorFilter {
+   fun createColorFilter(brightness: Float): LightingColorFilter {
       var addColor = Color.Black
       var multColor = Color.White
 
@@ -49,9 +49,9 @@ class ImageRepository(private val context: Context) {
          // Add color
          val addMult = (255 * brightness / 100f - 1).toInt()
          addColor = Color(red = addMult, green = addMult, blue = addMult)
-      } else {
+      } else if (brightness < 100) {
          // Scale color down
-         val brightMult = (255 * brightness / 100f).toInt().coerceAtMost(255)
+         val brightMult = (255 * brightness / 100f).toInt()
          multColor = Color(red = brightMult, green = brightMult, blue = brightMult)
       }
 

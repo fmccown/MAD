@@ -62,7 +62,7 @@ class PhotoExpressViewModel(private val imageRepo: ImageRepository) : ViewModel(
       _uiState.update {
          it.copy(
             brightness = brightness,
-            colorFilter = imageRepo.changeBrightness(brightness),
+            colorFilter = imageRepo.createColorFilter(brightness),
             photoSaved = false
          )
       }
