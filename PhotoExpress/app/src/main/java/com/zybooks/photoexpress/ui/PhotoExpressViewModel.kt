@@ -37,7 +37,10 @@ class PhotoExpressViewModel(private val imageRepo: ImageRepository) : ViewModel(
 
    fun photoTaken() {
       _uiState.update {
-         it.copy(photoVisible = true)
+         it.copy(
+            photoVisible = true,
+            photoSaved = false
+         )
       }
    }
 
