@@ -47,7 +47,7 @@ class ImageRepository(private val context: Context) {
       // 100 is the middle value
       if (brightness >= 101) {
          // Add color
-         val addMult = (255 * brightness / 100f - 1).toInt()
+         val addMult = (255 * (brightness - 100) / 100f).toInt()
          addColor = Color(red = addMult, green = addMult, blue = addMult)
       } else if (brightness < 100) {
          // Scale color down
