@@ -107,17 +107,16 @@ class ImageRepository(private val context: Context) {
       )
 
       // Create an entry for the MediaStore
-      val imageValues = ContentValues()
-      imageValues.put(MediaStore.MediaColumns.DISPLAY_NAME, photoFile.name)
-      imageValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-      imageValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+      val imageValues = ContentValues().apply {
+         put(MediaStore.MediaColumns.DISPLAY_NAME, photoFile.name)
+      }
 
       // Insert a new row into the MediaStore
       val resolver = context.applicationContext.contentResolver
-      val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageValues)
+      val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageValues)
 
       // Save bitmap as JPEG
-      uri?.let {
+      imageUri?.let {
          resolver.openOutputStream(it).use { outStream ->
             outStream?.let {
                alteredBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
