@@ -79,10 +79,10 @@ class ImageRepository(private val context: Context) {
          paint = paint
       )
 
-      // Save altered photo with "_mod" suffix
-      val newFileName = photoFile.nameWithoutExtension + "_mod.jpg"
-      val imageFile = File(photoFile.parentFile, newFileName)
-      imageFile.outputStream().use { outStream ->
+      // Save altered photo with "_alt" suffix
+      val newFileName = photoFile.nameWithoutExtension + "_alt.jpg"
+      val altPhotoFile = File(photoFile.parentFile, newFileName)
+      altPhotoFile.outputStream().use { outStream ->
          alteredBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
       }
    }
@@ -118,11 +118,9 @@ class ImageRepository(private val context: Context) {
 
       // Save bitmap as JPEG
       uri?.let {
-         runCatching {
-            resolver.openOutputStream(it).use { outStream ->
-               outStream?.let {
-                  alteredBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
-               }
+         resolver.openOutputStream(it).use { outStream ->
+            outStream?.let {
+               alteredBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
             }
          }
       }
