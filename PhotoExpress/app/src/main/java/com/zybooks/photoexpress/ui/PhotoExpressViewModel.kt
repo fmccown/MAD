@@ -51,13 +51,6 @@ class PhotoExpressViewModel(private val imageRepo: ImageRepository) : ViewModel(
       }
    }
 
-   suspend fun savePhoto() {
-      imageRepo.saveAlteredPhoto(uiState.value.colorFilter)
-      _uiState.update {
-         it.copy(photoSaved = true)
-      }
-   }
-
    fun changeBrightness(brightness: Float) {
       _uiState.update {
          it.copy(
@@ -65,6 +58,13 @@ class PhotoExpressViewModel(private val imageRepo: ImageRepository) : ViewModel(
             colorFilter = imageRepo.createColorFilter(brightness),
             photoSaved = false
          )
+      }
+   }
+
+   suspend fun savePhoto() {
+      imageRepo.saveAlteredPhoto(uiState.value.colorFilter)
+      _uiState.update {
+         it.copy(photoSaved = true)
       }
    }
 }
