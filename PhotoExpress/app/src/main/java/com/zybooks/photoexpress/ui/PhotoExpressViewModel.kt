@@ -52,7 +52,7 @@ class PhotoExpressViewModel(private val imageRepo: ImageRepository) : ViewModel(
    }
 
    suspend fun savePhoto() {
-      imageRepo.savePhoto(uiState.value.colorFilter)
+      imageRepo.saveAlteredPhoto(uiState.value.colorFilter)
       _uiState.update {
          it.copy(photoSaved = true)
       }
