@@ -2,6 +2,7 @@ package com.zybooks.findme.ui
 
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.location.Location
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
@@ -24,10 +25,11 @@ import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
-val startingLatLong = LatLng(0.0, 0.0)
-val defaultCameraPosition = CameraPosition.fromLatLngZoom(startingLatLong, 11f)
+val defaultCameraPosition = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 11f)
 
 @SuppressLint("MissingPermission")
 @Composable
@@ -37,15 +39,15 @@ fun FindMeApp() {
       LocationServices.getFusedLocationProviderClient(context)
    }
 
-   var currentLatLng by remember { mutableStateOf(startingLatLong) }
+   var currentLatLng by remember { mutableStateOf(null as LatLng?) }
    val cameraPositionState = rememberCameraPositionState { defaultCameraPosition }
-   val markerState = rememberMarkerState(position = currentLatLng)
+   val markerState = rememberMarkerState()
 
    GoogleMap(
       cameraPositionState = cameraPositionState,
       properties = MapProperties(mapType = MapType.NORMAL)
    ) {
-      if (currentLatLng != startingLatLong) {
+      if (currentLatLng != null) {
          Marker(
             state = markerState,
             title = "Here You Are!"
@@ -54,16 +56,21 @@ fun FindMeApp() {
    }
 
    LaunchedEffect(Unit) {
-      val currentLocation = locationClient.getCurrentLocation(
-         Priority.PRIORITY_HIGH_ACCURACY,
-         CancellationTokenSource().token).await()
+      var currentLocation: Location?
+      withContext(Dispatchers.IO) {
+         currentLocation = locationClient.getCurrentLocation(
+            Priority.PRIORITY_HIGH_ACCURACY,
+            CancellationTokenSource().token
+         ).await()
+      }
 
-      if (currentLocation != null) {
-         currentLatLng = LatLng(currentLocation.latitude, currentLocation.longitude)
+      currentLocation?.let {
+         currentLatLng = LatLng(it.latitude, it.longitude)
+         markerState.position = currentLatLng as LatLng
 
          cameraPositionState.animate(
             update = CameraUpdateFactory.newLatLngZoom(
-               LatLng(currentLatLng.latitude, currentLatLng.longitude),
+               currentLatLng!!,
                15f
             ),
             durationMs = 1000
