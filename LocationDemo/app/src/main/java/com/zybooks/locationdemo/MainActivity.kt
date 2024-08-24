@@ -34,6 +34,7 @@ import com.zybooks.locationdemo.ui.theme.LocationDemoTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
    override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,20 +67,22 @@ fun LocationDemo() {
    }
 
    LaunchedEffect(Unit) {
-      val lastLocation = locationClient.lastLocation.await()
-      if (lastLocation != null) {
-         println("Last known location " +
-               "lat: ${lastLocation.latitude} " +
-               "long: ${lastLocation.longitude}")
-      }
+      withContext(Dispatchers.IO) {
+         val lastLocation = locationClient.lastLocation.await()
+         if (lastLocation != null) {
+            println("Last known location " +
+                  "lat: ${lastLocation.latitude} " +
+                  "long: ${lastLocation.longitude}")
+         }
 
-      val currentLocation = locationClient.getCurrentLocation(
-         Priority.PRIORITY_HIGH_ACCURACY,
-         CancellationTokenSource().token).await()
-      if (currentLocation != null) {
-         println("Current location " +
-               "lat: ${currentLocation.latitude} " +
-               "long: ${currentLocation.longitude}")
+         val currentLocation = locationClient.getCurrentLocation(
+            Priority.PRIORITY_HIGH_ACCURACY,
+            CancellationTokenSource().token).await()
+         if (currentLocation != null) {
+            println("Current location " +
+                  "lat: ${currentLocation.latitude} " +
+                  "long: ${currentLocation.longitude}")
+         }
       }
    }
 }
