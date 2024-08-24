@@ -50,11 +50,9 @@ android {
 }
 
 dependencies {
-   //implementation("com.google.android.gms:play-services-maps:19.0.0")
-   //implementation("com.google.maps.android:maps-compose-utils:6.1.1")
-   implementation("com.google.maps.android:maps-compose:4.3.3")
+   implementation("com.google.maps.android:maps-compose:6.1.1")
    implementation("com.google.android.gms:play-services-location:21.3.0")
-   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
    implementation(libs.androidx.core.ktx)
    implementation(libs.androidx.lifecycle.runtime.ktx)
    implementation(libs.androidx.activity.compose)
