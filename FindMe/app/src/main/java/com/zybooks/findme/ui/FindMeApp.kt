@@ -22,8 +22,8 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.tasks.await
 
 val startingLatLong = LatLng(0.0, 0.0)
@@ -39,6 +39,7 @@ fun FindMeApp() {
 
    var currentLatLng by remember { mutableStateOf(startingLatLong) }
    val cameraPositionState = rememberCameraPositionState { defaultCameraPosition }
+   val markerState = rememberMarkerState(position = currentLatLng)
 
    GoogleMap(
       cameraPositionState = cameraPositionState,
@@ -46,7 +47,7 @@ fun FindMeApp() {
    ) {
       if (currentLatLng != startingLatLong) {
          Marker(
-            state = MarkerState(currentLatLng),
+            state = markerState,
             title = "Here You Are!"
          )
       }
