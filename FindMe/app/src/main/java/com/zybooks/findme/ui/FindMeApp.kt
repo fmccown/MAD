@@ -39,7 +39,7 @@ fun FindMeApp() {
       LocationServices.getFusedLocationProviderClient(context)
    }
 
-   var currentLatLng by remember { mutableStateOf(null as LatLng?) }
+   var currentLatLng: LatLng? by remember { mutableStateOf(null) }
    val cameraPositionState = rememberCameraPositionState { defaultCameraPosition }
    val markerState = rememberMarkerState()
 
