@@ -20,8 +20,6 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
@@ -40,12 +38,11 @@ fun FindMeApp() {
    }
 
    var currentLatLng: LatLng? by remember { mutableStateOf(null) }
-   val cameraPositionState = rememberCameraPositionState { defaultCameraPosition }
+   val cameraPositionState = rememberCameraPositionState { position = defaultCameraPosition }
    val markerState = rememberMarkerState()
 
    GoogleMap(
-      cameraPositionState = cameraPositionState,
-      properties = MapProperties(mapType = MapType.NORMAL)
+      cameraPositionState = cameraPositionState
    ) {
       if (currentLatLng != null) {
          Marker(
