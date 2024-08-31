@@ -21,16 +21,6 @@ import com.zybooks.findme.ui.theme.FindMeTheme
 class MainActivity : ComponentActivity() {
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
-
-
-      // Trying to get rid of:
-      // java.util.concurrent.ExecutionException: java.lang.SecurityException: GoogleCertificatesRslt: not allowed:
-      // https://stackoverflow.com/questions/64196715/securityexception-googlecertificatesrslt-not-allowed
-      // The error occurs on the API 33 emunlator but not on the API 34 one
-      //MapsInitializer.initialize(this, MapsInitializer.Renderer.LATEST) {
-      //   println("MapsInitializer: $it")
-      //}
-
       setContent {
          FindMeTheme {
             Surface(
