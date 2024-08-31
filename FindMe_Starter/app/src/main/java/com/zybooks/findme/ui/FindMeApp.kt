@@ -30,9 +30,8 @@ fun FindMeApp() {
          Priority.PRIORITY_HIGH_ACCURACY,
          CancellationTokenSource().token).await()
 
-      if (currentLocation != null) {
-         println("Current location: lat=${currentLocation.latitude}, " +
-               "long=${currentLocation.longitude}")
+      currentLocation?.let {
+         println("Current location: lat=${it.latitude}, long=${it.longitude}")
       }
    }
 }
