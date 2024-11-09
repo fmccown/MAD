@@ -40,13 +40,13 @@ class TimerViewModel : ViewModel() {
       selectedSecond = sec
    }
 
-fun startTimer() {
-   // Convert hours, minutes, and seconds to milliseconds
-   totalMillis = (selectedHour * 60 * 60 + selectedMinute * 60 + selectedSecond) * 1000L
+   fun startTimer() {
+      // Convert hours, minutes, and seconds to milliseconds
+      totalMillis = (selectedHour * 60 * 60 + selectedMinute * 60 + selectedSecond) * 1000L
 
-   // TODO: Start coroutine that makes the timer count down
+      // TODO: Start coroutine that makes the timer count down
 
-}
+   }
 
    fun cancelTimer() {
       // TODO: Cancel the timer
