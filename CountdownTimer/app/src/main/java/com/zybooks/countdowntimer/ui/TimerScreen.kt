@@ -1,6 +1,5 @@
 package com.zybooks.countdowntimer.ui
 
-import android.util.Log
 import android.widget.NumberPicker
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
