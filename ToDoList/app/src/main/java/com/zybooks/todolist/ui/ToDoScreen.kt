@@ -41,7 +41,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -124,6 +123,7 @@ fun TaskList(
             modifier = Modifier
                .padding(vertical = 1.dp)
                .animateItemPlacement(),
+            directions = setOf(DismissDirection.StartToEnd, DismissDirection.EndToStart),
             dismissContent = {
                TaskCard(
                   task = task,
