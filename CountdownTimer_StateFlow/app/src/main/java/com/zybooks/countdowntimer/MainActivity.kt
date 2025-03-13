@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
@@ -24,7 +25,7 @@ import com.zybooks.countdowntimer.ui.theme.CountdownTimerTheme
 
 class MainActivity : ComponentActivity() {
 
-   private val timerViewModel = TimerViewModel()
+   private lateinit var timerViewModel: TimerViewModel
 
    private val permissionRequestLauncher =
       registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -36,6 +37,7 @@ class MainActivity : ComponentActivity() {
       super.onCreate(savedInstanceState)
       enableEdgeToEdge()
       setContent {
+         timerViewModel = viewModel()
          CountdownTimerTheme(dynamicColor = false) {
             Surface(
                modifier = Modifier.fillMaxSize(),
@@ -64,9 +66,11 @@ class MainActivity : ComponentActivity() {
             if (ActivityCompat.checkSelfPermission(this,
                   Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
                startWorker(timerViewModel.uiState.value.remainingMillis)
+               timerViewModel.cancelTimer()
             }
          } else {
             startWorker(timerViewModel.uiState.value.remainingMillis)
+            timerViewModel.cancelTimer()
          }
       }
    }
