@@ -64,9 +64,11 @@ class MainActivity : ComponentActivity() {
             if (ActivityCompat.checkSelfPermission(this,
                   Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
                startWorker(timerViewModel.remainingMillis)
+               timerViewModel.cancelTimer()
             }
          } else {
             startWorker(timerViewModel.remainingMillis)
+            timerViewModel.cancelTimer()
          }
       }
    }
