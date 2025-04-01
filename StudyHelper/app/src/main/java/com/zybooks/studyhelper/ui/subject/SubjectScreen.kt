@@ -1,6 +1,5 @@
 package com.zybooks.studyhelper.ui.subject
 
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
