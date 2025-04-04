@@ -29,23 +29,24 @@ class SubjectViewModel(private val studyRepo: StudyRepository) : ViewModel() {
    private val selectedSubjects = MutableStateFlow(emptySet<Subject>())
    private val isSubjectDialogVisible = MutableStateFlow(false)
 
-   val uiState: StateFlow<SubjectScreenUiState> =
-      combine(
-         studyRepo.getSubjects(),
-         selectedSubjects,
-         isSubjectDialogVisible
-      ) { subjects, selectSubs, dialogVisible ->
-         SubjectScreenUiState(
-            subjectList = subjects,
-            selectedSubjects = selectSubs,
-            isSubjectDialogVisible = dialogVisible
-         )
-      }
+   val uiState: StateFlow<SubjectScreenUiState> = transformedFlow()
       .stateIn(
          scope = viewModelScope,
          started = SharingStarted.WhileSubscribed(5000L),
          initialValue = SubjectScreenUiState(),
       )
+
+   private fun transformedFlow() = combine(
+      studyRepo.getSubjects(),
+      selectedSubjects,
+      isSubjectDialogVisible
+   ) { subjects, selectSubs, dialogVisible ->
+      SubjectScreenUiState(
+         subjectList = subjects,
+         selectedSubjects = selectSubs,
+         isSubjectDialogVisible = dialogVisible
+      )
+   }
 
    fun addSubject(title: String) {
       studyRepo.addSubject(Subject(title = title))
